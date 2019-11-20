@@ -1,2 +1,2 @@
 # BuliTorBot
-Telegram bot, der Bundesliga Tore in eine Telegram Guppe postet.
+Telegram bot that posts goals scored in the bundesliga in a telegram group.
