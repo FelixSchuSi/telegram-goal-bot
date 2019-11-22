@@ -32,11 +32,11 @@ def main():
         global restartcount
         if restartcount < 2:
             restartcount += 1
-            bot.send_message(chat_id=secrets.telegram_chat_id_test,
+            bot.send_message(chat_id=secrets.telegram_chat_id,
                              text='Whoops! Something went wrong when processing reddit posts. The script is going to restart now...')
             main()
         else:
-            bot.send_message(chat_id=secrets.telegram_chat_id_test,
+            bot.send_message(chat_id=secrets.telegram_chat_id,
                              text='Something is seriously wrong here. Felix should look into this!')
 
 def process_submission(submission):
@@ -47,15 +47,15 @@ def process_submission(submission):
         try:
             mp4Link = scrape.mp4Link(submission.url)
             if mp4Link:
-                bot.send_video(chat_id=secrets.telegram_chat_id_test, caption=submission.title,
+                bot.send_video(chat_id=secrets.telegram_chat_id, caption=submission.title,
                                video=mp4Link)
         except:
-            bot.send_message(chat_id=secrets.telegram_chat_id_test,
+            bot.send_message(chat_id=secrets.telegram_chat_id,
                              text='Whoops! Something went wrong when scraping this URL: ' + submission.url)
-            bot.send_message(chat_id=secrets.telegram_chat_id_test,
+            bot.send_message(chat_id=secrets.telegram_chat_id,
                              text=text, parse_mode=telegram.ParseMode.HTML)
     else:
-        bot.send_message(chat_id=secrets.telegram_chat_id_test,
+        bot.send_message(chat_id=secrets.telegram_chat_id,
                          text=text, parse_mode=telegram.ParseMode.HTML)
 
 def filter(title, url):
