@@ -11,5 +11,8 @@ def mp4Link(url):
     if 'clippituser' in url:
         d = pq(url=url)('#player-container')
         return d.attr('data-hd-file')
+    if 'streamvi' in url:
+        d = pq(url=url)('video > source')
+        return d.attr('src')
     else:
         return False

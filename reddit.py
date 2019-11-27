@@ -5,10 +5,10 @@ import scrape
 from datetime import datetime
 from datetime import timedelta
 
-buli = ["gladbach", "mönchengladbach", "monchengladbach", "leipzig", "bayern", "münchen", "munchen", "munich", "freiburg", "hoffenheim", "dortmund", "schalke", "leverkusen", "bayer",
-        "frankfurt", "wolfsburg", "union", "berlin", "hertha", "fortuna", "düsseldorf", "dusseldorf", "werder", "bremen", "augsburg", "mainz", "köln", "koln", "cologne", "paderborn"]
-hosts = ["streamja", "streamable", "twitter", "imgtc",
-         "clippituser", "instagram", "vimeo", "youtu"]
+buli = ['gladbach', 'mönchengladbach', 'monchengladbach', 'leipzig', 'bayern', 'münchen', 'munchen', 'munich', 'freiburg', 'hoffenheim', 'dortmund', 'schalke', 'leverkusen', 'bayer',
+        'frankfurt', 'wolfsburg', 'union', 'berlin', 'hertha', 'fortuna', 'düsseldorf', 'dusseldorf', 'werder', 'bremen', 'augsburg', 'mainz', 'köln', 'koln', 'cologne', 'paderborn']
+hosts = ['streamja', 'streamable', 'imgtc', 'clippituser',
+         'instagram', 'vimeo', 'youtu', 'streamvi']
 bot = telegram.Bot(token=secrets.telegram_token)
 restartcount = 0
 
@@ -21,12 +21,12 @@ def main():
             client_secret=secrets.reddit_client_secret
         )
 
-        subreddit = reddit.subreddit("soccer")
+        subreddit = reddit.subreddit('soccer')
         for submission in subreddit.stream.submissions():
             process_submission(submission)
 
         # Use this for testing!
-        # submissions = subreddit.search("great goal")
+        # submissions = subreddit.search('great goal')
         # for submission in submissions:
         #     process_submission(submission)
 
@@ -70,10 +70,10 @@ def filter(title, url, date):
             # video must be hosted on one of the specified services.
             if any(host in url for host in hosts):
                 diff = datetime.utcnow() - datetime.utcfromtimestamp(date)
-                # post must be younger than 10 minutes.
-                if ((diff.total_seconds() / 60) < 10):
+                # post must be younger than 3 minutes.
+                if ((diff.total_seconds() / 60) < 3):
                     return True
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
