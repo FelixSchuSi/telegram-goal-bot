@@ -48,7 +48,7 @@ async def process_submission(submission, bot, competition):
                       'Couldnt scrape mp4 link. Sening link...' + bcolors.ENDC)
                 bot.send_message(chat_id=secrets.telegram_chat_id,
                                  text=text, parse_mode=telegram.ParseMode.HTML)
-        except:
+        except Exception as e:
             print(bcolors.FAIL + 'Exception occured: ' + str(e) + bcolors.ENDC)
             bot.send_message(chat_id=secrets.telegram_chat_id,
                              text='Whoops! Something went wrong when scraping this URL: ' + submission.url)
