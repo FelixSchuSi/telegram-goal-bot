@@ -1,13 +1,15 @@
 import secrets
 import scrape
 import telegram
+import asyncio
 from datetime import datetime
+from bcolors import bcolors
 import setup
 import sys
 
 hosts = ['streamja', 'streamable', 'imgtc', 'clippituser', 'vimeo', 'streamvi']
 
-def main():
+async def main():
     try: competition = setup.competition(sys.argv[1])
     except IndexError: competition = setup.competition('buli')
 
@@ -16,36 +18,42 @@ def main():
 
     try:
         # for submission in subreddit.stream.submissions():
-        #     process_submission(submission, bot, competition)
+        #     await process_submission(submission, bot, competition)
 
         # Use this for testing!
         submissions = subreddit.new(limit=200)
         for submission in submissions:
-            process_submission(submission, bot, competition)
+            await process_submission(submission, bot, competition)
 
     except KeyboardInterrupt:
         print('CTRL + C detected. closing...')
         quit()
+    except:
+        print(bcolors.FAIL + 'crashed.' + bcolors.ENDC)
 
 
-def process_submission(submission, bot, competition):
+async def process_submission(submission, bot, competition):
     normalized_title = submission.title.lower().split()
     text = '<a href="{}">{}</a>'.format(submission.url, submission.title)
     if filter(normalized_title, submission.url, submission.created_utc, competition):
         print(text)
         try:
-            mp4Link = scrape.mp4Link(submission.url)
+            mp4Link = await scrape.mp4Link(submission.url)
             if mp4Link:
                 bot.send_video(chat_id=secrets.telegram_chat_id, caption=submission.title,
                                video=mp4Link)
                 print('Successfully scraped mp4 link. Sening video...')
             else:
-                print('Couldnt scrape mp4 link. Sening link...')
+                print(bcolors.WARNING +
+                      'Couldnt scrape mp4 link. Sening link...' + bcolors.ENDC)
                 bot.send_message(chat_id=secrets.telegram_chat_id,
                                  text=text, parse_mode=telegram.ParseMode.HTML)
         except:
+            print(bcolors.FAIL + 'Exception occured: ' + str(e) + bcolors.ENDC)
             bot.send_message(chat_id=secrets.telegram_chat_id,
                              text='Whoops! Something went wrong when scraping this URL: ' + submission.url)
+            print(
+                'Whoops! Something went wrong when scraping this URL: ' + submission.url)
             bot.send_message(chat_id=secrets.telegram_chat_id,
                              text=text, parse_mode=telegram.ParseMode.HTML)
 
@@ -64,4 +72,4 @@ def filter(title, url, date, competition):
 
 
 if __name__ == '__main__':
-    main()
+    asyncio.run(main())
