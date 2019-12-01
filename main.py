@@ -59,8 +59,8 @@ def filter(title, url, date, competition):
             if any(host in url for host in hosts):
                 diff = datetime.utcnow() - datetime.utcfromtimestamp(date)
                 # post must be younger than 3 minutes.
-                # if ((diff.total_seconds() / 60) < 3):
-                return True
+                if ((diff.total_seconds() / 60) < 3):
+                    return True
 
 
 if __name__ == '__main__':
