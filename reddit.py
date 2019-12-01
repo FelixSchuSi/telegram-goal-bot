@@ -3,6 +3,8 @@ import secrets
 import telegram
 import scrape
 import asyncio
+import signal
+from bcolors import bcolors
 from datetime import datetime
 from datetime import timedelta
 
@@ -11,8 +13,6 @@ buli = ['gladbach', 'mönchengladbach', 'monchengladbach', 'leipzig', 'bayern', 
 hosts = ['streamja', 'streamable', 'imgtc', 'clippituser', 'vimeo', 'streamvi']
 
 bot = telegram.Bot(token=secrets.telegram_token)
-restartcount = 0
-
 
 async def main():
     try:
@@ -23,47 +23,46 @@ async def main():
         )
 
         subreddit = reddit.subreddit('soccer')
-        # for submission in subreddit.stream.submissions():
-        #     process_submission(submission)
-        print('meep')
-        # Use this for testing!
-        # submissions = subreddit.search('great goal')
-        submissions = subreddit.new(limit=300)
-        for submission in submissions:
+        for submission in subreddit.stream.submissions():
             await process_submission(submission)
 
+        # Use this for testing!
+        # submissions = subreddit.search('great goal')
+        # submissions = subreddit.new(limit=300)
+        # for submission in submissions:
+        #     await process_submission(submission)
+
+    except KeyboardInterrupt:
+        print("Received exit, exiting")
     except:
-        global restartcount
-        if restartcount < 2:
-            restartcount += 1
-            print('crashed. restarting...')
-            main()
-        else:
-            print('crashed third time.')
+        print(bcolors.FAIL + 'crashed.' + bcolors.ENDC)
 
 
 async def process_submission(submission):
     normalized_title = submission.title.lower()
     text = '<a href="{}">{}</a>'.format(submission.url, submission.title)
-    
+
     if filter(normalized_title, submission.url, submission.created_utc):
         print(normalized_title)
         try:
             mp4Link = await scrape.mp4Link(submission.url)
             if mp4Link:
-                print('Successfully scraped mp4 link. Sening video...')
-                bot.send_video(chat_id=secrets.telegram_chat_id_test, caption=submission.title,
+                bot.send_video(chat_id=secrets.telegram_chat_id, caption=submission.title,
                                video=mp4Link)
+                print('Successfully scraped mp4 link. Sening video...')
             else:
-                print('Couldnt scrape mp4 link. Sening link...')
-                bot.send_message(chat_id=secrets.telegram_chat_id_test,
+                print(bcolors.WARNING +
+                      'Couldnt scrape mp4 link. Sening link...' + bcolors.ENDC)
+                bot.send_message(chat_id=secrets.telegram_chat_id,
                                  text=text, parse_mode=telegram.ParseMode.HTML)
-        except:
-            bot.send_message(chat_id=secrets.telegram_chat_id_test,
+        except Exception as e:
+            print(bcolors.FAIL + 'Exception occured: ' + str(e) + bcolors.ENDC)
+            bot.send_message(chat_id=secrets.telegram_chat_id,
                              text='Whoops! Something went wrong when scraping this URL: ' + submission.url)
-            print('Whoops! Something went wrong when scraping this URL: ' + submission.url)
-            # bot.send_message(chat_id=secrets.telegram_chat_id_test,
-                            #  text=text, parse_mode=telegram.ParseMode.HTML)
+            print(
+                'Whoops! Something went wrong when scraping this URL: ' + submission.url)
+            bot.send_message(chat_id=secrets.telegram_chat_id,
+                             text=text, parse_mode=telegram.ParseMode.HTML)
 
 
 def filter(title, url, date):
@@ -75,10 +74,10 @@ def filter(title, url, date):
             if any(host in url for host in hosts):
                 diff = datetime.utcnow() - datetime.utcfromtimestamp(date)
                 # post must be younger than 3 minutes.
-                # if ((diff.total_seconds() / 60) < 3):
-                return True
-
+                if ((diff.total_seconds() / 60) < 3):
+                    return True
 
 if __name__ == '__main__':
     asyncio.run(main())
-
+    
+    
