@@ -1,8 +1,8 @@
 from pyquery import PyQuery as pq
 import asyncio
 
-# TODO: "twitter", "imgtc", "instagram", "vimeo", "youtu"
-async def mp4Link(url):
+# TODO: "imgtc", "vimeo"
+def mp4Link(url):
     if 'streamja' in url:
         d = pq(url=url)('video > source')
         return d.attr('src')
