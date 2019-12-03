@@ -1,2 +1,2 @@
-# BuliTorBot
-Telegram bot that posts goals scored in the bundesliga in a telegram group.
+# FelixGoalBot
+Telegram bot that posts videos of soccer goals in a telegram group.
