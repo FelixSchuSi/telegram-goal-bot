@@ -17,17 +17,19 @@ class Competition:
             if isinstance(team, Team): self.teams.append(team)
 
     def isCompetition(self, strings):
-        if sum(team.isTeam(strings) for team in self.teams) >= 2:
+        indexOfHyphen = list('-' in e for e in strings).index(True)
+        left = strings[:indexOfHyphen]
+        right = strings[indexOfHyphen+1:]
+        if any(team.isTeam(left) for team in self.teams) and any(team.isTeam(right) for team in self.teams):
             return True
         return False
 
 class Team:
-    def __init__(self, alias=None):
+    def __init__(self, alias=None, matchesNeeded=1):
+        self.matchesNeeded = matchesNeeded
+        self.aliases = []
         if not(alias is None):
-            self.aliases = []
             self.addAlias(alias)
-        else:
-            self.aliases = []
     
     def __str__(self):
         return str(aliases)
@@ -39,6 +41,6 @@ class Team:
             self.aliases.append(alias)
 
     def isTeam(self, strings):
-        if any(alias in strings for alias in self.aliases):
+        if sum(alias in strings for alias in self.aliases) >= self.matchesNeeded:
             return True
         return False
