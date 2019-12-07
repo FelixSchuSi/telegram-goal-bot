@@ -3,7 +3,7 @@ import telegram
 import asyncio
 from datetime import datetime
 from bcolors import bcolors
-import setup
+from setup import setup
 import sys
 from urllib.error import HTTPError
 from traceback import print_exception
@@ -14,23 +14,18 @@ hosts = ['streamja', 'streamable', 'imgtc', 'clippituser', 'vimeo', 'streamvi']
 
 async def main():
     try:
-        competition = setup.competition(sys.argv[1])
-        chat_id = setup.chat_id(sys.argv[1])
+        setupObject = setup(sys.argv[1])
     except IndexError:
-        competition = setup.competition('buli')
-        chat_id = setup.chat_id('buli')
-
-    bot = setup.telegramBot()
-    subreddit = setup.redditBot()
+        setupObject = setup('buli')
 
     try:
-        for submission in subreddit.stream.submissions():
-            await process_submission(submission, bot, competition, chat_id)
+        for submission in setupObject.subreddit.stream.submissions():
+            await process_submission(submission, setupObject.bot, setupObject.competition, setupObject.chat_id)
 
         # Use this for testing!
-        # submissions = subreddit.new(limit=1000)
+        # submissions = setupObject.subreddit.new(limit=1000)
         # for submission in submissions:
-        #     await process_submission(submission, bot, competition, chat_id)
+        #     await process_submission(submission, setupObject.bot, setupObject.competition, setupObject.chat_id)
 
     except KeyboardInterrupt:
         print(bcolors.FAIL + 'CTRL + C detected. closing...' + bcolors.ENDC)
