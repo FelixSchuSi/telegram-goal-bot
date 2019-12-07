@@ -23,6 +23,5 @@ async def mp4Link(url):
     except HTTPError as e:
         return True
     except Exception as e:
-        return True
         print('URL: ' + url)
         print('Exception occured in mp4Link(url): ' + e)
