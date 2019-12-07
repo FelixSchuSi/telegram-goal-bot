@@ -49,10 +49,6 @@ async def process_submission(submission, bot, competition, chat_id):
             if mp4Link:
                 print(mp4Link)
                 # TODO: Improve Error handling. When scraping dead links nothin should happen. Example of dead link: https://streamja.com/da6n
-                if mp4Link == True:
-                    print(bcolors.WARNING +
-                          'tried to process dead link.' + bcolors.ENDC)
-                    return
                 bot.send_video(chat_id=chat_id, caption=submission.title,
                                video=mp4Link, timeout=240)
                 print('Successfully scraped mp4 link. Sening video...')
