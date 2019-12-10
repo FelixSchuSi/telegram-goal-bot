@@ -2,8 +2,6 @@ secrets.py
 __pycache__
 .venv
 .vscode
-buli.sh
-prem.sh
-cl.sh
+logs/*
 
 
