@@ -19,7 +19,6 @@ steps:
     runOptions: 'inline'
     inline: |
       cd BuliTorBot
-      git pull
-      pm2 restart all
+      bash pipeline.sh
     failOnStdErr: false
   displayName: 'ssh task in uberspace VM'
