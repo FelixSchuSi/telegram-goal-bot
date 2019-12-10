@@ -18,6 +18,6 @@ steps:
     sshEndpoint: 'uberspace'
     runOptions: 'commands'
     commands: |
-      cd ~/BuliTorBot/
+      cd a
       touch iwashere.txt
   displayName: 'ssh task in uberspace VM'
