@@ -78,6 +78,7 @@ def filter(title, url, date, competition):
 
 if __name__ == '__main__':
     while True:
-        asyncio.run(main())
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(main())
         print(bcolors.FAIL + 'Script crashed due to praw Error. Restarting in 3 mins...' + bcolors.ENDC)
         time.sleep(180)
