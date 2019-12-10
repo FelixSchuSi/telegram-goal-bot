@@ -16,8 +16,9 @@ steps:
 - task: SSH@0
   inputs:
     sshEndpoint: 'uberspace'
-    runOptions: 'commands'
-    commands: |
-      cd a
-      touch iwashere.txt
+    runOptions: 'inline'
+    inline: |
+      cd BuliTorBot
+      git pull
+      pm2 restart
   displayName: 'ssh task in uberspace VM'
