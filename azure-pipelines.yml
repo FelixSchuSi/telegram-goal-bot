@@ -19,5 +19,5 @@ steps:
     runOptions: 'commands'
     commands: |
       cd BuliTorBot
-      pwd
+      touch iwashere.txt
   displayName: 'ssh task in uberspace VM'
