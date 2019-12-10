@@ -20,7 +20,6 @@ async def main():
         setupObject = setup('buli')
 
     try:
-        x = 0/0
         for submission in setupObject.subreddit.stream.submissions():
             await process_submission(submission, setupObject.bot, setupObject.competition, setupObject.chat_id)
 
