@@ -21,4 +21,5 @@ steps:
       cd BuliTorBot
       git pull
       pm2 restart all
+    failOnStdErr: false
   displayName: 'ssh task in uberspace VM'
