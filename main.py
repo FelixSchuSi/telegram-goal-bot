@@ -8,6 +8,7 @@ import sys
 from urllib.error import HTTPError
 from traceback import print_exception
 from telegram.error import BadRequest
+import time
 
 hosts = ['streamja', 'streamable', 'imgtc', 'clippituser', 'vimeo', 'streamvi']
 
@@ -19,6 +20,7 @@ async def main():
         setupObject = setup('buli')
 
     try:
+        x = 0/0
         for submission in setupObject.subreddit.stream.submissions():
             await process_submission(submission, setupObject.bot, setupObject.competition, setupObject.chat_id)
 
@@ -76,4 +78,7 @@ def filter(title, url, date, competition):
 
 
 if __name__ == '__main__':
-    asyncio.run(main())
+    while True:
+        asyncio.run(main())
+        print(bcolors.FAIL + 'Script crashed due to praw Error. Restarting in 3 mins...' + bcolors.ENDC)
+        time.sleep(180)
