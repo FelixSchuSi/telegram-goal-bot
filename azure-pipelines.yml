@@ -17,6 +17,6 @@ steps:
   inputs:
     sshEndpoint: 'uberspace'
     runOptions: 'commands'
-    commands: 'cd BuliTorBot && npm i -g pm2 && bash pipeline.sh'
+    commands: 'cd BuliTorBot && git pull && /home/felixs/bin/pm2 restart all'
     failOnStdErr: false
   displayName: 'ssh task in uberspace VM'
