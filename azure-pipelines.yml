@@ -19,6 +19,7 @@ steps:
     runOptions: 'inline'
     inline: |
       cd BuliTorBot
+      npm i -g pm2
       bash pipeline.sh
     failOnStdErr: false
   displayName: 'ssh task in uberspace VM'
