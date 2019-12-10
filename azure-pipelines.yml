@@ -17,5 +17,5 @@ steps:
   inputs:
     sshEndpoint: 'uberspace'
     runOptions: 'commands'
-    commands: 'echo hallo'
+    commands: 'cd BuliTorBot; git pull; pm2 restart all'
   displayName: 'ssh task in uberspace VM'
