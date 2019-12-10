@@ -64,8 +64,8 @@ async def process_submission(submission, bot, competition, chat_id):
 
 
 def filter(title, url, date, competition):
-    # title must contain a hyphen.
-    if any('-' in e for e in title):
+    # title must contain a hyphen AND not be a u19 game.
+    if any('-' in e for e in title) and not any('u19' in e for e in title):
         # video must be hosted on one of the specified services.
         if any(host in url for host in hosts):
             diff = datetime.utcnow() - datetime.utcfromtimestamp(date)
