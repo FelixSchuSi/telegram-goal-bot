@@ -1,6 +1,5 @@
 from pyquery import PyQuery as pq
 import asyncio
-from bcolors import bcolors
 from urllib.error import HTTPError
 # TODO: "imgtc", "vimeo"
 
@@ -21,7 +20,7 @@ async def mp4Link(url):
         else:
             return False
     except HTTPError as e:
-        print(bcolors.WARNING + 'tried to process dead link.' + bcolors.ENDC)
+        print('tried to process dead link.')
     except Exception as e:
         print('URL: ' + url)
         print('Exception occured in mp4Link(url): ' + e)

@@ -2,7 +2,6 @@ import scrape
 import telegram
 import asyncio
 from datetime import datetime
-from bcolors import bcolors
 from setup import setup
 import sys
 from urllib.error import HTTPError
@@ -29,10 +28,10 @@ async def main():
         #     await process_submission(submission, setupObject.bot, setupObject.competition, setupObject.chat_id)
 
     except KeyboardInterrupt:
-        print(bcolors.FAIL + 'CTRL + C detected. closing...' + bcolors.ENDC)
+        print('CTRL + C detected. closing...')
         quit()
     except Exception as e:
-        print(bcolors.FAIL + 'Exception in main() occured: ' + str(e) + bcolors.ENDC)
+        print('Exception in main() occured: ' + str(e))
 
 
 async def process_submission(submission, bot, competition, chat_id):
@@ -49,14 +48,13 @@ async def process_submission(submission, bot, competition, chat_id):
                                video=mp4Link, timeout=240)
                 print('Successfully scraped mp4 link. Sening video...')
             else:
-                print(bcolors.WARNING +
-                      'Couldnt scrape mp4 link. Sening link...' + bcolors.ENDC)
+                print('Couldnt scrape mp4 link. Sening link...')
                 bot.send_message(chat_id=chat_id,
                                  text=text, parse_mode=telegram.ParseMode.HTML)
         except BadRequest as e:
-            print(bcolors.WARNING + 'tried to process dead link.' + bcolors.ENDC)
+            print('tried to process dead link.')
         except Exception as e:
-            print(bcolors.FAIL + 'This URL ' + submission.url + ' caused an Exception in process_submission(): ' + str(e) + bcolors.ENDC)
+            print('This URL ' + submission.url + ' caused an Exception in process_submission(): ' + str(e))
             # bot.send_message(chat_id=chat_id,
             #                  text='Whoops! Something went wrong when scraping this URL: ' + submission.url)
             bot.send_message(chat_id=chat_id,
@@ -80,5 +78,5 @@ if __name__ == '__main__':
     while True:
         loop = asyncio.get_event_loop()
         loop.run_until_complete(main())
-        print(bcolors.FAIL + 'Script crashed due to praw Error. Restarting in 3 mins...' + bcolors.ENDC)
+        print('Script crashed due to praw Error. Restarting in 3 mins...')
         time.sleep(180)
