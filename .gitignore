@@ -2,6 +2,6 @@ secrets.py
 __pycache__
 .venv
 .vscode
-logs/*
+*.log
 
 
