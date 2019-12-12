@@ -52,7 +52,7 @@ async def process_submission(submission, bot, competition, chat_id):
                 bot.send_message(chat_id=chat_id,
                                  text=text, parse_mode=telegram.ParseMode.HTML)
         except BadRequest as e:
-            print('Tried to process dead link (BadRequest).')
+            print('Tried to process dead link (BadRequest): ' + str(e))
         except Exception as e:
             print('This URL ' + submission.url + ' caused an Exception in process_submission(): ' + str(e))
             # bot.send_message(chat_id=chat_id,

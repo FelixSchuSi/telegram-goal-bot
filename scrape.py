@@ -21,7 +21,7 @@ async def mp4Link(url):
             print('No scraping routine specified for this host.')
             return False
     except HTTPError as e:
-        print('Tried to process dead link. (HTTPError)')
+        print('Tried to process dead link. (HTTPError): ' + str(e))
     except Exception as e:
         print('URL: ' + url)
-        print('Exception occured in mp4Link(url): ' + e)
+        print('Exception occured in mp4Link(url): ' + str(e))
