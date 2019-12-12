@@ -18,9 +18,10 @@ async def mp4Link(url):
             d = pq(url=url)('video > source')
             return d.attr('src')
         else:
+            print('No scraping routine specified for this host.')
             return False
     except HTTPError as e:
-        print('tried to process dead link.')
+        print('Tried to process dead link. (HTTPError)')
     except Exception as e:
         print('URL: ' + url)
         print('Exception occured in mp4Link(url): ' + e)

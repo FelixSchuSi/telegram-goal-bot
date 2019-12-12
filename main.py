@@ -45,14 +45,14 @@ async def process_submission(submission, bot, competition, chat_id):
                 print(mp4Link)
                 # TODO: Improve Error handling. When scraping dead links nothin should happen. Example of dead link: https://streamja.com/da6n
                 bot.send_video(chat_id=chat_id, caption=submission.title,
-                               video=mp4Link, timeout=240)
+                               video=mp4Link, timeout=500)
                 print('Successfully scraped mp4 link. Sening video...')
             else:
                 print('Couldnt scrape mp4 link. Sening link...')
                 bot.send_message(chat_id=chat_id,
                                  text=text, parse_mode=telegram.ParseMode.HTML)
         except BadRequest as e:
-            print('tried to process dead link.')
+            print('Tried to process dead link (BadRequest).')
         except Exception as e:
             print('This URL ' + submission.url + ' caused an Exception in process_submission(): ' + str(e))
             # bot.send_message(chat_id=chat_id,
