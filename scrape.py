@@ -1,9 +1,8 @@
 from pyquery import PyQuery as pq
-import asyncio
 from urllib.error import HTTPError
 # TODO: "imgtc", "vimeo"
 
-async def mp4Link(url):
+def mp4Link(url):
     try:
         if 'streamja' in url:
             d = pq(url=url)('video > source')

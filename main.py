@@ -1,6 +1,5 @@
 import scrape
 import telegram
-import asyncio
 from datetime import datetime
 from setup import setup
 import sys
@@ -8,24 +7,25 @@ from urllib.error import HTTPError
 from traceback import print_exception
 from telegram.error import BadRequest
 import time
+from multiprocessing import Process
 
 hosts = ['streamja', 'streamable', 'imgtc', 'clippituser', 'vimeo', 'streamvi']
 
 
-async def main():
+def main():
     try:
         setupObject = setup(sys.argv[1])
     except IndexError:
         setupObject = setup('buli')
 
     try:
-        for submission in setupObject.subreddit.stream.submissions():
-            await process_submission(submission, setupObject.bot, setupObject.competition, setupObject.chat_id)
+        # for submission in setupObject.subreddit.stream.submissions():
+        #     Process(target=process_submission, args=(submission, setupObject.bot, setupObject.competition, setupObject.chat_id)).start()
 
         # Use this for testing!
-        # submissions = setupObject.subreddit.new(limit=1000)
-        # for submission in submissions:
-        #     await process_submission(submission, setupObject.bot, setupObject.competition, setupObject.chat_id)
+        submissions = setupObject.subreddit.new(limit=1000)
+        for submission in submissions:
+            Process(target=process_submission, args=(submission, setupObject.bot, setupObject.competition, setupObject.chat_id)).start()
 
     except KeyboardInterrupt:
         print('CTRL + C detected. closing...')
@@ -34,13 +34,13 @@ async def main():
         print('Exception in main() occured: ' + str(e))
 
 
-async def process_submission(submission, bot, competition, chat_id):
+def process_submission(submission, bot, competition, chat_id):
     normalized_title = submission.title.lower().split()
     text = '<a href="{}">{}</a>'.format(submission.url, submission.title)
     if filter(normalized_title, submission.url, submission.created_utc, competition):
         print(text)
         try:
-            mp4Link = await scrape.mp4Link(submission.url)
+            mp4Link = scrape.mp4Link(submission.url)
             if mp4Link:
                 print(mp4Link)
                 # TODO: Improve Error handling. When scraping dead links nothin should happen. Example of dead link: https://streamja.com/da6n
@@ -68,15 +68,14 @@ def filter(title, url, date, competition):
         if any(host in url for host in hosts):
             diff = datetime.utcnow() - datetime.utcfromtimestamp(date)
             # post must be younger than 3 minutes.
-            if ((diff.total_seconds() / 60) < 3):
-                # title must contain two bundesliga teams.
-                if competition.isCompetition(title):
-                    return True
+            # if ((diff.total_seconds() / 60) < 3):
+            # title must contain two bundesliga teams.
+            if competition.isCompetition(title):
+                return True
 
 
 if __name__ == '__main__':
     while True:
-        loop = asyncio.get_event_loop()
-        loop.run_until_complete(main())
+        main()
         print('Script crashed due to praw Error. Restarting in 3 mins...')
         time.sleep(180)
