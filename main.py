@@ -3,7 +3,6 @@ import telegram
 from datetime import datetime
 from setup import setup
 import sys
-from urllib.error import HTTPError
 from traceback import print_exception
 from telegram.error import BadRequest
 import time
@@ -36,29 +35,33 @@ def main():
 
 def process_submission(submission, bot, competition, chat_id):
     normalized_title = submission.title.lower().split()
-    text = '<a href="{}">{}</a>'.format(submission.url, submission.title)
+    text = f'<a href="{submission.url}">{submission.title}</a>'
     if filter(normalized_title, submission.url, submission.created_utc, competition):
         print(text)
-        try:
-            mp4Link = scrape.mp4Link(submission.url)
-            if mp4Link:
-                print(mp4Link)
-                # TODO: Improve Error handling. When scraping dead links nothin should happen. Example of dead link: https://streamja.com/da6n
-                bot.send_video(chat_id=chat_id, caption=submission.title,
-                               video=mp4Link, timeout=500)
-                print('Successfully scraped mp4 link. Sening video...')
+        def scrape_and_send(submission, bot, chat_id, retries=1):
+            if retries <= 5:
+                try:
+                    mp4Link = scrape.mp4Link(submission.url)
+                    if mp4Link:
+                        print(mp4Link)
+                        # TODO: Improve Error handling. When scraping dead links nothin should happen. Example of dead link: https://streamja.com/da6n
+                        bot.send_video(chat_id=chat_id, caption=submission.title,
+                                    video=mp4Link, timeout=500)
+                        print('Successfully scraped mp4 link. Sening video...')
+                    else:
+                        raise Exception()
+                except BadRequest as e:
+                    time.sleep(5)
+                    print(f'Tried to process dead link (BadRequest) on try No.: {retries} {str(e)}')
+                    scrape_and_send(submission, bot, chat_id, retries+1)
+                except Exception as e:
+                    time.sleep(5)
+                    print(f'This URL {submission.url} caused an Exception in process_submission() on try No.: {retries} {str(e)}')
+                    scrape_and_send(submission, bot, chat_id, retries+1)
             else:
-                print('Couldnt scrape mp4 link. Sening link...')
-                bot.send_message(chat_id=chat_id,
-                                 text=text, parse_mode=telegram.ParseMode.HTML)
-        except BadRequest as e:
-            print('Tried to process dead link (BadRequest): ' + str(e))
-        except Exception as e:
-            print('This URL ' + submission.url + ' caused an Exception in process_submission(): ' + str(e))
-            # bot.send_message(chat_id=chat_id,
-            #                  text='Whoops! Something went wrong when scraping this URL: ' + submission.url)
-            bot.send_message(chat_id=chat_id,
-                             text=text, parse_mode=telegram.ParseMode.HTML)
+                print(f'This URL {submission.url} couldnt be scraped 5 times in a row. Sending the direct link now.')
+                bot.send_message(chat_id=chat_id, text=text, parse_mode=telegram.ParseMode.HTML)
+        scrape_and_send(submission, bot, chat_id)
 
 
 def filter(title, url, date, competition):
