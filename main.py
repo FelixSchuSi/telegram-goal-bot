@@ -19,13 +19,13 @@ def main():
         setupObject = setup('buli')
 
     try:
-        # for submission in setupObject.subreddit.stream.submissions():
-        #     Process(target=process_submission, args=(submission, setupObject.bot, setupObject.competition, setupObject.chat_id)).start()
+        for submission in setupObject.subreddit.stream.submissions():
+            Process(target=process_submission, args=(submission, setupObject.bot, setupObject.competition, setupObject.chat_id)).start()
 
         # Use this for testing!
-        submissions = setupObject.subreddit.top(limit=20)
-        for submission in submissions:
-            Process(target=process_submission, args=(submission, setupObject.bot, setupObject.competition, setupObject.chat_id)).start()
+        # submissions = setupObject.subreddit.top(limit=20)
+        # for submission in submissions:
+        #     Process(target=process_submission, args=(submission, setupObject.bot, setupObject.competition, setupObject.chat_id)).start()
 
     except KeyboardInterrupt:
         print('CTRL + C detected. closing...')
@@ -68,10 +68,10 @@ def filter(title, url, date, competition):
         if any(host in url for host in hosts):
             diff = datetime.utcnow() - datetime.utcfromtimestamp(date)
             # post must be younger than 3 minutes.
-            # if ((diff.total_seconds() / 60) < 3):
-            # title must contain two bundesliga teams.
-            if competition.isCompetition(title):
-                return True
+            if ((diff.total_seconds() / 60) < 3):
+                # title must contain two bundesliga teams.
+                if competition.isCompetition(title):
+                    return True
 
 
 if __name__ == '__main__':
