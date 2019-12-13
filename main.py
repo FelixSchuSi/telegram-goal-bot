@@ -23,7 +23,7 @@ def main():
         #     Process(target=process_submission, args=(submission, setupObject.bot, setupObject.competition, setupObject.chat_id)).start()
 
         # Use this for testing!
-        submissions = setupObject.subreddit.new(limit=1000)
+        submissions = setupObject.subreddit.top(limit=20)
         for submission in submissions:
             Process(target=process_submission, args=(submission, setupObject.bot, setupObject.competition, setupObject.chat_id)).start()
 
