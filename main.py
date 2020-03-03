@@ -55,7 +55,7 @@ def process_submission(submission, bot, competition, chat_id):
                     print(f'Tried to process dead link (BadRequest) on try No.: {retries} {str(e)}')
                     scrape_and_send(submission, bot, chat_id, retries+1)
                 except Exception as e:
-                    time.sleep(5)
+                    time.sleep(15)
                     print(f'This URL {submission.url} caused an Exception in process_submission() on try No.: {retries} {str(e)}')
                     scrape_and_send(submission, bot, chat_id, retries+1)
             else:
