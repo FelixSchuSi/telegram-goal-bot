@@ -72,7 +72,7 @@ def filter(title, url, date, competition):
             diff = datetime.utcnow() - datetime.utcfromtimestamp(date)
             # post must be younger than 3 minutes.
             if ((diff.total_seconds() / 60) < 3):
-                # title must contain two bundesliga teams.
+                # title must contain two teams of the specified competition.
                 if competition.isCompetition(title):
                     return True
 
@@ -80,5 +80,5 @@ def filter(title, url, date, competition):
 if __name__ == '__main__':
     while True:
         main()
-        print('Script crashed due to praw Error. Restarting in 3 mins...')
+        print('Praw API is down. Restarting in 3 mins...')
         time.sleep(180)
