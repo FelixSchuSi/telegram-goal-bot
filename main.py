@@ -40,23 +40,22 @@ def process_submission(submission, bot, competition, chat_id):
                 try:
                     mp4Link = scrape.mp4Link(submission.url)
                     if mp4Link:
-                        print(mp4Link)
                         # TODO: Improve Error handling. When scraping dead links nothin should happen. Example of dead link: https://streamja.com/da6n
                         bot.send_video(chat_id=chat_id, caption=submission.title,
                                     video=mp4Link, timeout=500)
-                        print('Successfully scraped mp4 link. Sening video...')
+                        print(f'{submission.title},{mp4Link},{submission.created_utc},{"Successfully scraped mp4 link. Sening video..."}')
                     else:
                         raise Exception()
                 except BadRequest as e:
                     time.sleep(5)
-                    print(f'Tried to process dead link (BadRequest) on try No.: {retries} {str(e)}')
+                    print(f'{submission.title},{mp4Link},{submission.created_utc},{ f"Tried to process dead link (BadRequest) on try No.: {retries} {str(e)}"}')
                     scrape_and_send(submission, bot, chat_id, retries+1)
                 except Exception as e:
                     time.sleep(15)
-                    print(f'This URL {submission.url} caused an Exception in process_submission() on try No.: {retries} {str(e)}')
+                    print(f'{submission.title},{mp4Link},{submission.created_utc},{f"This URL {submission.url} caused an Exception in process_submission() on try No.: {retries} {str(e)}"}')
                     scrape_and_send(submission, bot, chat_id, retries+1)
             else:
-                print(f'This URL {submission.url} couldnt be scraped 5 times in a row. Sending the direct link now.')
+                print(f'{submission.title},{mp4Link},{submission.created_utc},{f"This URL {submission.url} couldnt be scraped 5 times in a row. Sending the direct link now."}')
                 bot.send_message(chat_id=chat_id, text=text, parse_mode=telegram.ParseMode.HTML)
         scrape_and_send(submission, bot, chat_id)
 
