@@ -7,7 +7,7 @@ class Competition:
             self.teams = []
 
     def __str__(self):
-        return str(teams)
+        return str(self.teams)
 
     def addTeam(self, team):
         if isinstance(team, list):

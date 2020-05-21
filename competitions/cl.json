@@ -1,0 +1,267 @@
+{
+    "id": 3,
+    "names": [
+        "cl",
+        "champions",
+        "championsleague",
+        "ucl"
+    ],
+    "teams": [
+        {
+            "id": "001",
+            "names": [
+                "bayern",
+                "m\u00fcnchen",
+                "munchen",
+                "munich"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "006",
+            "names": [
+                "dortmund"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "003",
+            "names": [
+                "leipzig"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "106",
+            "names": [
+                "chelsea"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "110",
+            "names": [
+                "liverpool"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "111",
+            "names": [
+                "manchester",
+                "city",
+                "man"
+            ],
+            "min_matches": 2
+        },
+        {
+            "id": "117",
+            "names": [
+                "tottenham",
+                "hotspur",
+                "spurs"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "201",
+            "names": [
+                "paris",
+                "saint",
+                "germain",
+                "psg"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "202",
+            "names": [
+                "real",
+                "madrid"
+            ],
+            "min_matches": 2
+        },
+        {
+            "id": "203",
+            "names": [
+                "atalanta",
+                "bergamo"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "204",
+            "names": [
+                "valencia"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "205",
+            "names": [
+                "atl\u00e9tico",
+                "atletico"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "206",
+            "names": [
+                "olympique",
+                "lyon"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "207",
+            "names": [
+                "juventus",
+                "turin",
+                "juve"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "208",
+            "names": [
+                "ssc",
+                "neapel",
+                "napoli"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "209",
+            "names": [
+                "barcelona",
+                "barca"
+            ],
+            "min_matches": 1
+        }
+    ],
+    "relegated_teams": [
+        {
+            "id": "209",
+            "names": [
+                "ajax",
+                "amsterdam"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "210",
+            "names": [
+                "br\u00fcgge",
+                "brugge"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "211",
+            "names": [
+                "roter",
+                "stern",
+                "belgrad",
+                "red",
+                "star"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "212",
+            "names": [
+                "dinamo",
+                "zagreb",
+                "dynamo"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "213",
+            "names": [
+                "galatasaray"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "214",
+            "names": [
+                "inter"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "215",
+            "names": [
+                "genk"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "216",
+            "names": [
+                "lille",
+                "osc"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "217",
+            "names": [
+                "lokomotiv"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "218",
+            "names": [
+                "olympiakos",
+                "pir\u00e4us",
+                "piraus",
+                "olympiacos"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "219",
+            "names": [
+                "salzburg"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "220",
+            "names": [
+                "schachtar",
+                "donezk",
+                "shakhtar",
+                "donetsk"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "221",
+            "names": [
+                "benfica"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "222",
+            "names": [
+                "slavia",
+                "praha",
+                "prag"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "223",
+            "names": [
+                "zenit",
+                "petersburg"
+            ],
+            "min_matches": 1
+        }
+    ]
+}

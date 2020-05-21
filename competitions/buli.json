@@ -1,0 +1,171 @@
+{
+    "id": 1,
+    "names": [
+        "bundesliga",
+        "buli",
+        "bundesliga",
+        "bl",
+        "german",
+        "germany"
+    ],
+    "teams": [
+        {
+            "id": "1",
+            "names": [
+                "bayern",
+                "m\u00fcnchen",
+                "munchen",
+                "munich"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "2",
+            "names": [
+                "gladbach",
+                "m\u00f6nchengladbach",
+                "monchengladbach"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "3",
+            "names": [
+                "leipzig"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "4",
+            "names": [
+                "freiburg"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "5",
+            "names": [
+                "hoffenheim"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "6",
+            "names": [
+                "dortmund"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "7",
+            "names": [
+                "schalke",
+                "shalke",
+                "s04"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "8",
+            "names": [
+                "leverkusen",
+                "bayer"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "9",
+            "names": [
+                "frankfurt",
+                "sge"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "10",
+            "names": [
+                "wolfsburg"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "11",
+            "names": [
+                "union"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "12",
+            "names": [
+                "hertha"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "13",
+            "names": [
+                "d\u00fcsseldorf",
+                "dusseldorf"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "14",
+            "names": [
+                "werder",
+                "bremen",
+                "svw"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "15",
+            "names": [
+                "augsburg",
+                "fca"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "16",
+            "names": [
+                "mainz"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "17",
+            "names": [
+                "k\u00f6ln",
+                "koln",
+                "cologne"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "18",
+            "names": [
+                "paderborn"
+            ],
+            "min_matches": 1
+        }
+    ],
+    "relegated_teams": [
+        {
+            "id": "19",
+            "names": [
+                "hannover"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "20",
+            "names": [
+                "hamburg",
+                "hsv"
+            ],
+            "min_matches": 1
+        }
+    ]
+}

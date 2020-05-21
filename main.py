@@ -3,7 +3,6 @@ import telegram
 from datetime import datetime
 from setup import setup
 import sys
-from traceback import print_exception
 from telegram.error import BadRequest
 import time
 from multiprocessing import Process
@@ -20,9 +19,8 @@ def main():
     try:
         for submission in setupObject.subreddit.stream.submissions():
             Process(target=process_submission, args=(submission, setupObject.bot, setupObject.competition, setupObject.chat_id)).start()
-
         # Use this for testing!
-        # submissions = setupObject.subreddit.top(limit=20)
+        # submissions = setupObject.subreddit.top("week",limit=5)
         # for submission in submissions:
         #     Process(target=process_submission, args=(submission, setupObject.bot, setupObject.competition, setupObject.chat_id)).start()
 
@@ -30,14 +28,13 @@ def main():
         print('CTRL + C detected. closing...')
         quit()
     except Exception as e:
-        print('Exception in main() occured: ' + str(e))
+        print('Exception in main() occured: ' + str(e.with_traceback()))
 
 
 def process_submission(submission, bot, competition, chat_id):
     normalized_title = submission.title.lower().split()
     text = f'<a href="{submission.url}">{submission.title}</a>'
     if filter(normalized_title, submission.url, submission.created_utc, competition):
-        print(text)
         def scrape_and_send(submission, bot, chat_id, retries=1):
             if retries <= 5:
                 try:

@@ -1,0 +1,185 @@
+{
+    "id": 2,
+    "names": [
+        "prem",
+        "premier league",
+        "premier",
+        "premierleague",
+        "pl",
+        "prem",
+        "bpl",
+        "english",
+        "england"
+    ],
+    "teams": [
+        {
+            "id": "101",
+            "names": [
+                "bournemouth"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "102",
+            "names": [
+                "arsenal",
+                "gunners",
+                "afc"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "103",
+            "names": [
+                "aston",
+                "villa"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "104",
+            "names": [
+                "brighton"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "105",
+            "names": [
+                "burnley"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "106",
+            "names": [
+                "chelsea"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "107",
+            "names": [
+                "crystal",
+                "palace"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "108",
+            "names": [
+                "everton"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "109",
+            "names": [
+                "leicester"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "110",
+            "names": [
+                "liverpool"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "111",
+            "names": [
+                "manchester",
+                "city",
+                "man"
+            ],
+            "min_matches": 2
+        },
+        {
+            "id": "112",
+            "names": [
+                "manchester",
+                "united",
+                "man"
+            ],
+            "min_matches": 2
+        },
+        {
+            "id": "113",
+            "names": [
+                "newcastle"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "114",
+            "names": [
+                "norwich"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "115",
+            "names": [
+                "sheffield",
+                "sheff"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "116",
+            "names": [
+                "southampton"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "117",
+            "names": [
+                "tottenham",
+                "hotspur",
+                "spurs"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "118",
+            "names": [
+                "watford"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "119",
+            "names": [
+                "west",
+                "ham"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "120",
+            "names": [
+                "wolverhampton",
+                "wanderers"
+            ],
+            "min_matches": 1
+        }
+    ],
+    "relegated_teams": [
+        {
+            "id": "121",
+            "names": [
+                "fulham"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "122",
+            "names": [
+                "huddersfield"
+            ],
+            "min_matches": 1
+        }
+    ]
+}
