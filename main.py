@@ -14,7 +14,7 @@ def main():
         #     process_submission(apis, submission)
 
         for submission in apis["subreddit"].stream.submissions():
-            process_submission(submission, apis["bot"], apis["competition"], apis["chat_id"])
+            process_submission(apis, submission)
     except KeyboardInterrupt:
         print('CTRL + C detected. closing...')
         quit()
