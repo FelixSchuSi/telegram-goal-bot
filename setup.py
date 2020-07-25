@@ -1,30 +1,37 @@
 import praw
-import secrets
 from competition import Competition, Team
 import telegram
 import json
+import sys
 
-def setup(competition):
-    if competition.lower() in ['buli', 'bundesliga', 'bl', 'german', 'germany']:
-        bot = telegram.Bot(token=secrets.telegram_token)
-        comp = createComp("buli")
-        print('STARTED BUNDESLIGA BOT')
-        return setupObject(secrets.buli_user_agent,
-                              secrets.buli_client_id, secrets.buli_client_secret, secrets.buli_chat_id, bot, comp)
-    elif competition.lower() in ['cl', 'champions', 'championsleague', 'ucl']:
-        bot = telegram.Bot(token=secrets.telegram_token)
-        comp = createComp("cl")
-        print('STARTED CHAMPIONS LEAGUE BOT')
-        return setupObject(secrets.cl_user_agent,
-                              secrets.cl_client_id, secrets.cl_client_secret, secrets.cl_chat_id, bot, comp)
-    elif competition.lower() in ['premier', 'premierleague', 'pl', 'prem', 'bpl','english', 'england']:
-        bot = telegram.Bot(token=secrets.telegram_token)
-        comp = createComp("prem")
-        print('STARTED PREMIER LEAGUE BOT')
-        return setupObject(secrets.prem_user_agent,
-                              secrets.prem_client_id, secrets.prem_client_secret, secrets.prem_chat_id, bot, comp)
-    else:
-        raise Exception('unkown league')
+supportedCompetitions = ['buli', 'cl', 'prem']
+
+def setup():
+    # When no league is passed, the bundesliga bot is started.
+    compTitle = 'buli' if len(sys.argv) is 1 else sys.argv[1]
+    compTitle = compTitle.lower()
+
+    if compTitle not in supportedCompetitions:
+        raise Exception(f'Unkown league. Use one of these: {supportedCompetitions}')
+
+    secrets = readSecrets()
+    bot = telegram.Bot(token=secrets["telegram_token"])
+    comp = createComp(compTitle)
+    
+    apis = {
+        "bot": bot,
+        "competition": comp,
+        "chat_id": secrets[f'{compTitle}_chat_id'],
+        "subreddit": praw.Reddit(
+            user_agent=secrets[f'{compTitle}_user_agent'],
+            client_id=secrets[f'{compTitle}_client_id'],
+            client_secret=secrets[f'{compTitle}_client_secret']
+        ).subreddit('soccer')        
+    }
+
+    print(f'STARTED {compTitle.upper()} BOT')
+
+    return apis
 
 def createComp(comp):
     with open(f'./competitions/{comp}.json') as compJson:
@@ -36,13 +43,6 @@ def createComp(comp):
             teams.append(tempTeam)
     return Competition(teams)
 
-class setupObject:
-    def __init__(self, user_agent, client_id, client_secret, chat_id, bot, competition):
-        self.subreddit = praw.Reddit(
-            user_agent=user_agent,
-            client_id=client_id,
-            client_secret=client_secret
-        ).subreddit('soccer')
-        self.chat_id = chat_id
-        self.bot = bot
-        self.competition = competition
+def readSecrets():
+    with open('./secrets.json') as secrets:
+        return json.load(secrets)

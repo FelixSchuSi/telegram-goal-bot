@@ -2,7 +2,6 @@ import scrape
 import telegram
 from datetime import datetime
 from setup import setup
-import sys
 from telegram.error import BadRequest
 import time
 from multiprocessing import Process
@@ -11,24 +10,22 @@ hosts = ['streamja', 'streamable', 'imgtc', 'clippituser', 'vimeo', 'streamvi']
 
 
 def main():
-    try:
-        setupObject = setup(sys.argv[1])
-    except IndexError:
-        setupObject = setup('buli')
+    apis = setup()
 
     try:
-        for submission in setupObject.subreddit.stream.submissions():
-            Process(target=process_submission, args=(submission, setupObject.bot, setupObject.competition, setupObject.chat_id)).start()
+        # for submission in apis["subreddit"].stream.submissions():
+        #     Process(target=process_submission, args=(submission, apis["bot"], apis["competition"], apis["chat_id"])).start()
+
         # Use this for testing!
-        # submissions = setupObject.subreddit.top("week",limit=5)
-        # for submission in submissions:
-        #     Process(target=process_submission, args=(submission, setupObject.bot, setupObject.competition, setupObject.chat_id)).start()
+        submissions = apis["subreddit"].top("week",limit=50)
+        for submission in submissions:
+            Process(target=process_submission, args=(submission, apis["bot"], apis["competition"], apis["chat_id"])).start()
 
     except KeyboardInterrupt:
         print('CTRL + C detected. closing...')
         quit()
     except Exception as e:
-        print('Exception in main() occured: ' + str(e.with_traceback()))
+        print('Exception in main() occured: ' + str(e))
 
 
 def process_submission(submission, bot, competition, chat_id):
@@ -40,25 +37,24 @@ def process_submission(submission, bot, competition, chat_id):
                 try:
                     mp4Link = scrape.mp4Link(submission.url)
                     if mp4Link:
-                        # TODO: Improve Error handling. When scraping dead links nothin should happen. Example of dead link: https://streamja.com/da6n
                         bot.send_video(chat_id=chat_id, caption=submission.title,
                                     video=mp4Link, timeout=500)
-                        print(f'{submission.title},{mp4Link},{submission.created_utc},{"Successfully scraped mp4 link. Sening video..."}')
+                        print('[SUCCESS]', submission.title, mp4Link, submission.created_utc)
                     else:
-                        raise Exception()
+                        return
                 except BadRequest as e:
-                    time.sleep(5)
-                    print(f'{submission.title},{mp4Link},{submission.created_utc},{ f"Tried to process dead link (BadRequest) on try No.: {retries} {str(e)}"}')
-                    scrape_and_send(submission, bot, chat_id, retries+1)
+                    print('[BAD REQUEST]', submission.title, submission.url, mp4Link, str(e))
+                    if e.message is 'Wrong file identifier/http url specified':
+                        bot.send_message(chat_id=chat_id, text=text, parse_mode=telegram.ParseMode.HTML)
                 except Exception as e:
+                    # In most cases the video is not processed yet. We will try again in a few secs.
                     time.sleep(15)
-                    print(f'{submission.title},{mp4Link},{submission.created_utc},{f"This URL {submission.url} caused an Exception in process_submission() on try No.: {retries} {str(e)}"}')
+                    print(f'[RETRY NO {retries}]', submission.title, mp4Link, submission.created_utc, str(e))
                     scrape_and_send(submission, bot, chat_id, retries+1)
             else:
-                print(f'{submission.title},{mp4Link},{submission.created_utc},{f"This URL {submission.url} couldnt be scraped 5 times in a row. Sending the direct link now."}')
+                print('[ERR AFTER RETRIES]', submission.title, mp4Link, submission.created_utc, submission.url)
                 bot.send_message(chat_id=chat_id, text=text, parse_mode=telegram.ParseMode.HTML)
         scrape_and_send(submission, bot, chat_id)
-
 
 def filter(title, url, date, competition):
     # title must contain a hyphen AND not be a u19 game.
@@ -67,10 +63,10 @@ def filter(title, url, date, competition):
         if any(host in url for host in hosts):
             diff = datetime.utcnow() - datetime.utcfromtimestamp(date)
             # post must be younger than 3 minutes.
-            if ((diff.total_seconds() / 60) < 3):
+            # if ((diff.total_seconds() / 60) < 3):
                 # title must contain two teams of the specified competition.
-                if competition.isCompetition(title):
-                    return True
+            if competition.isCompetition(title):
+                return True
 
 
 if __name__ == '__main__':

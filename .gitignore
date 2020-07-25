@@ -1,4 +1,5 @@
 secrets.py
+secrets.json
 __pycache__
 .venv
 .vscode
