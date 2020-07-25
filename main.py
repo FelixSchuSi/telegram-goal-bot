@@ -14,12 +14,12 @@ def main():
 
     try:
         # for submission in apis["subreddit"].stream.submissions():
-        #     Process(target=process_submission, args=(submission, apis["bot"], apis["competition"], apis["chat_id"])).start()
+        #     process_submission(submission, apis["bot"], apis["competition"], apis["chat_id"])
 
         # Use this for testing!
         submissions = apis["subreddit"].top("week",limit=50)
         for submission in submissions:
-            Process(target=process_submission, args=(submission, apis["bot"], apis["competition"], apis["chat_id"])).start()
+            process_submission(submission, apis["bot"], apis["competition"], apis["chat_id"])
 
     except KeyboardInterrupt:
         print('CTRL + C detected. closing...')
