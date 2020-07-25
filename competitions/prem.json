@@ -1,16 +1,4 @@
 {
-    "id": 2,
-    "names": [
-        "prem",
-        "premier league",
-        "premier",
-        "premierleague",
-        "pl",
-        "prem",
-        "bpl",
-        "english",
-        "england"
-    ],
     "teams": [
         {
             "id": "101",

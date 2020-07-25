@@ -2,8 +2,8 @@ from pyquery import PyQuery as pq
 from urllib.error import HTTPError
 import requests
 # TODO: "imgtc", "vimeo"
-# headers = {'user-agent': 'my-app/0.0.1'}
-def mp4Link(url):
+
+def mp4_link(url):
     try:
         if 'streamja' in url:
             d = pq(url=url)('video > source')

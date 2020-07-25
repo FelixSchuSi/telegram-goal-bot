@@ -1,11 +1,4 @@
 {
-    "id": 3,
-    "names": [
-        "cl",
-        "champions",
-        "championsleague",
-        "ucl"
-    ],
     "teams": [
         {
             "id": "001",

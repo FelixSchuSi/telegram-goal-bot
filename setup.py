@@ -4,45 +4,45 @@ import telegram
 import json
 import sys
 
-supportedCompetitions = ['buli', 'cl', 'prem']
+supported_competitions = ['buli', 'cl', 'prem']
 
 def setup():
-    # When no league is passed, the bundesliga bot is started.
-    compTitle = 'buli' if len(sys.argv) is 1 else sys.argv[1]
-    compTitle = compTitle.lower()
+    # When no league is passed, bundesliga is selected.
+    comp_title = 'buli' if len(sys.argv) is 1 else sys.argv[1]
+    comp_title = comp_title.lower()
 
-    if compTitle not in supportedCompetitions:
-        raise Exception(f'Unkown league. Use one of these: {supportedCompetitions}')
+    if comp_title not in supported_competitions:
+        raise Exception(f'Unkown league. Use one of these: {supported_competitions}')
 
-    secrets = readSecrets()
+    secrets = read_secrets()
     bot = telegram.Bot(token=secrets["telegram_token"])
-    comp = createComp(compTitle)
+    comp = create_comp(comp_title)
     
     apis = {
         "bot": bot,
         "competition": comp,
-        "chat_id": secrets[f'{compTitle}_chat_id'],
+        "chat_id": secrets[f'{comp_title}_chat_id'],
         "subreddit": praw.Reddit(
-            user_agent=secrets[f'{compTitle}_user_agent'],
-            client_id=secrets[f'{compTitle}_client_id'],
-            client_secret=secrets[f'{compTitle}_client_secret']
+            user_agent=secrets[f'{comp_title}_user_agent'],
+            client_id=secrets[f'{comp_title}_client_id'],
+            client_secret=secrets[f'{comp_title}_client_secret']
         ).subreddit('soccer')        
     }
 
-    print(f'STARTED {compTitle.upper()} BOT')
+    print(f'STARTED {comp_title.upper()} BOT')
 
     return apis
 
-def createComp(comp):
-    with open(f'./competitions/{comp}.json') as compJson:
-        compDict = json.load(compJson)
+def create_comp(comp):
+    with open(f'./competitions/{comp}.json') as comp_json:
+        compDict = json.load(comp_json)
         teams = []
         for team in compDict["teams"]:
             matchesNeeded = team["min_matches"]
-            tempTeam = Team(team["names"], matchesNeeded)
-            teams.append(tempTeam)
+            temp_team = Team(team["names"], matchesNeeded)
+            teams.append(temp_team)
     return Competition(teams)
 
-def readSecrets():
+def read_secrets():
     with open('./secrets.json') as secrets:
         return json.load(secrets)
