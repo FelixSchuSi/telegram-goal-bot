@@ -30,7 +30,7 @@ def process_submission(apis, submission):
             try:
                 mp4_link = scrape.mp4_link(submission.url)
                 if not mp4_link: return
-                send_video(apis, submission, mp4_link)
+                send_video(apis, submission.title, mp4_link)
                 print('[SUCCESS]', submission.title, mp4_link, submission.created_utc)
             except BadRequest as e:
                 print('[BAD REQUEST]', submission.title, submission.url, mp4_link, str(e))

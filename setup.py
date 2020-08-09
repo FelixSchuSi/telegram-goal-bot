@@ -22,6 +22,11 @@ def setup():
         "bot": bot,
         "competition": comp,
         "chat_id": secrets[f'{comp_title}_chat_id'],
+        "reddit": praw.Reddit(
+            user_agent=secrets[f'{comp_title}_user_agent'],
+            client_id=secrets[f'{comp_title}_client_id'],
+            client_secret=secrets[f'{comp_title}_client_secret']
+        ),
         "subreddit": praw.Reddit(
             user_agent=secrets[f'{comp_title}_user_agent'],
             client_id=secrets[f'{comp_title}_client_id'],
