@@ -28,7 +28,6 @@ def filterLinks(links):
     filtered = []
     for elem in links:
         link, text = elem
-        print(f"link: {link} | text: {text}")
         if any(host in link for host in ['streamja', 'streamable', 'imgtc', 'clippituser', 'vimeo', 'streamvi']):
             # Maybe also filter by text?
             filtered.append(elem)
@@ -40,7 +39,6 @@ def getLinksFromComments(comments):
         links.append(getLinksFromComment(comment))
 
     flat = list(itertools.chain.from_iterable(links))
-    print("unfiltered: ", flat)
     filtered = filterLinks(flat)
     return filtered
 
@@ -50,7 +48,9 @@ def getLinksFromComment(comment):
     links = []
     # TODO: Refactor with list comprehension
     for link in d("a"):
-        links.append((link.attrib["href"], link.text))
+        is_link = link.text == None or 'http' in link.text
+        text = '' if is_link else link.text
+        links.append((link.attrib["href"], text))
     return links
 
 def parseTitle(title):
@@ -59,24 +59,3 @@ def parseTitle(title):
     links = getLinksFromComments(relevant_comments)
     # scraped_links = list(map(lambda x: (mp4_link(x[0]), x[1]), links))
     return links
-
-# print(scraped_links)
-
-# print('!!! SENDING NOW !!!')
-# print(apis["chat_id"])
-# print(apis["bot"])
-# for i in scraped_links:
-#     link, text = i
-#     print("TRYING TO SEND THIS: ", i)
-#     send_video(apis, text, link)
-#     print("SENT THIS: ", i)
-#     sleep(500)
-
-# i = scraped_links[3]
-# link, text = i
-# print("TRYING TO SEND THIS: ", i)
-# send_video(apis, text, link)
-# print("SENT THIS: ", i)
-# print('!!! SUCCESS !!!')
-
-

@@ -1,15 +1,14 @@
-import scrape
+from scrape import scrape_with_retries
 from telegram_wrapper import send_message, send_video
 from datetime import datetime
 from setup import setup
-from telegram.error import BadRequest
 import time
 
 def main():
     apis = setup()
     try:
         # Use this for testing!
-        # submissions = apis["subreddit"].top("week",limit=50)
+        # submissions = apis["subreddit"].top("week",limit=500)
         # for submission in submissions:
         #     process_submission(apis, submission)
 
@@ -24,28 +23,8 @@ def main():
 def process_submission(apis, submission):
     passed_filter = filter(submission, apis["competition"])
     if not passed_filter: return
-
-    def scrape_and_send(retries=1):
-        if retries <= 5:
-            try:
-                mp4_link = scrape.mp4_link(submission.url)
-                if not mp4_link: return
-                send_video(apis, submission.title, mp4_link)
-                print('[SUCCESS]', submission.title, mp4_link, submission.created_utc)
-            except BadRequest as e:
-                print('[BAD REQUEST]', submission.title, submission.url, mp4_link, str(e))
-                if e.message is 'Wrong file identifier/http url specified':
-                    send_message(apis, submission)
-            except Exception as e:
-                # In most cases the video is not processed yet. We will try again in a few secs.
-                print(f'[RETRY NO {retries}]', submission.title, mp4_link, submission.created_utc, str(e))
-                time.sleep(15)
-                scrape_and_send(retries+1)
-        else:
-            print(f'[ERR AFTER {retries} RETRIES]', submission.title, mp4_link, submission.created_utc, submission.url)
-            send_message(apis, submission)
-            
-    scrape_and_send()
+    mp4_link = scrape_with_retries(submission.url, submission.title)
+    send_video(apis, submission.title, mp4_link) if mp4_link else send_message(apis, submission.title, submission.url)
 
 def filter(submission, competition):
     title = submission.title.lower().split()
