@@ -1,6 +1,4 @@
 from pyquery import PyQuery as pq
-from urllib.error import HTTPError
-import requests
 # TODO: "imgtc", "vimeo"
 
 def mp4_link(url):
