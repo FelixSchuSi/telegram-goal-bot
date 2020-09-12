@@ -1,6 +1,6 @@
 from praw import models
 
-def getRelevantComments(submission):
+def getExistingComments(submission):
     a_a_comment = getAlternativeAnglesCommentFromSubmission(submission)
     replies = a_a_comment.replies.list()
     comments = getAllRepliesFromComment(a_a_comment)

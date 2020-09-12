@@ -24,7 +24,7 @@ def process_submission(apis, submission):
     passed_filter = filter(submission, apis["competition"])
     if not passed_filter: return
     mp4_link = scrape_with_retries(submission.url, submission.title)
-    send_video(apis, submission.title, mp4_link) if mp4_link else send_message(apis, submission.title, submission.url)
+    send_video(apis, submission.title, (submission.url, mp4_link)) if mp4_link else send_message(apis, submission.title, submission.url)
 
 def filter(submission, competition):
     title = submission.title.lower().split()

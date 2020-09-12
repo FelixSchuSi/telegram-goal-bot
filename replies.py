@@ -1,6 +1,8 @@
 import os
 import sys
-from setup import read_secrets
+from scrape import scrape_with_retries
+from telegram_wrapper import send_message, send_video
+from setup import read_secrets, setup
 from threading import Thread
 from alternative_angles import parseTitle
 import telegram
@@ -11,8 +13,10 @@ import logging
 
 secrets = read_secrets()
 TOKEN = secrets["telegram_token"]
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+# logging.basicConfig(level=logging.DEBUG,
+#                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+apis = setup()
 
 def main():
     updater = Updater(TOKEN, use_context=True)
@@ -27,16 +31,27 @@ def main():
             text = eng_text if is_eng else ger_text
             update.message.reply_text(text=text)
             return
+        user_id = update.message.from_user.id
 
         title = update.message.reply_to_message.caption
+        eng_start_text = f"Searching for alternative angles of goal: \'{title}\'..."
+        ger_start_text = f"Suche nach Kameraperspektiven von Tor: \'{title}\'..."
+        start_text = eng_start_text if is_eng else ger_start_text
+        send_message(apis, start_text, '', user_id)
+        
         linksWithTexts = parseTitle(title)
-        # text = linksToText(linksWithTexts, is_eng, update.message.from_user)
+        
         for i, linkWithText in enumerate(linksWithTexts):
+            print(f'parsing link {i+1} of {len(linksWithTexts)}')
             link, title = linkWithText
+            print('linkWithText', linkWithText)
             mp4_link, new_title = parseLinkWithText(linkWithText, is_eng, i)
-            send_video(apis, new_title, mp4_link) if mp4_link else send_message(apis, title, link)
-        print("SENDING: ", text)
-        # original_message.reply_text(text=text, parse_mode=telegram.ParseMode.HTML, disable_web_page_preview=True)
+            links = (link, mp4_link)
+            try:
+                send_video(apis, new_title, links, user_id) if mp4_link else send_message(apis, title, link, user_id)
+            except Exception as e:
+                print('Error when sending this: ' + linkWithText)
+                print(e)
 
         print(f"SUCCESS!")
 
@@ -53,22 +68,8 @@ def parseLinkWithText(linkWithText, is_eng, i):
 
     link, title = linkWithText
     scraped_link = scrape_with_retries(link, title)
-    string = f"#{i+1}: {no_desc if title == '' else title}"
+    string = no_desc if title == '' else title
     return (scraped_link, string)
-
-# def linksToText(links, is_eng, user):
-#     ger_text = f"<b>Hier sind mehr Kameraperspektiven für dich <a href=\"tg://user?id={user.id}\">{user.name}</a>:</b>\n"
-#     eng_text = f"<b>Here are more angles for you <a href=\"tg://user?id={user.id}\">{user.name}</a>:</b>\n"
-#     ger_no_desc = "Ohne Beschreibung"
-#     eng_no_desc = "No description"
-#     text = eng_text if is_eng else ger_text
-#     no_desc = eng_no_desc if is_eng else ger_no_desc
-#     for i, linkWithText in enumerate(links):
-#         link, title = linkWithText
-#         string = f"#{i+1}: {no_desc if title == '' else title}"
-#         text += f'<a href="{link}">{string}</a>\n'
-
-    return text
 
 if __name__ == '__main__':
     main()

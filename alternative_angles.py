@@ -2,7 +2,7 @@ from time import sleep
 from setup import setup
 from praw import models
 from pyquery import PyQuery as pq
-from existing_comments import getRelevantComments
+from existing_comments import getExistingComments
 from scrape import mp4_link
 from telegram_wrapper import send_video
 import itertools
@@ -55,7 +55,7 @@ def getLinksFromComment(comment):
 
 def parseTitle(title):
     submission = findSubmissionByTitle(title)
-    relevant_comments = getRelevantComments(submission)
+    relevant_comments = getExistingComments(submission)
     links = getLinksFromComments(relevant_comments)
     # scraped_links = list(map(lambda x: (mp4_link(x[0]), x[1]), links))
     return links
