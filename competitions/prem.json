@@ -1,9 +1,9 @@
 {
     "teams": [
         {
-            "id": "101",
+            "id": "121",
             "names": [
-                "bournemouth"
+                "fulham"
             ],
             "min_matches": 1
         },
@@ -146,6 +146,22 @@
             "min_matches": 1
         },
         {
+            "id": "123",
+            "names": [
+                "west",
+                "brom",
+                "albion"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "124",
+            "names": [
+                "leeds"
+            ],
+            "min_matches": 1
+        },
+        {
             "id": "120",
             "names": [
                 "wolverhampton",
@@ -156,16 +172,16 @@
     ],
     "relegated_teams": [
         {
-            "id": "121",
+            "id": "122",
             "names": [
-                "fulham"
+                "huddersfield"
             ],
             "min_matches": 1
         },
         {
-            "id": "122",
+            "id": "101",
             "names": [
-                "huddersfield"
+                "bournemouth"
             ],
             "min_matches": 1
         }
