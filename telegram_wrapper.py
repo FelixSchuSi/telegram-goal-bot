@@ -8,13 +8,12 @@ def send_message(apis, title, mp4Link, chat_id=None):
 
 
 def send_video(apis, title, links, chat_id=None):
-    link, mp4Link = links
+    link, mp4_link = links
     try:
         chat_id = apis["chat_id"] if chat_id is None else chat_id
-        print(chat_id)
         apis["bot"].send_video(chat_id=chat_id, caption=title,
-                               video=mp4Link, timeout=500)
+                               video=mp4_link, timeout=500)
     except Exception as e:
-        print(f'Exception when sending video with title "{title}" to {chat_id}. Sending text instead.')
-        print(e)
+        print(f'[TELEGRAM WRAPPER] Exception when sending video with title "{title}" to {chat_id}. Sending text instead.')
+        print('[TELEGRAM WRAPPER]', e)
         send_message(apis, title, link, chat_id)

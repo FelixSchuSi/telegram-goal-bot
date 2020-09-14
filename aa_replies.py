@@ -1,8 +1,7 @@
 from scrape import scrape_with_retries
 from telegram_wrapper import send_message, send_video
 from setup import read_secrets, setup
-from alternative_angles import parse_title
-from alternative_angles import queue_handler
+from aa_util import parse_title, queue_handler
 from telegram.ext import (Updater, CommandHandler)
 from multiprocessing import Process, Queue
 
@@ -10,7 +9,9 @@ secrets = read_secrets()
 TOKEN = secrets["telegram_token"]
 apis = setup()
 live_comments_queue = Queue()
-live_comments_process = Process(target=queue_handler, args=(live_comments_queue, apis))
+live_comments_process = Process(target=queue_handler, args=(live_comments_queue, apis,))
+
+
 # logging.basicConfig(level=logging.DEBUG,
 #                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
@@ -36,24 +37,22 @@ def main():
         start_text = eng_start_text if is_eng else ger_start_text
         send_message(apis, start_text, '', user_id)
 
-        links_with_texts, submission_id = parse_title(title, apis)
+        links_with_texts, submission = parse_title(title, apis)
 
         for i, linkWithText in enumerate(links_with_texts):
-            print(f'parsing link {i + 1} of {len(links_with_texts)}')
+            print(f'[EXISTING COMMENTS] parsing link {i + 1} of {len(links_with_texts)}')
             link, title = linkWithText
-            print('linkWithText', linkWithText)
+            print('[EXISTING COMMENTS] linkWithText', linkWithText)
             mp4_link, new_title = parse_link_with_text(linkWithText, is_eng)
             links = (link, mp4_link)
             try:
                 send_video(apis, new_title, links, user_id) if mp4_link else send_message(apis, title, link, user_id)
             except Exception as e:
-                print('Error when sending this: ' + linkWithText)
+                print('[EXISTING COMMENTS] Error when sending this: ' + linkWithText)
                 print(e)
 
         # submission oder root comment hier übergeben
-        live_comments_queue.put(submission_id)
-
-        print(f"SUCCESS!")
+        live_comments_queue.put((submission, user_id))
 
     dp.add_handler(CommandHandler("more", more_callback))
     dp.add_handler(CommandHandler("mehr", more_callback))
@@ -74,4 +73,6 @@ def parse_link_with_text(link_with_text, is_eng):
 
 
 if __name__ == '__main__':
+    live_comments_process.start()
     main()
+
