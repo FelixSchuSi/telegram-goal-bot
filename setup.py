@@ -6,6 +6,7 @@ import sys
 
 supported_competitions = ['buli', 'cl', 'prem']
 
+
 def setup():
     # When no league is passed, bundesliga is selected.
     comp_title = 'buli' if len(sys.argv) is 1 else sys.argv[1]
@@ -17,7 +18,7 @@ def setup():
     secrets = read_secrets()
     bot = telegram.Bot(token=secrets["telegram_token"])
     comp = create_comp(comp_title)
-    
+
     apis = {
         "bot": bot,
         "competition": comp,
@@ -31,22 +32,24 @@ def setup():
             user_agent=secrets[f'{comp_title}_user_agent'],
             client_id=secrets[f'{comp_title}_client_id'],
             client_secret=secrets[f'{comp_title}_client_secret']
-        ).subreddit('soccer')        
+        ).subreddit('soccer')
     }
 
     print(f'STARTED {comp_title.upper()} BOT')
 
     return apis
 
+
 def create_comp(comp):
     with open(f'./competitions/{comp}.json') as comp_json:
-        compDict = json.load(comp_json)
+        comp_dict = json.load(comp_json)
         teams = []
-        for team in compDict["teams"]:
-            matchesNeeded = team["min_matches"]
-            temp_team = Team(team["names"], matchesNeeded)
+        for team in comp_dict["teams"]:
+            matches_needed = team["min_matches"]
+            temp_team = Team(team["names"], matches_needed)
             teams.append(temp_team)
     return Competition(teams)
+
 
 def read_secrets():
     with open('./secrets.json') as secrets:

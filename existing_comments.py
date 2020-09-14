@@ -1,14 +1,16 @@
 from praw import models
 
-def getExistingComments(submission):
-    a_a_comment = getAlternativeAnglesCommentFromSubmission(submission)
+
+def get_existing_comments(submission):
+    a_a_comment = get_alternative_angles_comment_from_submission(submission)
     replies = a_a_comment.replies.list()
-    comments = getAllRepliesFromComment(a_a_comment)
+    comments = get_all_replies_from_comment(a_a_comment)
     return comments
 
-def getAlternativeAnglesCommentFromSubmission(submission):
-    tuple_thing = commentForestToLists(submission.comments.list())
-    comments = tuple_thing[0]
+
+def get_alternative_angles_comment_from_submission(submission):
+    tuple_thing = comment_forest_to_lists(submission.comments.list())
+    comments, more_comments = tuple_thing
 
     for comment in comments:
         if comment.author == "AutoModerator":
@@ -18,20 +20,22 @@ def getAlternativeAnglesCommentFromSubmission(submission):
     # The a_a_comment might not even exist yet, since it is created by a bot after
     # the post is created. You might want to call this function again in a few secs.
 
-def getAllRepliesFromComment(commentOrMoreComments, temp_list=None):
+
+def get_all_replies_from_comment(comment_or_more_comments, temp_list=None):
     temp_list = [] if temp_list is None else temp_list
-    if isinstance(commentOrMoreComments, models.MoreComments):
-        for c in commentOrMoreComments.comments():
-            getAllRepliesFromComment(c, temp_list)
-    elif isinstance(commentOrMoreComments, models.Comment):
-        temp_list.append(commentOrMoreComments)
-        for child in commentOrMoreComments.replies.list():
-            getAllRepliesFromComment(child, temp_list)
+    if isinstance(comment_or_more_comments, models.MoreComments):
+        for c in comment_or_more_comments.comments():
+            get_all_replies_from_comment(c, temp_list)
+    elif isinstance(comment_or_more_comments, models.Comment):
+        temp_list.append(comment_or_more_comments)
+        for child in comment_or_more_comments.replies.list():
+            get_all_replies_from_comment(child, temp_list)
     else:
-        print(f"What is this: {commentOrMoreComments}")
+        print(f"What is this: {comment_or_more_comments}")
     return temp_list
 
-def commentForestToLists(comment_forest):
+
+def comment_forest_to_lists(comment_forest):
     more_comments = []
     comments = []
     for commentOrMoreComments in comment_forest:
@@ -41,4 +45,4 @@ def commentForestToLists(comment_forest):
             comments.append(commentOrMoreComments)
         else:
             print(f"What is this: {commentOrMoreComments}")
-    return (comments, more_comments)
+    return comments, more_comments
