@@ -3,71 +3,47 @@ from pyquery import PyQuery as pq
 import itertools
 from multiprocessing import Process
 from datetime import datetime
+from aa_watchlist import WatchList
 import time
 
 # {aa_comment_id: [("telegram_user_id_1", created_at), ("telegram_user_id_2", created_at)]}
 
-watch_list = {}
+
+watch_list = WatchList();
 
 
 def comment_listener(apis):
-  print('[COMMENT LISTENER] started comment listener')
+  print('[COMMENT LISTENER] Started comment listener')
   for comment in apis["subreddit"].stream.comments():
-    aa_comment = get_alternative_angles_comment_from_submission(comment.submission)
+    aa_comment = get_aa_comment_from_submission(comment.submission)
     print('[COMMENT LISTENER]', aa_comment.id) if aa_comment is not None else print('no aa_comment found')
     if aa_comment is not None:
-      # element[0] here is the key of a dict entry.
-      # the key of an entry within the watch list is the ID of the aa_comment
-      hit = tuple(filter(lambda element: element[0] == aa_comment.id, watch_list.items()))
-      if any(hit):
-
-        registered_users = hit[0]
-        for user in registered_users:
-          telegram_id, created_at = user
-          # send video here using telegram_id
-          # scrape comment first and only send if link was found
-
-        # print('[COMMENT LISTENER] aa_comment lookup: ', x, type(x))
-        print(f"[COMMENT LISTENER] HIT!")
+      # Aufrufen von get_aa_comment_from_submission und None behanlung an neue Funktion is_comment_childof_aa_comment auslagern
+      is_comment_childof_aa_comment()
+      if aa_comment.id in watch_list:
         # TODO: check if comment is child of aa_comment then parse and send
 
 
 def queue_handler(queue, apis):
-  print('[QUEUE HANDLER] started queue handler')
+  print('[QUEUE HANDLER] Started queue handler')
   listen_for_comments_process = Process(target=comment_listener, args=(apis,))
   listen_for_comments_process.start()
-  watch_list_last_updated = datetime.utcnow()
   while True:
     try:
       new_item = queue.get()
-      new_submission, user_id = new_item
-      print(f"[QUEUE HANDLER] received new submission in queue: {new_submission}")
-      aa_comment = get_alternative_angles_comment_from_submission(new_submission)
-      if aa_comment is not None and user_id is not None:
-        created_at = datetime.utcnow()
-        print(f"[QUEUE HANDLER] putting aa_comment of {new_submission} in watch list")
-        if watch_list.get(aa_comment.id) is None:
-          watch_list[aa_comment.id] = [(user_id, created_at)]
-        else:
-          if isinstance(watch_list[aa_comment.id], list):
-            watch_list[aa_comment.id].append((user_id, created_at))
-          else:
-            print(
-              f'[QUEUE HANDLER] watch list item does not have the expected format: {watch_list[aa_comment.id]}')
+      new_submission, telegram_user_id = new_item
+      print(f"[QUEUE HANDLER] Received new submission in queue: {new_submission}")
+      aa_comment = get_aa_comment_from_submission(new_submission)
+      if aa_comment is not None and telegram_user_id is not None:
+        watch_list.append(aa_comment.id, telegram_user_id)
     except Exception as e:
-      print(e)
-    # new code, needs to be tested
-    diff = datetime.utcnow() - watch_list_last_updated
+      print('[QUEUE HANDLER] ', e)
+
+    diff = datetime.utcnow() - watch_list.last_expiration_check
     if (diff.total_seconds() / 60 / 60) >= 1:
-      for aa_comment_id, registered_users in watch_list:
-        for user in registered_users:
-          telegram_user_id, created_at = user
-          if (datetime.utcnow() - created_at).total_seconds() / 60 / 60 > 4:
-            if len(registered_users) == 1:
-              del watch_list[aa_comment_id]
-            else:
-              new_registered_users = registered_users.remove(user)
-              del watch_list[aa_comment_id]
+      # Every hour we remove expired entries from the watch list
+      print('[QUEUE HANDLER] Initiated removal of expired entries in watchlist')
+      watch_list.remove_expired_entries()
     time.sleep(1)
 
 
@@ -118,19 +94,20 @@ def parse_title(title, apis):
 
 
 def get_existing_comments(submission):
-  a_a_comment = get_alternative_angles_comment_from_submission(submission)
+  a_a_comment = get_aa_comment_from_submission(submission)
   replies = a_a_comment.replies.list()
   comments = get_all_replies_from_comment(a_a_comment)
   return comments
 
 
-def get_alternative_angles_comment_from_submission(submission):
+def get_aa_comment_from_submission(submission):
   tuple_thing = comment_forest_to_lists(submission.comments.list())
   comments, more_comments = tuple_thing
 
   for comment in comments:
     if comment.author == "AutoModerator":
       return comment
+  return None
   # If you have trouble finding the alternative angle comment in the future,
   # you should serach in the list of MoreComments objects!
   # The a_a_comment might not even exist yet, since it is created by a bot after
