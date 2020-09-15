@@ -20,6 +20,7 @@ def comment_listener(apis):
             # the key of an entry within the watch list is the ID of the aa_comment
             hit = tuple(filter(lambda element: element[0] == aa_comment.id, watch_list.items()))
             if any(hit):
+
                 registered_users = hit[0]
                 for user in registered_users:
                     telegram_id, created_at = user
@@ -35,6 +36,7 @@ def queue_handler(queue, apis):
     print('[QUEUE HANDLER] started queue handler')
     listen_for_comments_process = Process(target=comment_listener, args=(apis,))
     listen_for_comments_process.start()
+    watch_list_last_updated = datetime.utcnow()
     while True:
         try:
             new_item = queue.get()
@@ -54,6 +56,18 @@ def queue_handler(queue, apis):
                             f'[QUEUE HANDLER] watch list item does not have the expected format: {watch_list[aa_comment.id]}')
         except Exception as e:
             print(e)
+        # new code, needs to be tested
+        diff = datetime.utcnow() - watch_list_last_updated
+        if (diff.total_seconds() / 60 / 60) >= 1:
+            for aa_comment_id, registered_users in watch_list:
+                for user in registered_users:
+                    telegram_user_id, created_at = user
+                    if (datetime.utcnow() - created_at).total_seconds() / 60 / 60 > 4:
+                        if len(registered_users) == 1:
+                            del watch_list[aa_comment_id]
+                        else:
+                            new_registered_users = registered_users.remove(user)
+                            del watch_list[aa_comment_id]
         time.sleep(1)
 
 
