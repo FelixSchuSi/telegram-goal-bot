@@ -94,14 +94,6 @@
             "min_matches": 1
         },
         {
-            "id": "13",
-            "names": [
-                "d\u00fcsseldorf",
-                "dusseldorf"
-            ],
-            "min_matches": 1
-        },
-        {
             "id": "14",
             "names": [
                 "werder",
@@ -135,9 +127,18 @@
             "min_matches": 1
         },
         {
-            "id": "18",
+            "id": "21",
             "names": [
-                "paderborn"
+                "arminia",
+                "bielefeld"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "22",
+            "names": [
+                "vfb",
+                "stuttgart"
             ],
             "min_matches": 1
         }
@@ -155,6 +156,21 @@
             "names": [
                 "hamburg",
                 "hsv"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "18",
+            "names": [
+                "paderborn"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "13",
+            "names": [
+                "d\u00fcsseldorf",
+                "dusseldorf"
             ],
             "min_matches": 1
         }
