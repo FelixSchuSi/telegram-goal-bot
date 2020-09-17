@@ -37,6 +37,9 @@ class WatchList:
             print(f"[WATCH LIST] Removing entry of user {telegram_user_id} for aa_comment_id {aa_comment_id}")
             registered_users.remove(user_entry)
 
+  def get_registered_users(self, aa_comment_id):
+    return self.watchlist[aa_comment_id]
+
   def __contains__(self, item):
     if isinstance(item, tuple):
       aa_comment_id, telegram_user_id = item

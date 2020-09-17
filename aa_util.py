@@ -4,29 +4,37 @@ import itertools
 from multiprocessing import Process
 from datetime import datetime
 from aa_watchlist import WatchList
+from scrape import scrape_with_retries
+from telegram_wrapper import send_message, send_video
 import time
 
 # {aa_comment_id: [("telegram_user_id_1", created_at), ("telegram_user_id_2", created_at)]}
-
-
-watch_list = WatchList();
-
+watchlist = WatchList()
+apis = None
 
 def comment_listener(apis):
   print('[COMMENT LISTENER] Started comment listener')
   for comment in apis["subreddit"].stream.comments():
     aa_comment = get_aa_comment_from_submission(comment.submission)
-    print('[COMMENT LISTENER]', aa_comment.id) if aa_comment is not None else print('no aa_comment found')
     if aa_comment is not None:
-      # Aufrufen von get_aa_comment_from_submission und None behanlung an neue Funktion is_comment_childof_aa_comment auslagern
-      is_comment_childof_aa_comment()
-      if aa_comment.id in watch_list:
-        # TODO: check if comment is child of aa_comment then parse and send
+      if aa_comment.id in watchlist:
+        print(f'[COMMENT FILTER] aa_comment {aa_comment.id} of comment {aa_comment.id} is on watchlist')
+        all_children = get_all_replies_from_comment(aa_comment)
+        if comment in all_children:
+          print(f'[COMMENT FILTER] Comment {comment.id} is child of aa_comment {aa_comment.id}')
+          print(f'[COMMENT FILTER] Comment {comment.id} passed the filter!')
+          links_with_texts = get_links_from_comments(all_children)
+          registered_users = watchlist.get_registered_users(aa_comment.id)
+          for telegram_user_id, created_at in registered_users:
+            # TODO: Get is_eng in the registration and pass it to this function instead of False
+            send_links_with_texts(links_with_texts, telegram_user_id, False)
 
 
-def queue_handler(queue, apis):
-  print('[QUEUE HANDLER] Started queue handler')
-  listen_for_comments_process = Process(target=comment_listener, args=(apis,))
+def queue_handler(queue, passed_apis):
+  print('[QUEUE HANDLER] Started queue handler')#
+  global apis
+  apis = passed_apis
+  listen_for_comments_process = Process(target=comment_listener, args=(passed_apis,))
   listen_for_comments_process.start()
   while True:
     try:
@@ -35,15 +43,15 @@ def queue_handler(queue, apis):
       print(f"[QUEUE HANDLER] Received new submission in queue: {new_submission}")
       aa_comment = get_aa_comment_from_submission(new_submission)
       if aa_comment is not None and telegram_user_id is not None:
-        watch_list.append(aa_comment.id, telegram_user_id)
+        watchlist.append(aa_comment.id, telegram_user_id)
     except Exception as e:
       print('[QUEUE HANDLER] ', e)
 
-    diff = datetime.utcnow() - watch_list.last_expiration_check
+    diff = datetime.utcnow() - watchlist.last_expiration_check
     if (diff.total_seconds() / 60 / 60) >= 1:
       # Every hour we remove expired entries from the watch list
       print('[QUEUE HANDLER] Initiated removal of expired entries in watchlist')
-      watch_list.remove_expired_entries()
+      watchlist.remove_expired_entries()
     time.sleep(1)
 
 
@@ -89,13 +97,11 @@ def parse_title(title, apis):
   submission = find_submission_by_title(title, apis)
   relevant_comments = get_existing_comments(submission)
   links = get_links_from_comments(relevant_comments)
-  # scraped_links = list(map(lambda x: (mp4_link(x[0]), x[1]), links))
   return links, submission
 
 
 def get_existing_comments(submission):
   a_a_comment = get_aa_comment_from_submission(submission)
-  replies = a_a_comment.replies.list()
   comments = get_all_replies_from_comment(a_a_comment)
   return comments
 
@@ -140,11 +146,31 @@ def comment_forest_to_lists(comment_forest):
       print(f"What is this: {commentOrMoreComments}")
   return comments, more_comments
 
-# def is_relevant(comment):
-#     # Does this comment belong to one of the posts on the watchlist?
-#     if list(filter(lambda x: x["post_id"] == comment.link_id, watch_list)):
-#         root_comment = getAlternativeAnglesCommentFromSubmission(comment.submission)
-#         # Is this comment a child of the stickied 'Mirrors / Alternate angles' comment?
-#         if list(filter(lambda x: x["root_comment_id"] == root_comment.id, watch_list)):
-#             return True
-#     return False
+
+def is_comment_childof(child, parent):
+  all_children = get_all_replies_from_comment(parent)
+  return child in all_children
+
+def send_links_with_texts(links_with_texts, user_id, is_eng):
+  for i, linkWithText in enumerate(links_with_texts):
+    print(f'[EXISTING COMMENTS] parsing link {i + 1} of {len(links_with_texts)}')
+    link, title = linkWithText
+    print('[EXISTING COMMENTS] linkWithText', linkWithText)
+    mp4_link, new_title = parse_link_with_text(linkWithText, is_eng)
+    links = (link, mp4_link)
+    try:
+      send_video(apis, new_title, links, user_id) if mp4_link else send_message(apis, title, link, user_id)
+    except Exception as e:
+      print('[EXISTING COMMENTS] Error when sending this: ' + linkWithText)
+      print(e)
+
+
+def parse_link_with_text(link_with_text, is_eng):
+  ger_no_desc = "Ohne Beschreibung"
+  eng_no_desc = "No description"
+  no_desc = eng_no_desc if is_eng else ger_no_desc
+
+  link, title = link_with_text
+  scraped_link = scrape_with_retries(link, title)
+  string = no_desc if title == '' else title
+  return scraped_link, string
