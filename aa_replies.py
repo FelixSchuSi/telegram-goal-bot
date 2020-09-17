@@ -29,15 +29,21 @@ def main():
       update.message.reply_text(text=text)
       return
     user_id = update.message.from_user.id
-
-    title = update.message.reply_to_message.caption
+    title = original_message.caption or original_message.text
     eng_start_text = f"Searching for alternative angles of goal: \'{title}\'..."
     ger_start_text = f"Suche nach Kameraperspektiven von Tor: \'{title}\'..."
     start_text = eng_start_text if is_eng else ger_start_text
     send_message(apis, start_text, '', user_id)
 
     links_with_texts, submission = parse_title(title, apis)
-    send_links_with_texts(links_with_texts)
+    if links_with_texts is None:
+      eng_notfound_text = f"Couldn't find any alternative angles."
+      ger_notfound_text = f"Es wurden keine Kameraperspektiven gefunden."
+      notfound_text = eng_notfound_text if is_eng else ger_notfound_text
+      send_message(apis, notfound_text, '', user_id)
+      return
+
+    send_links_with_texts(apis, links_with_texts, user_id, is_eng)
 
     live_comments_queue.put((submission, user_id))
 

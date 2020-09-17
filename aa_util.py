@@ -10,7 +10,7 @@ import time
 
 # {aa_comment_id: [("telegram_user_id_1", created_at), ("telegram_user_id_2", created_at)]}
 watchlist = WatchList()
-apis = None
+
 
 def comment_listener(apis):
   print('[COMMENT LISTENER] Started comment listener')
@@ -27,12 +27,11 @@ def comment_listener(apis):
           registered_users = watchlist.get_registered_users(aa_comment.id)
           for telegram_user_id, created_at in registered_users:
             # TODO: Get is_eng in the registration and pass it to this function instead of False
-            send_links_with_texts(links_with_texts, telegram_user_id, False)
+            send_links_with_texts(apis, links_with_texts, telegram_user_id, False)
 
 
 def queue_handler(queue, passed_apis):
-  print('[QUEUE HANDLER] Started queue handler')#
-  global apis
+  print('[QUEUE HANDLER] Started queue handler')  #
   apis = passed_apis
   listen_for_comments_process = Process(target=comment_listener, args=(passed_apis,))
   listen_for_comments_process.start()
@@ -58,7 +57,8 @@ def queue_handler(queue, passed_apis):
 def find_submission_by_title(title, apis):
   search_results = list(apis["subreddit"].search(title))
   # For now, we return the first search result.
-  return search_results[0]
+
+  return search_results[0] if len(search_results) > 0 else None
 
 
 def filter_links(links):
@@ -95,6 +95,8 @@ def get_links_from_comment(comment):
 
 def parse_title(title, apis):
   submission = find_submission_by_title(title, apis)
+  if submission is None:
+    return None, None
   relevant_comments = get_existing_comments(submission)
   links = get_links_from_comments(relevant_comments)
   return links, submission
@@ -151,7 +153,8 @@ def is_comment_childof(child, parent):
   all_children = get_all_replies_from_comment(parent)
   return child in all_children
 
-def send_links_with_texts(links_with_texts, user_id, is_eng):
+
+def send_links_with_texts(apis, links_with_texts, user_id, is_eng):
   for i, linkWithText in enumerate(links_with_texts):
     print(f'[EXISTING COMMENTS] parsing link {i + 1} of {len(links_with_texts)}')
     link, title = linkWithText
