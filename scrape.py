@@ -1,6 +1,8 @@
 from pyquery import PyQuery as pq
 from telegram.error import BadRequest
 import time
+
+
 # TODO: "imgtc", "vimeo"
 
 
@@ -40,4 +42,3 @@ def scrape_with_retries(url, title, retries=1):
   else:
     print(f'[ERR AFTER {retries} RETRIES]', title, url)
     return False
-
