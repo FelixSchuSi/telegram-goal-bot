@@ -33,7 +33,7 @@ def main():
     eng_start_text = f"Searching for alternative angles of goal: \'{title}\'..."
     ger_start_text = f"Suche nach Kameraperspektiven von Tor: \'{title}\'..."
     start_text = eng_start_text if is_eng else ger_start_text
-    print(f"sending msg: {start_text} to {user_id}")
+    print(f"[REPLIES]: Sending text {start_text} to {user_id}.")
     send_message(apis, start_text, '', user_id)
 
     links_with_texts, submission = parse_title(title, apis)

@@ -8,14 +8,15 @@ from scrape import scrape_with_retries
 from telegram_wrapper import send_message, send_video
 import time
 
+
 # {aa_comment_id: [("telegram_user_id_1", created_at), ("telegram_user_id_2", created_at)]}
-watchlist = WatchList()
 
 
-def comment_listener(apis):
+def comment_listener(apis, watchlist):
   print('[COMMENT LISTENER] Started comment listener')
   for comment in apis["subreddit"].stream.comments():
     aa_comment = get_aa_comment_from_submission(comment.submission)
+    print(f'[COMMENT LISTENER] Curernt watchlist: {watchlist}')
     if aa_comment is not None:
       if aa_comment.id in watchlist:
         print(f'[COMMENT FILTER] aa_comment {aa_comment.id} of comment {aa_comment.id} is on watchlist')
@@ -31,9 +32,9 @@ def comment_listener(apis):
 
 
 def queue_handler(queue, passed_apis):
-  print('[QUEUE HANDLER] Started queue handler')  #
-  apis = passed_apis
-  listen_for_comments_process = Process(target=comment_listener, args=(passed_apis,))
+  watchlist = WatchList()
+  print('[QUEUE HANDLER] Started queue handler')
+  listen_for_comments_process = Process(target=comment_listener, args=(passed_apis, watchlist))
   listen_for_comments_process.start()
   while True:
     try:
@@ -47,7 +48,8 @@ def queue_handler(queue, passed_apis):
       print('[QUEUE HANDLER] ', e)
 
     diff = datetime.utcnow() - watchlist.last_expiration_check
-    if (diff.total_seconds() / 60 / 60) >= 1:
+    # if (diff.total_seconds() / 60 / 60) >= 1:
+    if (diff.total_seconds()) >= 20:
       # Every hour we remove expired entries from the watch list
       print('[QUEUE HANDLER] Initiated removal of expired entries in watchlist')
       watchlist.remove_expired_entries()
