@@ -29,22 +29,24 @@ class WatchList:
     # Entries older than 4 hours get removed from the watchlist.
     print(f"[WATCH LIST] Deleting expired entries. starting to loop over entries now.")
     try:
-      for aa_comment_id, registered_users in self.watchlist:
+      for aa_comment_id, registered_users in self.watchlist.items():
+        print('[WATCH LIST] Inspecting all registrations for comment: ', aa_comment_id)
         for user_entry in registered_users:
           print('[WATCH LIST] Inspecting user_entry for expiration: ', str(user_entry))
           telegram_user_id, created_at = user_entry
-          # if (datetime.utcnow() - created_at).total_seconds() / 60 / 60 > 4:
-          if True:
-            if len(registered_users) == 1:
-              print(
-                f"[WATCH LIST] Removing key and entries for aa_comment_id {aa_comment_id} since expired entry of user"
-                f"{telegram_user_id} was the only entry.")
-              self.watchlist.pop(aa_comment_id)
-            elif len(registered_users) > 1:
-              print(f"[WATCH LIST] Removing entry of user {telegram_user_id} for aa_comment_id {aa_comment_id}")
-              registered_users.remove(user_entry)
+          # Every entry older than 4 hours gets removed.
+          if (datetime.utcnow() - created_at).total_seconds() / 60 / 60 > 4:
+            if True:
+              if len(registered_users) == 1:
+                print(
+                  f"[WATCH LIST] Removing key and entries for aa_comment_id {aa_comment_id} since expired entry of user"
+                  f"{telegram_user_id} was the only entry.")
+                self.watchlist.pop(aa_comment_id)
+              elif len(registered_users) > 1:
+                print(f"[WATCH LIST] Removing entry of user {telegram_user_id} for aa_comment_id {aa_comment_id}")
+                registered_users.remove(user_entry)
     except Exception as e:
-      print('[WATCH LIST]' + str(e))
+      print('[WATCH LIST] ' + str(e))
 
   def get_registered_users(self, aa_comment_id):
     return self.watchlist[aa_comment_id]

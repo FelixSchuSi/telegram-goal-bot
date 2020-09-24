@@ -2,7 +2,6 @@ from praw import models
 from pyquery import PyQuery as pq
 import itertools
 from multiprocessing import Process
-from datetime import datetime
 from aa_watchlist import WatchList
 from scrape import scrape_with_retries
 from telegram_wrapper import send_message, send_video
@@ -47,12 +46,8 @@ def queue_handler(queue, passed_apis):
     except Exception as e:
       print('[QUEUE HANDLER] ', e)
 
-    diff = datetime.utcnow() - watchlist.last_expiration_check
-    # if (diff.total_seconds() / 60 / 60) >= 1:
-    if (diff.total_seconds()) >= 20:
-      # Every hour we remove expired entries from the watch list
-      print('[QUEUE HANDLER] Initiated removal of expired entries in watchlist')
-      watchlist.remove_expired_entries()
+    # Every time someone registers a comment we remove expired entries from the watch list
+    watchlist.remove_expired_entries()
     time.sleep(1)
 
 
