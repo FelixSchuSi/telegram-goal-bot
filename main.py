@@ -9,12 +9,13 @@ def main():
   apis = setup()
   try:
     # Use this for testing!
-    # submissions = apis["subreddit"].top("week",limit=500)
-    # for submission in submissions:
-    #     process_submission(apis, submission)
-
-    for submission in apis["subreddit"].stream.submissions():
+    submissions = apis["subreddit"].new()
+    for submission in submissions:
+      print(submission.title)
       process_submission(apis, submission)
+
+    # for submission in apis["subreddit"].stream.submissions():
+    #   process_submission(apis, submission)
   except KeyboardInterrupt:
     print('CTRL + C detected. closing...')
     quit()
@@ -40,10 +41,10 @@ def filter_submission(submission, competition):
            ['streamja', 'streamable', 'imgtc', 'clippituser', 'vimeo', 'streamvi']):
       diff = datetime.utcnow() - datetime.utcfromtimestamp(submission.created_utc)
       # post must be younger than 3 minutes.
-      if (diff.total_seconds() / 60) < 3:
+      # if (diff.total_seconds() / 60) < 3:
         # title must contain two teams of the specified competition.
-        if competition.is_competition(title):
-          return True
+      if competition.is_competition(title):
+        return True
 
 
 if __name__ == '__main__':
