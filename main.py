@@ -11,7 +11,6 @@ def main():
     # Use this for testing!
     submissions = apis["subreddit"].new()
     for submission in submissions:
-      print(submission.title)
       process_submission(apis, submission)
 
     # for submission in apis["subreddit"].stream.submissions():
