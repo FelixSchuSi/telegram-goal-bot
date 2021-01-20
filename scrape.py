@@ -19,6 +19,9 @@ def mp4_link(url):
   if 'streamvi' in url:
     d = pq(url=url)('video > source')
     return d.attr('src')
+  if 'streamye' in url:
+    d = pq(url=url)('body video > source')
+    return d.attr('src') 
   else:
     print(f'[SCRAPE ERROR] No existing routine for url: {url}')
     return False
