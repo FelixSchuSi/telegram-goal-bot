@@ -6,7 +6,7 @@ cryptography==3.3.2
 cssselect==1.1.0
 future==0.18.2
 idna==2.10
-lxml==4.6.2
+lxml==4.6.3
 praw==7.1.0
 prawcore==1.5.0
 pycparser==2.20
