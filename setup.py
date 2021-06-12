@@ -4,7 +4,7 @@ import telegram
 import json
 import sys
 
-supported_competitions = ['buli', 'cl', 'prem']
+supported_competitions = ['buli', 'cl', 'prem', 'internationals']
 
 
 def setup():

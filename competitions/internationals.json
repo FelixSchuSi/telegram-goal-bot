@@ -1,0 +1,162 @@
+{
+  "teams": [
+    {
+      "names": [
+        "turkey",
+        "tur"
+      ],
+      "min_matches": 1
+    },
+    {
+      "names": [
+        "italy",
+        "ita"
+      ],
+      "min_matches": 1
+    },
+    {
+      "names": [
+        "wales",
+        "wal"
+      ],
+      "min_matches": 1
+    },
+    {
+      "names": [
+        "switzerland",
+        "swi"
+      ],
+      "min_matches": 1
+    },
+    {
+      "names": [
+        "denmark",
+        "dnk"
+      ],
+      "min_matches": 1
+    },
+    {
+      "names": [
+        "finalnd",
+        "fin"
+      ],
+      "min_matches": 1
+    },
+    {
+      "names": [
+        "belguim",
+        "bel"
+      ],
+      "min_matches": 1
+    },
+    {
+      "names": [
+        "russia",
+        "rus",
+        "russian"
+      ],
+      "min_matches": 1
+    },
+    {
+      "names": [
+        "netherlands",
+        "holland",
+        "netherland",
+        "nld"
+      ],
+      "min_matches": 1
+    },
+    {
+      "names": [
+        "macedonia",
+        "north",
+        "mkd"
+      ],
+      "min_matches": 1
+    },
+    {
+      "names": [
+        "england",
+        "eng"
+      ],
+      "min_matches": 1
+    },
+    {
+      "names": [
+        "croatia",
+        "cro"
+      ],
+      "min_matches": 1
+    },
+    {
+      "names": [
+        "scotland",
+        "sco"
+      ],
+      "min_matches": 1
+    },
+    {
+      "names": [
+        "czech",
+        "cze"
+      ],
+      "min_matches": 1
+    },
+    {
+      "names": [
+        "spain",
+        "esp"
+      ],
+      "min_matches": 1
+    },
+    {
+      "names": [
+        "sweden",
+        "swe"
+      ],
+      "min_matches": 1
+    },
+    {
+      "names": [
+        "poland",
+        "pol"
+      ],
+      "min_matches": 1
+    },
+    {
+      "names": [
+        "slovakia",
+        "svk"
+      ],
+      "min_matches": 1
+    },
+    {
+      "names": [
+        "hungary",
+        "hun"
+      ],
+      "min_matches": 1
+    },
+    {
+      "names": [
+        "portugal",
+        "por"
+      ],
+      "min_matches": 1
+    },
+    {
+      "names": [
+        "france",
+        "fra"
+      ],
+      "min_matches": 1
+    },
+    {
+      "names": [
+        "germany",
+        "ger"
+      ],
+      "min_matches": 1
+    }
+  ]
+}
