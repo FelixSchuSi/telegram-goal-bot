@@ -12,11 +12,11 @@ steps:
     commands: |
       cd BuliTorBot && git pull
       /home/felixs/bin/pm2 delete all
-      /home/felixs/bin/pm2 start bash_scripts/internationals.sh -o logs/internationalsLogs.log
-      /home/felixs/bin/pm2 start bash_scripts/cl.sh -o logs/clLogs.log
-      /home/felixs/bin/pm2 start bash_scripts/prem.sh -o logs/premLogs.log
-      /home/felixs/bin/pm2 start bash_scripts/buli.sh -o logs/buliLogs.log
-      /home/felixs/bin/pm2 start bash_scripts/reply.sh -o logs/replyLogs.log
-      /home/felixs/bin/pm2 start bash_scripts/formula1.sh -o logs/formula1.log
+      cd BuliTorBot && /home/felixs/bin/pm2 start BuliTorBot/bash_scripts/internationals.sh -o logs/internationalsLogs.log
+      cd BuliTorBot && /home/felixs/bin/pm2 start bash_scripts/cl.sh -o logs/clLogs.log
+      cd BuliTorBot && /home/felixs/bin/pm2 start bash_scripts/prem.sh -o logs/premLogs.log
+      cd BuliTorBot && /home/felixs/bin/pm2 start bash_scripts/buli.sh -o logs/buliLogs.log
+      cd BuliTorBot && /home/felixs/bin/pm2 start bash_scripts/reply.sh -o logs/replyLogs.log
+      cd BuliTorBot && /home/felixs/bin/pm2 start bash_scripts/formula1.sh -o logs/formula1.log
     failOnStdErr: false
   displayName: 'ssh task in uberspace VM'
