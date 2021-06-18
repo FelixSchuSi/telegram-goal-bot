@@ -17,6 +17,8 @@ class Competition:
       if isinstance(team, Team): self.teams.append(team)
 
   def is_competition(self, strings):
+    if len(self.teams) == 0:
+      return True  # No Teams means wildcard
     index_of_hyphen = list('-' in e for e in strings).index(True)
     left = strings[:index_of_hyphen]
     right = strings[index_of_hyphen + 1:]

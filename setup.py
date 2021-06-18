@@ -4,7 +4,7 @@ import telegram
 import json
 import sys
 
-supported_competitions = ['buli', 'cl', 'prem', 'internationals']
+supported_competitions = ['buli', 'cl', 'prem', 'internationals', 'formula1']
 
 
 def setup():
@@ -32,11 +32,9 @@ def setup():
       user_agent=secrets[f'{comp_title}_user_agent'],
       client_id=secrets[f'{comp_title}_client_id'],
       client_secret=secrets[f'{comp_title}_client_secret']
-    ).subreddit('soccer')
+    ).subreddit('formula1' if comp_title == 'formula1' else 'soccer')
   }
-
   print(f'STARTED {comp_title.upper()} BOT')
-
   return apis
 
 
