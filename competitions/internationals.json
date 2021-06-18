@@ -157,6 +157,13 @@
         "ger"
       ],
       "min_matches": 1
+    },
+{
+      "names": [
+        "ukraine",
+        "ukr"
+      ],
+      "min_matches": 1
     }
   ]
 }
