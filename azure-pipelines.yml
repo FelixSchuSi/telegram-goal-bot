@@ -10,8 +10,7 @@ steps:
     sshEndpoint: 'uberspace'
     runOptions: 'commands'
     commands: |
-      cd BuliTorBot
-      git pull
+      cd BuliTorBot && git pull
       /home/felixs/bin/pm2 delete all
       /home/felixs/bin/pm2 start bash_scripts/internationals.sh -o logs/internationalsLogs.log
       /home/felixs/bin/pm2 start bash_scripts/cl.sh -o logs/clLogs.log
