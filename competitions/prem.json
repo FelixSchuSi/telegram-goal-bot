@@ -1,13 +1,6 @@
 {
     "teams": [
         {
-            "id": "121",
-            "names": [
-                "fulham"
-            ],
-            "min_matches": 1
-        },
-        {
             "id": "102",
             "names": [
                 "arsenal",
@@ -108,14 +101,6 @@
             "min_matches": 1
         },
         {
-            "id": "115",
-            "names": [
-                "sheffield",
-                "sheff"
-            ],
-            "min_matches": 1
-        },
-        {
             "id": "116",
             "names": [
                 "southampton"
@@ -147,15 +132,6 @@
             "min_matches": 1
         },
         {
-            "id": "123",
-            "names": [
-                "west",
-                "brom",
-                "albion"
-            ],
-            "min_matches": 1
-        },
-        {
             "id": "124",
             "names": [
                 "leeds"
@@ -170,9 +146,51 @@
                 "wolves"
             ],
             "min_matches": 1
+        },
+        {
+            "names": [
+                "norwich"
+            ],
+            "min_matches": 1
+        },
+        {
+            "names": [
+                "watford"
+            ],
+            "min_matches": 1
+        },
+        {
+            "names": [
+                "brentford"
+            ],
+            "min_matches": 1
         }
     ],
     "relegated_teams": [
+        {
+            "id": "115",
+            "names": [
+                "sheffield",
+                "sheff"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "123",
+            "names": [
+                "west",
+                "brom",
+                "albion"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "121",
+            "names": [
+                "fulham"
+            ],
+            "min_matches": 1
+        },
         {
             "id": "122",
             "names": [

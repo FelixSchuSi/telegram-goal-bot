@@ -48,15 +48,6 @@
             "min_matches": 1
         },
         {
-            "id": "7",
-            "names": [
-                "schalke",
-                "shalke",
-                "s04"
-            ],
-            "min_matches": 1
-        },
-        {
             "id": "8",
             "names": [
                 "leverkusen",
@@ -90,15 +81,6 @@
             "id": "12",
             "names": [
                 "hertha"
-            ],
-            "min_matches": 1
-        },
-        {
-            "id": "14",
-            "names": [
-                "werder",
-                "bremen",
-                "svw"
             ],
             "min_matches": 1
         },
@@ -141,9 +123,45 @@
                 "stuttgart"
             ],
             "min_matches": 1
+        },
+        {
+            "names": [
+                "fürth",
+                "furth",
+                "fuerth",
+                "greuther",
+                "fürt",
+                "furt",
+                "fuert"
+            ],
+            "min_matches": 1
+        },
+        {
+            "names": [
+                "bochum"
+            ],
+            "min_matches": 1
         }
     ],
     "relegated_teams": [
+        {
+            "id": "7",
+            "names": [
+                "schalke",
+                "shalke",
+                "s04"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "14",
+            "names": [
+                "werder",
+                "bremen",
+                "svw"
+            ],
+            "min_matches": 1
+        },
         {
             "id": "19",
             "names": [
