@@ -1,3 +1,6 @@
+from typing import List
+
+
 class Competition:
   def __init__(self, team=None):
     if not (team is None):
@@ -44,6 +47,12 @@ class Team:
       self.aliases.append(alias)
 
   def is_team(self, strings):
-    if sum(alias in strings for alias in self.aliases) >= self.matchesNeeded:
+    input = list(map(remove_special_chars, strings))
+    if sum(alias in input for alias in self.aliases) >= self.matchesNeeded:
+      print(f"pass")
       return True
     return False
+
+def remove_special_chars(input: str):
+  sp_chars = [';', ':', '!', "*"] 
+  return "".join(list(filter(lambda i: i not in sp_chars, input)))

@@ -59,6 +59,7 @@
             "id": "9",
             "names": [
                 "frankfurt",
+                "eintracht",
                 "sge"
             ],
             "min_matches": 1
@@ -126,11 +127,11 @@
         },
         {
             "names": [
-                "fürth",
+                "f\u00fcrth",
                 "furth",
                 "fuerth",
                 "greuther",
-                "fürt",
+                "f\u00fcrt",
                 "furt",
                 "fuert"
             ],
