@@ -39,7 +39,7 @@ def process_submission(apis, submission):
   else:
     message = send_message(apis, submission.title, submission.url)
 
-  loop.create_task(register_comment_listener_for_goal(apis, submission.id, message.message_id))
+  loop.create_task(register_comment_listener_for_goal(apis, submission, message))
 
 
 def filter_submission(submission, competition):

@@ -1,23 +1,32 @@
-from typing import Union
+from typing import Union, List
 
-from praw.reddit import Comment
+from praw.reddit import Comment, Submission
 from telegram import Message
 
 from alternative_angles.reddit_comment_traversal import get_links_with_texts_from_comment, \
   get_aa_comment_from_submission, get_all_replies_from_comment
 
 
-def register_comment_listener_for_goal(apis, submission_id: str, telegram_message_id: str):
+def register_comment_listener_for_goal(apis, submission: Submission, message: Message):
+  # scrape existing comments for angles
+  existing_aa_comment = get_aa_comment_from_submission(submission)
+  all_children: List[Comment] = get_all_replies_from_comment(existing_aa_comment)
+  for comment in all_children:  # Is the comment a reply to the aa_comment?
+    links, texts = get_links_with_texts_from_comment(comment)
+    for link, text in zip(links, texts):
+      html_text = f'<b><a href="{link}">{text}</a></b>'
+      message.reply_html(text=html_text)
+
+  # listen for future comments for angles
   print('[COMMENT LISTENER] Started comment listener for goal with submission_id: {submission_id}')
   for comment in apis.subreddit.stream.comments():
-    aa_comment = is_comment_relevant(comment, submission_id)
+    aa_comment = is_comment_relevant(comment, submission.id)
     if aa_comment:
       print(f'[COMMENT FILTER] Comment {comment.id} passed the filter!')
       links, texts = get_links_with_texts_from_comment(comment)
-      goal_message = Message(telegram_message_id)
       for link, text in zip(links, texts):
         html_text = f'<b><a href="{link}">{text}</a></b>'
-        goal_message.reply_html(text=html_text)
+        message.reply_html(text=html_text)
 
 
 def is_comment_relevant(comment: Comment, submission_id: str) -> Union[Comment, None]:
