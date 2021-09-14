@@ -1,20 +1,24 @@
+from telegram import Message
+
+from alternative_angles.register_comment_listener_for_goal import register_comment_listener_for_goal
 from scrape import scrape_with_retries
 from telegram_wrapper import send_message, send_video
 from datetime import datetime
 from setup import setup
 import time
+import asyncio
 
 
-def main():
+async def main():
   apis = setup()
   try:
     # Use this for testing!
-    # submissions = apis["subreddit"].new()
-    # for submission in submissions:
-    #   process_submission(apis, submission)
-
-    for submission in apis["subreddit"].stream.submissions():
+    submissions = apis["subreddit"].new()
+    for submission in submissions:
       process_submission(apis, submission)
+
+    # for submission in apis["subreddit"].stream.submissions():
+    #   process_submission(apis, submission)
   except KeyboardInterrupt:
     print('CTRL + C detected. closing...')
     quit()
@@ -27,8 +31,15 @@ def process_submission(apis, submission):
   if not passed_filter:
     return
   mp4_link = scrape_with_retries(submission.url, submission.title)
-  send_video(apis, submission.title, (submission.url, mp4_link)) if mp4_link else send_message(apis, submission.title,
-                                                                                               submission.url)
+
+  message: Message
+
+  if mp4_link:
+    message = send_video(apis, submission.title, (submission.url, mp4_link))
+  else:
+    message = send_message(apis, submission.title, submission.url)
+
+  loop.create_task(register_comment_listener_for_goal(apis, submission.id, message.message_id))
 
 
 def filter_submission(submission, competition):
@@ -40,14 +51,16 @@ def filter_submission(submission, competition):
            ['streamwo', 'streamja', 'streamye', 'streamable', 'imgtc', 'clippituser', 'vimeo', 'streamvi']):
       diff = datetime.utcnow() - datetime.utcfromtimestamp(submission.created_utc)
       # post must be younger than 3 minutes.
-      if (diff.total_seconds() / 60) < 3:
-        # title must contain two teams of the specified competition.
-        if competition.is_competition(title):
-          return True
+      # if (diff.total_seconds() / 60) < 3:
+      # title must contain two teams of the specified competition.
+      if competition.is_competition(title):
+        return True
 
 
 if __name__ == '__main__':
   while True:
-    main()
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(main())
+    loop.close()
     print('Praw API is down. Restarting in 3 mins...')
     time.sleep(180)
