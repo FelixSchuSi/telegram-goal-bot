@@ -2,7 +2,7 @@ from telegram import Message
 
 from alternative_angles.register_comment_listener_for_goal import register_comment_listener_for_goal
 from scrape import scrape_with_retries
-from telegram_wrapper import send_message, send_video
+from telegram_wrapper import send_message, send_video, get_copy_of_message_in_comment_group
 from datetime import datetime
 from setup import setup
 import time
@@ -10,14 +10,16 @@ import asyncio
 
 
 async def main():
-  apis = setup()
+  apis = await setup()
   try:
     # Use this for testing!
-    submissions = apis["subreddit"].new()
-    for submission in submissions:
-      process_submission(apis, submission)
+    submissions = apis["subreddit"].new(limit=20)
+    async for submission in submissions:
+      await process_submission(apis, submission)
 
-    # for submission in apis["subreddit"].stream.submissions():
+    print(f'done but processing')
+    await asyncio.sleep(1000)
+    # async for submission in apis["subreddit"].stream.submissions():
     #   process_submission(apis, submission)
   except KeyboardInterrupt:
     print('CTRL + C detected. closing...')
@@ -26,8 +28,8 @@ async def main():
     print('Exception in main() occured: ' + str(e))
 
 
-def process_submission(apis, submission):
-  passed_filter = filter_submission(submission, apis["competition"])
+async def process_submission(apis, submission):
+  passed_filter = await filter_submission(submission, apis["competition"])
   if not passed_filter:
     return
   mp4_link = scrape_with_retries(submission.url, submission.title)
@@ -39,10 +41,13 @@ def process_submission(apis, submission):
   else:
     message = send_message(apis, submission.title, submission.url)
 
-  loop.create_task(register_comment_listener_for_goal(apis, submission, message))
+  print(1)
+  get_copy_of_message_in_comment_group(apis, message)
+  print(2)
+  # loop.create_task(register_comment_listener_for_goal(apis, submission, message))
 
 
-def filter_submission(submission, competition):
+async def filter_submission(submission, competition):
   title = submission.title.lower().split()
   # title must contain a hyphen AND not be a u19 or u21 game.
   if (any('-' in e for e in title) and not any('u19' in e for e in title) and not any('u21' in e for e in title) and not any('w' in e for e in title)) or len(competition.teams) == 0:

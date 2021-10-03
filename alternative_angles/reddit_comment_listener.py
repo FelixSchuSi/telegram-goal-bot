@@ -1,6 +1,6 @@
 from typing import Union
 
-from praw.reddit import Comment
+from asyncpraw.reddit import Comment
 from telegram import Message
 
 from alternative_angles.reddit_comment_traversal import get_links_with_texts_from_comment, \

@@ -1,4 +1,4 @@
-import praw
+import asyncpraw
 from competition import Competition, Team
 import telegram
 import json
@@ -7,7 +7,7 @@ import sys
 supported_competitions = ['buli', 'cl', 'prem', 'internationals', 'formula1']
 
 
-def setup():
+async def setup():
   # When no league is passed, bundesliga is selected.
   comp_title = 'buli' if len(sys.argv) is 1 else sys.argv[1]
   comp_title = comp_title.lower()
@@ -23,12 +23,12 @@ def setup():
     "bot": bot,
     "competition": comp,
     "chat_id": secrets[f'{comp_title}_chat_id'],
-    "reddit": praw.Reddit(
+    "reddit": asyncpraw.Reddit(
       user_agent=secrets[f'{comp_title}_user_agent'],
       client_id=secrets[f'{comp_title}_client_id'],
       client_secret=secrets[f'{comp_title}_client_secret']
     ),
-    "subreddit": praw.Reddit(
+    "subreddit": await asyncpraw.Reddit(
       user_agent=secrets[f'{comp_title}_user_agent'],
       client_id=secrets[f'{comp_title}_client_id'],
       client_secret=secrets[f'{comp_title}_client_secret']

@@ -2,7 +2,7 @@ import time
 from multiprocessing import Queue
 from typing import List
 
-from praw.reddit import Comment
+from asyncpraw.reddit import Comment
 
 from alternative_angles.reddit_comment_traversal import get_aa_comment_from_submission
 

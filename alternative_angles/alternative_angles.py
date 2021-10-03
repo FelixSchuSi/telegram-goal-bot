@@ -1,4 +1,4 @@
-from praw.reddit import Submission
+from asyncpraw.reddit import Submission
 from telegram import Message
 from alternative_angles.goal_registration_handler import goal_registration_handler
 from alternative_angles.reddit_comment_listener import reddit_comment_listener

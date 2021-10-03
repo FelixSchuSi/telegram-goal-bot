@@ -49,7 +49,6 @@ class Team:
   def is_team(self, strings):
     input = list(map(remove_special_chars, strings))
     if sum(alias in input for alias in self.aliases) >= self.matchesNeeded:
-      print(f"pass")
       return True
     return False
 
