@@ -34,7 +34,7 @@ def process_submission(apis, submission):
 def filter_submission(submission, competition):
   title = submission.title.lower().split()
   # title must contain a hyphen AND not be a u19 or u21 game.
-  if (any('-' in e for e in title) and not any('u19' in e for e in title) and not any('u21' in e for e in title)) or len(competition.teams) == 0:
+  if (any('-' in e for e in title) and not any('u19' in e for e in title) and not any('u21' in e for e in title) and not any('w' in e for e in title)) or len(competition.teams) == 0:
     # video must be hosted on one of the specified services.
     if any(host in submission.url for host in
            ['streamwo', 'streamja', 'streamye', 'streamable', 'imgtc', 'clippituser', 'vimeo', 'streamvi']):
