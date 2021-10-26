@@ -29,9 +29,9 @@ def setup():
       client_secret=secrets[f'reddit_client_secret']
     ),
     "subreddit": praw.Reddit(
-      user_agent=secrets[f'{comp_title}_user_agent'],
-      client_id=secrets[f'{comp_title}_client_id'],
-      client_secret=secrets[f'{comp_title}_client_secret']
+      user_agent=secrets[f'reddit_user_agent'],
+      client_id=secrets[f'reddit_client_id'],
+      client_secret=secrets[f'reddit_client_secret']
     ).subreddit('formula1' if comp_title == 'formula1' else 'soccer')
   }
   print(f'STARTED {comp_title.upper()} BOT')
