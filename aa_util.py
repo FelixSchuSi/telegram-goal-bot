@@ -62,7 +62,7 @@ def filter_links(links):
   filtered = []
   for elem in links:
     link, text = elem
-    if any(host in link for host in ['streamja', 'streamable', 'imgtc', 'clippituser', 'vimeo', 'streamvi']):
+    if any(host in link for host in ['streamwo', 'streamja', 'streamye', 'streamable', 'imgtc', 'clippituser', 'vimeo', 'streamvi', 'juststream', 'streamff', 'streamgg']):
       # Maybe also filter by text?
       filtered.append(elem)
   return filtered
