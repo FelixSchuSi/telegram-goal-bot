@@ -110,14 +110,6 @@
             "min_matches": 1
         },
         {
-            "id": "21",
-            "names": [
-                "arminia",
-                "bielefeld"
-            ],
-            "min_matches": 1
-        },
-        {
             "id": "22",
             "names": [
                 "vfb",
@@ -127,24 +119,10 @@
         },
         {
             "names": [
-                "f\u00fcrth",
-                "furth",
-                "fuerth",
-                "greuther",
-                "f\u00fcrt",
-                "furt",
-                "fuert"
-            ],
-            "min_matches": 1
-        },
-        {
-            "names": [
                 "bochum"
             ],
             "min_matches": 1
-        }
-    ],
-    "relegated_teams": [
+        },
         {
             "id": "7",
             "names": [
@@ -160,6 +138,28 @@
                 "werder",
                 "bremen",
                 "svw"
+            ],
+            "min_matches": 1
+        }
+    ],
+    "relegated_teams": [
+        {
+            "id": "21",
+            "names": [
+                "arminia",
+                "bielefeld"
+            ],
+            "min_matches": 1
+        },
+        {
+            "names": [
+                "f\u00fcrth",
+                "furth",
+                "fuerth",
+                "greuther",
+                "f\u00fcrt",
+                "furt",
+                "fuert"
             ],
             "min_matches": 1
         },

@@ -25,13 +25,6 @@
             "min_matches": 1
         },
         {
-            "id": "105",
-            "names": [
-                "burnley"
-            ],
-            "min_matches": 1
-        },
-        {
             "id": "106",
             "names": [
                 "chelsea"
@@ -94,13 +87,6 @@
             "min_matches": 1
         },
         {
-            "id": "114",
-            "names": [
-                "norwich"
-            ],
-            "min_matches": 1
-        },
-        {
             "id": "116",
             "names": [
                 "southampton"
@@ -113,13 +99,6 @@
                 "tottenham",
                 "hotspur",
                 "spurs"
-            ],
-            "min_matches": 1
-        },
-        {
-            "id": "118",
-            "names": [
-                "watford"
             ],
             "min_matches": 1
         },
@@ -155,18 +134,52 @@
         },
         {
             "names": [
-                "watford"
+                "brentford"
             ],
             "min_matches": 1
         },
         {
             "names": [
-                "brentford"
+                "nottingham"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "101",
+            "names": [
+                "bournemouth"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "121",
+            "names": [
+                "fulham"
             ],
             "min_matches": 1
         }
     ],
     "relegated_teams": [
+        {
+            "names": [
+                "watford"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "114",
+            "names": [
+                "norwich"
+            ],
+            "min_matches": 1
+        },
+        {
+            "id": "105",
+            "names": [
+                "burnley"
+            ],
+            "min_matches": 1
+        },
         {
             "id": "115",
             "names": [
