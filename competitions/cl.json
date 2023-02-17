@@ -2,6 +2,116 @@
   "teams": [
     {
       "names": [
+        "paris",
+        "saint",
+        "germain",
+        "psg"
+      ],
+      "min_matches": 1
+    },
+    {
+      "names": [
+        "bayern",
+        "m\u00fcnchen",
+        "munchen",
+        "munich"
+      ],
+      "min_matches": 1
+    },
+    {
+      "names": [
+        "ac",
+        "milan",
+        "mailand",
+        "calcio"
+      ],
+      "min_matches": 1
+    },
+    {
+      "names": [
+        "br\u00fcgge",
+        "brugge"
+      ],
+      "min_matches": 1
+    },
+    {
+      "names": [
+        "tottenham",
+        "hotspur",
+        "spurs"
+      ],
+      "min_matches": 1
+    },
+    {
+      "names": [
+        "benfica"
+      ],
+      "min_matches": 1
+    },
+    {
+      "names": [
+        "dortmund",
+        "bvb"
+      ],
+      "min_matches": 1
+    },
+    {
+      "names": [
+        "chelsea"
+      ],
+      "min_matches": 1
+    },
+    {
+      "names": [
+        "liverpool"
+      ],
+      "min_matches": 1
+    },
+    {
+      "names": [
+        "real",
+        "madrid"
+      ],
+      "min_matches": 2
+    },
+    {
+      "names": [
+          "frankfurt",
+          "eintracht",
+          "sge"
+      ],
+      "min_matches": 1
+    },
+    {
+      "names": [
+        "ssc",
+        "neapel",
+        "napoli"
+      ],
+      "min_matches": 1
+    },
+    {
+      "names": [
+        "leipzig"
+      ],
+      "min_matches": 1
+    },
+    {
+      "names": [
+        "inter"
+      ],
+      "min_matches": 1
+    },
+    {
+      "names": [
+        "porto"
+      ],
+      "min_matches": 1
+    }
+  ],
+  "relegated_teams": [
+    {
+      "names": [
         "zenit",
         "petersburg"
       ],
@@ -67,25 +177,10 @@
     },
     {
       "names": [
-        "porto"
-      ],
-      "min_matches": 1
-    },
-    {
-      "names": [
         "paris",
         "saint",
         "germain",
         "psg"
-      ],
-      "min_matches": 1
-    },
-    {
-      "names": [
-        "ac",
-        "milan",
-        "mailand",
-        "calcio"
       ],
       "min_matches": 1
     },
@@ -117,27 +212,9 @@
     },
     {
       "names": [
-        "liverpool"
-      ],
-      "min_matches": 1
-    },
-    {
-      "names": [
-        "leipzig"
-      ],
-      "min_matches": 1
-    },
-    {
-      "names": [
         "juventus",
         "turin",
         "juve"
-      ],
-      "min_matches": 1
-    },
-    {
-      "names": [
-        "inter"
       ],
       "min_matches": 1
     },
@@ -152,38 +229,9 @@
     },
     {
       "names": [
-        "dortmund",
-        "bvb"
-      ],
-      "min_matches": 1
-    },
-    {
-      "names": [
-        "br\u00fcgge",
-        "brugge"
-      ],
-      "min_matches": 1
-    },
-    {
-      "names": [
         "be\u015Fikta\u015F",
         "istanbul",
         "besiktas"
-      ],
-      "min_matches": 1
-    },
-    {
-      "names": [
-        "benfica"
-      ],
-      "min_matches": 1
-    },
-    {
-      "names": [
-        "bayern",
-        "m\u00fcnchen",
-        "munchen",
-        "munich"
       ],
       "min_matches": 1
     },
@@ -217,27 +265,12 @@
     },
     {
       "names": [
-        "real",
-        "madrid"
-      ],
-      "min_matches": 2
-    },
-    {
-      "names": [
         "manchester",
         "city",
         "man"
       ],
       "min_matches": 2
     },
-    {
-      "names": [
-        "chelsea"
-      ],
-      "min_matches": 1
-    }
-  ],
-  "relegated_teams": [
     {
       "names": [
         "rennes"
@@ -324,23 +357,6 @@
     },
     {
       "names": [
-        "tottenham",
-        "hotspur",
-        "spurs"
-      ],
-      "min_matches": 1
-    },
-    {
-      "names": [
-        "paris",
-        "saint",
-        "germain",
-        "psg"
-      ],
-      "min_matches": 1
-    },
-    {
-      "names": [
         "real",
         "madrid"
       ],
@@ -356,14 +372,6 @@
       "names": [
         "olympique",
         "lyon"
-      ],
-      "min_matches": 1
-    },
-    {
-      "names": [
-        "ssc",
-        "neapel",
-        "napoli"
       ],
       "min_matches": 1
     },

@@ -37,7 +37,7 @@ def filter_submission(submission, competition):
   if (any('-' in e for e in title) and not any('u19' in e for e in title) and not any('u21' in e for e in title) and not any('w' in e for e in title)) or len(competition.teams) == 0:
     # video must be hosted on one of the specified services.
     if any(host in submission.url for host in
-           ['streamwo', 'streamja', 'streamye', 'streamable', 'imgtc', 'clippituser', 'vimeo', 'streamvi', 'juststream', 'streamff', 'streamgg']):
+           ['streamwo', 'streamja', 'streamye', 'streamable', 'imgtc', 'clippituser', 'vimeo', 'streamvi', 'juststream', 'streamff', 'streamgg', 'streamin', 'dubz']):
       diff = datetime.utcnow() - datetime.utcfromtimestamp(submission.created_utc)
       # post must be younger than 3 minutes.
       if (diff.total_seconds() / 60) < 3:

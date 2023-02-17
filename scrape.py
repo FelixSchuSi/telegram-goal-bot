@@ -22,6 +22,15 @@ def mp4_link(url):
   if 'streamgg' in url:
     d = pq(url=url)('video > source')
     return d.attr('src')
+  if 'dubz' in url:
+    d = pq(url=url)('video')
+    return d.attr('src')
+  if 'streamff' in url:
+    d = pq(url=url)('video')
+    return d.attr('src')
+  if 'streamin' in url:
+    d = pq(url=url)('video')
+    return d.attr('src')
   if 'streamye' in url:
     d = pq(url=url)('body video > source')
     src = d.attr('src')
