@@ -1,0 +1,238 @@
+{
+  "teams": [
+    {
+      "aliases": ["paris", "saint", "germain", "psg"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["bayern", "m\u00fcnchen", "munchen", "munich"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["ac", "milan", "mailand", "calcio"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["br\u00fcgge", "brugge"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["tottenham", "hotspur", "spurs"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["benfica"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["dortmund", "bvb"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["chelsea"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["liverpool"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["real", "madrid"],
+      "min_matches_needed": 2
+    },
+    {
+      "aliases": ["frankfurt", "eintracht", "sge"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["ssc", "neapel", "napoli"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["leipzig"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["inter"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["porto"],
+      "min_matches_needed": 1
+    }
+  ],
+  "relegated_teams": [
+    {
+      "aliases": ["zenit", "petersburg"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["young", "boys", "bern"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["wolfsburg"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["villarreal"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["sporting", "cp", "lisbon"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["sheriff", "tiraspol"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["schachtar", "donezk", "shakhtar", "donetsk", "shakhtar"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["sevillia", "sevilla"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["salzburg"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["paris", "saint", "germain", "psg"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["manchester", "united", "man", "utd"],
+      "min_matches_needed": 2
+    },
+    {
+      "aliases": ["malm\u00F6", "malmo", "malmoe", "ff"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["lille", "osc", "losc"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["juventus", "turin", "juve"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["dynamo", "kiew", "kyiven", "Kyiv"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["be\u015Fikta\u015F", "istanbul", "besiktas"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["barcelona", "barca"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["atl\u00e9tico", "atletico"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["atalanta", "bergamo"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["ajax", "amsterdam"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["manchester", "city", "man"],
+      "min_matches_needed": 2
+    },
+    {
+      "aliases": ["rennes"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["lazio"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["budapest", "ferencvaros"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["midtjylland"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["krasnodar"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["basaksehir"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["olympiakos", "pir\u00e4us", "piraus", "olympiacos"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["olympique", "marseille"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["lok", "moskau", "lokomotiv", "moskow", "lokomotive"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["m\u00f6nchengladbach", "monchengladbach", "gladbach"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["dortmund"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["leipzig"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["real", "madrid"],
+      "min_matches_needed": 2
+    },
+    {
+      "aliases": ["valencia"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["olympique", "lyon"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["roter", "stern", "belgrad", "red", "star"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["dinamo", "zagreb", "dynamo"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["galatasaray"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["genk"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["lokomotiv"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["salzburg"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["slavia", "praha", "prag"],
+      "min_matches_needed": 1
+    }
+  ]
+}

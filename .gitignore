@@ -1,9 +1,11 @@
-secrets.py
-secrets.json
-__pycache__
 .venv
 .vscode
 *.log
 .idea/
 
 
+
+
+# Added by cargo
+
+/target
