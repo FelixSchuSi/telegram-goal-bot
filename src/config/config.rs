@@ -20,12 +20,17 @@ pub fn read_config() -> Config {
 }
 
 fn read_competition(competition_name: &str) -> Competition {
-    let filename = &format!("{competition_name}.json");
-
-    let file = fs::File::open(format!("src/config/{filename}"))
-        .expect(&format!("Opening file {filename} failed"));
-
-    let competition: Competition = serde_json::from_reader(file)
-        .expect(&format!("JSON deserialization of file {filename} failed"));
-    competition
+    let contents: &str;
+    if competition_name == "bundesliga" {
+        contents = include_str!("bundesliga.json");
+    } else if competition_name == "champions_league" {
+        contents = include_str!("champions_league.json");
+    } else if competition_name == "premier_league" {
+        contents = include_str!("premier_league.json");
+    } else if competition_name == "internationals" {
+        contents = include_str!("internationals.json");
+    } else {
+        panic!("Invalid competition name: {}", competition_name);
+    }
+    serde_json::from_str(contents).expect(&format!("JSON deserialization of competitions failed"))
 }
