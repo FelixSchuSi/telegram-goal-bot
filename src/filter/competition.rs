@@ -18,11 +18,11 @@ pub struct Team {
 }
 
 pub trait IsValidCompetition {
-    fn is_valid_competition(&self, potential_team_name: &str) -> bool;
+    fn is_valid_post_title_for_competition(&self, potential_team_name: &str) -> bool;
 }
 
 impl IsValidCompetition for Competition {
-    fn is_valid_competition(&self, potential_team_name: &str) -> bool {
+    fn is_valid_post_title_for_competition(&self, potential_team_name: &str) -> bool {
         let items = potential_team_name.split("-").collect::<Vec<&str>>();
         if items.len() < 2 {
             return false;
@@ -66,7 +66,7 @@ fn is_valid_post_test() {
         println!("{:?}", positive_cases);
         positive_cases.iter().for_each(|c| {
             assert!(
-                competition.is_valid_competition(c),
+                competition.is_valid_post_title_for_competition(c),
                 "\n\n Post falsely NOT identified: {c}\n\n",
             );
         });
@@ -85,7 +85,7 @@ fn is_not_valid_competition_test() {
 
     positive_cases.iter().for_each(|c| {
         assert!(
-            !bundesliga.is_valid_competition(c),
+            !bundesliga.is_valid_post_title_for_competition(c),
             "\n\n Bundesliga post falsely identified: {c}\n\n",
         );
     });
