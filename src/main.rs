@@ -5,6 +5,8 @@ mod config;
 mod filter;
 mod scrape;
 use futures_util::stream::StreamExt;
+
+use log::{error, info};
 use roux::Subreddit;
 use roux_stream::stream_submissions;
 use std::time::Duration;
@@ -13,6 +15,7 @@ use tokio_retry::strategy::ExponentialBackoff;
 
 #[tokio::main]
 async fn main() {
+    env_logger::init();
     let config = read_config();
     let subreddit = Subreddit::new("soccer");
     let retry_strategy = ExponentialBackoff::from_millis(5).factor(100).take(3);
@@ -28,7 +31,7 @@ async fn main() {
         // `submission` is an `Err` if getting the latest submissions
         // from Reddit failed even after retrying.
         let Ok(submission) = submission else {
-            println!("Error getting submission: {}", submission.unwrap_err());
+            error!("Error getting submission: {}", submission.unwrap_err());
             continue;
         };
         let url = match &submission.url {
@@ -37,7 +40,7 @@ async fn main() {
         };
 
         if submission_filter(&submission, &config.champions_league) {
-            println!(
+            info!(
                 "🟩 title:\"{}\" competition: champions_league scraped link: \"{}\" OG link: \"{}\"",
                 submission.title,
                 scrape_video(String::clone(&url)).await.expect(&url),
@@ -45,7 +48,7 @@ async fn main() {
             );
         }
         if submission_filter(&submission, &config.bundesliga) {
-            println!(
+            info!(
                 "🟩 title:\"{}\" competition: bundesliga scraped link: \"{}\" OG link: \"{}\"",
                 submission.title,
                 scrape_video(String::clone(&url)).await.expect(&url),
@@ -53,7 +56,7 @@ async fn main() {
             );
         }
         if submission_filter(&submission, &config.internationals) {
-            println!(
+            info!(
                 "🟩 title:\"{}\" competition: internationals scraped link: \"{}\" OG link: \"{}\"",
                 submission.title,
                 scrape_video(String::clone(&url)).await.expect(&url),
@@ -61,7 +64,7 @@ async fn main() {
             );
         }
         if submission_filter(&submission, &config.premier_league) {
-            println!(
+            info!(
                 "🟩 title:\"{}\" competition: premier_league scraped link: \"{}\" OG link: \"{}\"",
                 submission.title,
                 scrape_video(String::clone(&url)).await.expect(&url),

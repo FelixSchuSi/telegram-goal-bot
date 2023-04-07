@@ -63,7 +63,6 @@ fn is_valid_post_test() {
     ];
     for competition in competitions {
         let positive_cases = generate_positive_test_cases(&competition);
-        println!("{:?}", positive_cases);
         positive_cases.iter().for_each(|c| {
             assert!(
                 competition.is_valid_post_title_for_competition(c),

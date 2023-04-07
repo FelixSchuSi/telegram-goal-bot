@@ -1,6 +1,7 @@
 use std::str::FromStr;
 
 use chrono::Utc;
+use log::info;
 use roux::subreddit::responses::SubmissionsData;
 
 use super::{
@@ -19,18 +20,18 @@ pub fn submission_filter(submission: &SubmissionsData, competition: &Competition
     let lower_title = submission.title.to_lowercase();
     let mut title_split = lower_title.split_whitespace();
 
-    println!("Checking submission: {}", submission.title);
+    info!("Checking submission: {}", submission.title);
 
     // Titles of goal videos are expected to be in the format: "team1 [1] - [0] team2"
     // So a valid title has to contain a hyphen
     if !title_split.any(|s| s == "-") {
-        println!("Title does not contain a hyphen: {}", submission.title);
+        info!("Title does not contain a hyphen: {}", submission.title);
         return false;
     }
 
     // Ignore all u7 to u21 games
     if title_split.any(|s| UNDER_7_TO_UNDER_21.contains(&s)) {
-        println!(
+        info!(
             "Title contains an age group (u7 to u21): {}",
             submission.title
         );
@@ -39,19 +40,19 @@ pub fn submission_filter(submission: &SubmissionsData, competition: &Competition
 
     // Also ignore womens games
     if title_split.any(|s| s == "w") {
-        println!("Title contains a womens game: {}", submission.title);
+        info!("Title contains a womens game: {}", submission.title);
         return false;
     }
 
     // Check if the video is hosted on one of the specified VideoHosts
     if VideoHost::from_str(&host).is_err() {
-        println!("Video is not hosted on a valid host: {}", &host);
+        info!("Video is not hosted on a valid host: {}", &host);
         return false;
     }
 
     // Check if the title contains two teams of the specified competition
     if !competition.is_valid_post_title_for_competition(&submission.title) {
-        println!(
+        info!(
             "Title does not contain two teams of the specified competition: {}",
             submission.title
         );
@@ -60,7 +61,7 @@ pub fn submission_filter(submission: &SubmissionsData, competition: &Competition
 
     // Post must be younger than 3 minutes
     // if Utc::now().timestamp() - submission.created_utc as i64 > 180 {
-    //     println!(
+    //     trace!(
     //         "Submission is not younger than 3 minutes: {}",
     //         submission.title
     //     );
