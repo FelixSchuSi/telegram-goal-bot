@@ -59,13 +59,13 @@ pub fn submission_filter(submission: &SubmissionsData, competition: &Competition
     }
 
     // Post must be younger than 3 minutes
-    if Utc::now().timestamp() - submission.created_utc as i64 > 180 {
-        println!(
-            "Submission is not younger than 3 minutes: {}",
-            submission.title
-        );
-        return false;
-    }
+    // if Utc::now().timestamp() - submission.created_utc as i64 > 180 {
+    //     println!(
+    //         "Submission is not younger than 3 minutes: {}",
+    //         submission.title
+    //     );
+    //     return false;
+    // }
 
     true
 }

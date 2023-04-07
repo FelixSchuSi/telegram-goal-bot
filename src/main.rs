@@ -1,6 +1,9 @@
-use crate::{config::config::read_config, filter::filter::submission_filter};
+use crate::{
+    config::config::read_config, filter::filter::submission_filter, scrape::scrape::scrape_video,
+};
 mod config;
 mod filter;
+mod scrape;
 use futures_util::stream::StreamExt;
 use roux::Subreddit;
 use roux_stream::stream_submissions;
@@ -28,26 +31,41 @@ async fn main() {
             println!("Error getting submission: {}", submission.unwrap_err());
             continue;
         };
+        let url = match &submission.url {
+            Some(property) => property,
+            None => continue,
+        };
 
         if submission_filter(&submission, &config.champions_league) {
             println!(
-                "🟩 title:\"{}\" competition: champions_league",
+                "🟩 title:\"{}\" competition: champions_league scraped link: \"{}\" OG link: \"{}\"",
                 submission.title,
+                scrape_video(String::clone(&url)).await.expect(&url),
+                url
             );
         }
         if submission_filter(&submission, &config.bundesliga) {
-            println!("🟩 title:\"{}\" competition: bundesliga", submission.title,);
+            println!(
+                "🟩 title:\"{}\" competition: bundesliga scraped link: \"{}\" OG link: \"{}\"",
+                submission.title,
+                scrape_video(String::clone(&url)).await.expect(&url),
+                url
+            );
         }
         if submission_filter(&submission, &config.internationals) {
             println!(
-                "🟩 title:\"{}\" competition: internationals",
+                "🟩 title:\"{}\" competition: internationals scraped link: \"{}\" OG link: \"{}\"",
                 submission.title,
+                scrape_video(String::clone(&url)).await.expect(&url),
+                url
             );
         }
         if submission_filter(&submission, &config.premier_league) {
             println!(
-                "🟩 title:\"{}\" competition: premier_league",
+                "🟩 title:\"{}\" competition: premier_league scraped link: \"{}\" OG link: \"{}\"",
                 submission.title,
+                scrape_video(String::clone(&url)).await.expect(&url),
+                url
             );
         }
     }
