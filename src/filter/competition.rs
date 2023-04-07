@@ -74,6 +74,16 @@ fn is_valid_post_test() {
 }
 
 #[test]
+fn test123() {
+    let champions_league = read_config().champions_league;
+    let title = "Benfica [1] - 0 Porto - Diogo Costa 10' OG";
+    assert!(
+        champions_league.is_valid_post_title_for_competition(title),
+        "\n\n cl post falsely identified: {title}\n\n",
+    );
+}
+
+#[test]
 fn is_not_valid_competition_test() {
     let bundesliga = read_config().bundesliga;
 

@@ -21,7 +21,13 @@ pub enum VideoHost {
 impl FromStr for VideoHost {
     type Err = ();
     fn from_str(input: &str) -> Result<VideoHost, Self::Err> {
-        match input {
+        let mut owned_string = input.to_owned().to_lowercase();
+        owned_string = owned_string.replace("http://", "");
+        owned_string = owned_string.replace("https://", "");
+        owned_string = owned_string.replace("www.", "");
+        let domain = owned_string.split(".").collect::<Vec<&str>>()[0];
+
+        match domain {
             "streamwo" => Ok(VideoHost::Streamwo),
             "streamja" => Ok(VideoHost::Streamja),
             "streamye" => Ok(VideoHost::Streamye),

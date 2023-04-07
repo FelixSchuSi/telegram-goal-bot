@@ -1,5 +1,8 @@
 use std::str::FromStr;
 
+use chrono::Utc;
+use roux::subreddit::responses::SubmissionsData;
+
 use super::{
     competition::{Competition, IsValidCompetition},
     videohost::VideoHost,
@@ -11,41 +14,58 @@ const UNDER_7_TO_UNDER_21: [&str; 15] = [
 ];
 
 #[allow(dead_code)]
-pub fn filter(title: &str, host: &str, competition: &Competition) -> bool {
-    let lower_title = title.to_lowercase();
+pub fn submission_filter(submission: &SubmissionsData, competition: &Competition) -> bool {
+    let host = submission.url.to_owned().unwrap_or_default();
+    let lower_title = submission.title.to_lowercase();
     let mut title_split = lower_title.split_whitespace();
+
+    println!("Checking submission: {}", submission.title);
 
     // Titles of goal videos are expected to be in the format: "team1 [1] - [0] team2"
     // So a valid title has to contain a hyphen
     if !title_split.any(|s| s == "-") {
-        return false;
-    }
-
-    // Ignore u19 and u21 games
-    if lower_title.contains("u19") || lower_title.contains("u21") {
+        println!("Title does not contain a hyphen: {}", submission.title);
         return false;
     }
 
     // Ignore all u7 to u21 games
     if title_split.any(|s| UNDER_7_TO_UNDER_21.contains(&s)) {
+        println!(
+            "Title contains an age group (u7 to u21): {}",
+            submission.title
+        );
         return false;
     }
 
     // Also ignore womens games
     if title_split.any(|s| s == "w") {
+        println!("Title contains a womens game: {}", submission.title);
         return false;
     }
 
     // Check if the video is hosted on one of the specified VideoHosts
-    if VideoHost::from_str(host).is_err() {
+    if VideoHost::from_str(&host).is_err() {
+        println!("Video is not hosted on a valid host: {}", &host);
         return false;
     }
 
     // Check if the title contains two teams of the specified competition
-    if !competition.is_valid_post_title_for_competition(title) {
+    if !competition.is_valid_post_title_for_competition(&submission.title) {
+        println!(
+            "Title does not contain two teams of the specified competition: {}",
+            submission.title
+        );
         return false;
     }
 
-    // TODO: post must be younger than 3 minutes.
+    // Post must be younger than 3 minutes
+    if Utc::now().timestamp() - submission.created_utc as i64 > 180 {
+        println!(
+            "Submission is not younger than 3 minutes: {}",
+            submission.title
+        );
+        return false;
+    }
+
     true
 }
