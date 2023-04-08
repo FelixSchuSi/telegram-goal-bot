@@ -1,8 +1,6 @@
-use std::ops::Index;
-
+use crate::config::config::Config;
 use serde::Deserialize;
-
-use crate::config::config::{read_config, Config};
+use std::ops::Index;
 
 #[derive(Debug, Deserialize)]
 pub struct Competition {
@@ -17,12 +15,8 @@ pub struct Team {
     aliases: Vec<String>,
 }
 
-pub trait IsValidCompetition {
-    fn is_valid_post_title_for_competition(&self, potential_team_name: &str) -> bool;
-}
-
-impl IsValidCompetition for Competition {
-    fn is_valid_post_title_for_competition(&self, potential_team_name: &str) -> bool {
+impl Competition {
+    pub fn is_valid_post_title_for_competition(&self, potential_team_name: &str) -> bool {
         let items = potential_team_name.split("-").collect::<Vec<&str>>();
         if items.len() < 2 {
             return false;
@@ -36,11 +30,7 @@ impl IsValidCompetition for Competition {
     }
 }
 
-pub trait IsValidTeam {
-    fn is_valid_team(&self, potential_team_name: &str) -> bool;
-}
-
-impl IsValidTeam for Team {
+impl Team {
     fn is_valid_team(&self, potential_team_name: &str) -> bool {
         let words: Vec<String> = potential_team_name
             .split_whitespace()
@@ -54,7 +44,7 @@ impl IsValidTeam for Team {
 
 #[test]
 fn is_valid_post_test() {
-    let config = read_config();
+    let config = Config::init();
     let competitions = vec![
         config.bundesliga,
         config.champions_league,
@@ -74,7 +64,7 @@ fn is_valid_post_test() {
 
 #[test]
 fn test123() {
-    let champions_league = read_config().champions_league;
+    let champions_league = Config::init().champions_league;
     let title = "Benfica [1] - 0 Porto - Diogo Costa 10' OG";
     assert!(
         champions_league.is_valid_post_title_for_competition(title),
@@ -84,7 +74,7 @@ fn test123() {
 
 #[test]
 fn is_not_valid_competition_test() {
-    let bundesliga = read_config().bundesliga;
+    let bundesliga = Config::init().bundesliga;
 
     let positive_cases = vec![
         "Bayyern Munnich 4 - [2] Borussia Dortmund - Donyell Malen 90'",

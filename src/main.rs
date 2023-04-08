@@ -1,9 +1,8 @@
-use crate::{
-    config::config::read_config, filter::filter::submission_filter, scrape::scrape::scrape_video,
-};
+use crate::{filter::filter::submission_filter, scrape::scrape::scrape_video};
 mod config;
 mod filter;
 mod scrape;
+use config::config::Config;
 use futures_util::stream::StreamExt;
 
 use log::{error, info};
@@ -16,7 +15,7 @@ use tokio_retry::strategy::ExponentialBackoff;
 #[tokio::main]
 async fn main() {
     env_logger::init();
-    let config = read_config();
+    let config = Config::init();
     let subreddit = Subreddit::new("soccer");
     let retry_strategy = ExponentialBackoff::from_millis(5).factor(100).take(3);
 

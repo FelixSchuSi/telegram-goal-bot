@@ -4,10 +4,7 @@ use chrono::Utc;
 use log::info;
 use roux::subreddit::responses::SubmissionsData;
 
-use super::{
-    competition::{Competition, IsValidCompetition},
-    videohost::VideoHost,
-};
+use super::{competition::Competition, videohost::VideoHost};
 
 const UNDER_7_TO_UNDER_21: [&str; 15] = [
     "u7", "u8", "u9", "u10", "u11", "u12", "u13", "u14", "u15", "u16", "u17", "u18", "u19", "u20",
