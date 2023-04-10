@@ -1,6 +1,7 @@
 use crate::{filter::filter::submission_filter, telegram::send::send_video};
 mod config;
 mod filter;
+mod replay;
 mod scrape;
 mod telegram;
 use config::config::Config;
@@ -11,6 +12,7 @@ use roux::Subreddit;
 use roux_stream::stream_submissions;
 use std::time::Duration;
 use teloxide::Bot;
+
 use tokio_retry::strategy::ExponentialBackoff;
 
 #[tokio::main]
@@ -21,6 +23,13 @@ async fn main() {
     let subreddit = Subreddit::new("soccer");
     let bot = Bot::from_env();
 
+    // send_reply(
+    //     &bot,
+    //     "schönes Tor",
+    //     ChatId(-1000000000000 - 1273971265),
+    //     MessageId(34),
+    // )
+    // .await;
     let (mut stream, join_handle) = stream_submissions(
         &subreddit,
         Duration::from_secs(5),
@@ -41,16 +50,16 @@ async fn main() {
         };
 
         if submission_filter(&submission, &config.champions_league) {
-            send_video(&submission, &bot, url, &config.premier_league).await;
+            send_video(&submission.title, &bot, url, &config.champions_league).await;
         }
         if submission_filter(&submission, &config.bundesliga) {
-            send_video(&submission, &bot, url, &config.premier_league).await;
+            send_video(&submission.title, &bot, url, &config.bundesliga).await;
         }
         if submission_filter(&submission, &config.internationals) {
-            send_video(&submission, &bot, url, &config.premier_league).await;
+            send_video(&submission.title, &bot, url, &config.internationals).await;
         }
         if submission_filter(&submission, &config.premier_league) {
-            send_video(&submission, &bot, url, &config.premier_league).await;
+            send_video(&submission.title, &bot, url, &config.premier_league).await;
         }
     }
 

@@ -10,6 +10,8 @@ pub struct Competition {
     pub name: String,
     #[serde(skip)]
     pub chat_id: i64,
+    #[serde(skip)]
+    pub chat_id_replies: i64,
 }
 
 #[derive(Debug, Deserialize)]
