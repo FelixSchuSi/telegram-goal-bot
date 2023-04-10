@@ -1,4 +1,5 @@
 {
+  "name": "premier_league",
   "teams": [
     {
       "aliases": ["arsenal", "gunners", "afc"],

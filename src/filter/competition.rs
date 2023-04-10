@@ -1,11 +1,15 @@
 use crate::config::config::Config;
 use serde::Deserialize;
 use std::ops::Index;
+use teloxide::types::ChatId;
 
 #[derive(Debug, Deserialize)]
 pub struct Competition {
     #[allow(dead_code)]
     teams: Vec<Team>,
+    pub name: String,
+    #[serde(skip)]
+    pub chat_id: i64,
 }
 
 #[derive(Debug, Deserialize)]
@@ -27,6 +31,10 @@ impl Competition {
 
         self.teams.iter().any(|t| t.is_valid_team(team1))
             && self.teams.iter().any(|t| t.is_valid_team(team2))
+    }
+
+    pub fn get_chat_id(&self) -> ChatId {
+        ChatId(-1000000000000 + self.chat_id)
     }
 }
 
@@ -63,7 +71,7 @@ fn is_valid_post_test() {
 }
 
 #[test]
-fn test123() {
+fn testCL() {
     let champions_league = Config::init().champions_league;
     let title = "Benfica [1] - 0 Porto - Diogo Costa 10' OG";
     assert!(
@@ -72,6 +80,15 @@ fn test123() {
     );
 }
 
+#[test]
+fn testBundesliga() {
+    let bundesliga = Config::init().bundesliga;
+    let title = "Hoffenheim [1]-0 Schalke - Alex Kral (OG) 25'";
+    assert!(
+        bundesliga.is_valid_post_title_for_competition(title),
+        "\n\n bundesliga post falsely identified: {title}\n\n",
+    );
+}
 #[test]
 fn is_not_valid_competition_test() {
     let bundesliga = Config::init().bundesliga;

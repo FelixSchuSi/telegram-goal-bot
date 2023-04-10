@@ -1,28 +1,30 @@
-use crate::{filter::filter::submission_filter, scrape::scrape::scrape_video};
+use crate::{filter::filter::submission_filter, telegram::send::send_video};
 mod config;
 mod filter;
 mod scrape;
+mod telegram;
 use config::config::Config;
+use dotenv::dotenv;
 use futures_util::stream::StreamExt;
-
-use log::{error, info};
+use log::error;
 use roux::Subreddit;
 use roux_stream::stream_submissions;
 use std::time::Duration;
-
+use teloxide::Bot;
 use tokio_retry::strategy::ExponentialBackoff;
 
 #[tokio::main]
 async fn main() {
     env_logger::init();
+    dotenv().ok();
     let config = Config::init();
     let subreddit = Subreddit::new("soccer");
-    let retry_strategy = ExponentialBackoff::from_millis(5).factor(100).take(3);
+    let bot = Bot::from_env();
 
     let (mut stream, join_handle) = stream_submissions(
         &subreddit,
         Duration::from_secs(5),
-        retry_strategy,
+        ExponentialBackoff::from_millis(5).factor(100).take(3),
         Some(Duration::from_secs(10)),
     );
 
@@ -39,40 +41,21 @@ async fn main() {
         };
 
         if submission_filter(&submission, &config.champions_league) {
-            info!(
-                "🟩 title:\"{}\" competition: champions_league scraped link: \"{}\" OG link: \"{}\"",
-                submission.title,
-                scrape_video(String::clone(&url)).await.expect(&url),
-                url
-            );
+            send_video(&submission, &bot, url, &config.premier_league).await;
         }
         if submission_filter(&submission, &config.bundesliga) {
-            info!(
-                "🟩 title:\"{}\" competition: bundesliga scraped link: \"{}\" OG link: \"{}\"",
-                submission.title,
-                scrape_video(String::clone(&url)).await.expect(&url),
-                url
-            );
+            send_video(&submission, &bot, url, &config.premier_league).await;
         }
         if submission_filter(&submission, &config.internationals) {
-            info!(
-                "🟩 title:\"{}\" competition: internationals scraped link: \"{}\" OG link: \"{}\"",
-                submission.title,
-                scrape_video(String::clone(&url)).await.expect(&url),
-                url
-            );
+            send_video(&submission, &bot, url, &config.premier_league).await;
         }
         if submission_filter(&submission, &config.premier_league) {
-            info!(
-                "🟩 title:\"{}\" competition: premier_league scraped link: \"{}\" OG link: \"{}\"",
-                submission.title,
-                scrape_video(String::clone(&url)).await.expect(&url),
-                url
-            );
+            send_video(&submission, &bot, url, &config.premier_league).await;
         }
     }
 
-    // In case there was an error sending the submissions through the
-    // stream, `join_handle` will report it.
-    join_handle.await.unwrap().unwrap();
+    join_handle
+        .await
+        .expect("Error getting data from reddit")
+        .expect("Received SendError from reddit");
 }

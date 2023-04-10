@@ -1,4 +1,5 @@
 {
+  "name": "champions_league",
   "teams": [
     {
       "aliases": ["paris", "saint", "germain", "psg"],
