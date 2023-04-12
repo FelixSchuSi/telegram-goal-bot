@@ -17,9 +17,11 @@ pub enum VideoHost {
     Streamin,
     Dubz,
 }
+#[derive(Debug, PartialEq, Eq)]
+pub struct UnkownVideoHostError;
 
 impl FromStr for VideoHost {
-    type Err = ();
+    type Err = UnkownVideoHostError;
     fn from_str(input: &str) -> Result<VideoHost, Self::Err> {
         let mut owned_string = input.to_owned().to_lowercase();
         owned_string = owned_string.replace("http://", "");
@@ -41,7 +43,7 @@ impl FromStr for VideoHost {
             "streamgg" => Ok(VideoHost::Streamgg),
             "streamin" => Ok(VideoHost::Streamin),
             "dubz" => Ok(VideoHost::Dubz),
-            _ => Err(()),
+            _ => Err(UnkownVideoHostError),
         }
     }
 }

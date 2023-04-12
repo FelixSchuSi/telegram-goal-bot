@@ -1,12 +1,21 @@
 use std::str::FromStr;
 
-use reqwest::Error;
-
 use crate::filter::videohost::VideoHost;
 
-pub async fn scrape_video(url: String) -> Result<String, Error> {
-    let video_host = VideoHost::from_str(&url).unwrap();
-    let response = reqwest::get(url).await?.text().await?;
+#[derive(Debug, Clone)]
+pub struct ScrapeError(String);
+
+pub async fn scrape_video(url: String) -> Result<String, ScrapeError> {
+    let video_host =
+        VideoHost::from_str(&url).map_err(|_| ScrapeError("Unkown VideoHost".to_string()))?;
+
+    let response = reqwest::get(url)
+        .await
+        .map_err(|_| ScrapeError("Request to VideoHost site failed".to_string()))?
+        .text()
+        .await
+        .map_err(|_| ScrapeError("Getting text Response from Request failed".to_string()))?;
+
     let document = scraper::Html::parse_document(&response);
     let selector: &str;
     let attribute: &str;
@@ -66,7 +75,15 @@ pub async fn scrape_video(url: String) -> Result<String, Error> {
             attribute = "src";
         }
     };
-    let title_selector = scraper::Selector::parse(selector).unwrap();
-    let element = document.select(&title_selector).next().unwrap();
-    Ok(element.value().attr(attribute).unwrap().to_string())
+    let title_selector = scraper::Selector::parse(selector).map_err(|_| {
+        ScrapeError("The given String could not be parsed to a CSS selector".to_string())
+    })?;
+    let element = document.select(&title_selector).next().ok_or(ScrapeError(
+        "No Element matching the CSS Selector present in the scraped site".to_string(),
+    ))?;
+    let value = element.value().attr(attribute).ok_or(ScrapeError(format!(
+        "The given DOM-Element does not have the {} attribute",
+        attribute
+    )))?;
+    Ok(value.to_string())
 }

@@ -38,6 +38,10 @@ impl Competition {
     pub fn get_chat_id(&self) -> ChatId {
         ChatId(-1000000000000 + self.chat_id)
     }
+
+    pub fn get_chat_id_replies(&self) -> ChatId {
+        ChatId(-1000000000000 + self.chat_id_replies)
+    }
 }
 
 impl Team {
