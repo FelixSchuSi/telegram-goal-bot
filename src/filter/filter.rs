@@ -1,5 +1,6 @@
 use std::str::FromStr;
 
+#[allow(unused_imports)]
 use chrono::Utc;
 use log::info;
 use roux::subreddit::responses::SubmissionsData;
@@ -18,14 +19,14 @@ pub fn submission_filter(submission: &SubmissionsData, competition: &Competition
     let mut title_split = lower_title.split_whitespace();
 
     info!(
-        "Checking submission for competition {}: {}",
+        "Checking submission for competition {:?}: {}",
         competition.name, submission.title
     );
 
     // Check if the title contains two teams of the specified competition
     if !competition.is_valid_post_title_for_competition(&submission.title) {
         info!(
-            "Title does not contain two teams of {}: {}",
+            "Title does not contain two teams of {:?}: {}",
             competition.name, submission.title
         );
         return false;
@@ -69,7 +70,7 @@ pub fn submission_filter(submission: &SubmissionsData, competition: &Competition
     // }
 
     info!(
-        "✅ Submission passed filter for competition {}: {}",
+        "✅ Submission passed filter for competition {:?}: {:?}",
         competition.name, submission.title
     );
     true

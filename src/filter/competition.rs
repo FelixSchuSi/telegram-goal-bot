@@ -7,11 +7,23 @@ use crate::config::config::Config;
 #[cfg(test)]
 use std::env;
 
+#[derive(Debug, Deserialize, Clone)]
+pub enum CompetitionName {
+    #[serde(rename = "bundesliga")]
+    Bundesliga,
+    #[serde(rename = "premier_league")]
+    PremierLeague,
+    #[serde(rename = "champions_league")]
+    ChampionsLeague,
+    #[serde(rename = "internationals")]
+    Internationals,
+}
+
 #[derive(Debug, Deserialize)]
 pub struct Competition {
     #[allow(dead_code)]
     teams: Vec<Team>,
-    pub name: String,
+    pub name: CompetitionName,
     #[serde(skip)]
     pub chat_id: i64,
     #[serde(skip)]

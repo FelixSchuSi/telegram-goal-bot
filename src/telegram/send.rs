@@ -1,3 +1,4 @@
+use log::{error, info};
 use reqwest::Url;
 use teloxide::{
     payloads::{SendMessageSetters, SendVideoSetters},
@@ -12,6 +13,7 @@ pub async fn send_video(caption: &str, bot: &Bot, url: &str, competition: &Compe
     let scraped_url = scrape_video(String::clone(&url.to_string())).await;
 
     if scraped_url.is_err() {
+        error!("Scraping failed: {}", scraped_url.err().unwrap().0);
         return send_message(caption, bot, url, competition).await;
     }
 
@@ -30,7 +32,7 @@ pub async fn send_message(
     url: &str,
     competition: &Competition,
 ) -> Message {
-    println!(
+    info!(
         "🟩 SENDING MESSAGE: title:\"{}\" OG link: \"{}\"",
         caption, url
     );
@@ -44,8 +46,9 @@ pub async fn send_message(
     .expect("Failed to send message")
 }
 
+#[allow(dead_code)]
 pub async fn send_reply(bot: &Bot, message: &str, chat_id: ChatId, reply_to_message_id: MessageId) {
-    println!("🟩 SENDING REPLY: {}", message);
+    info!("🟩 SENDING REPLY: {}", message);
     bot.send_message(chat_id, message)
         .parse_mode(ParseMode::Html)
         .reply_to_message_id(reply_to_message_id)

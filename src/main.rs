@@ -1,70 +1,74 @@
-use crate::{filter::filter::submission_filter, telegram::send::send_video};
+use crate::reddit::listen_for_submissions::listen_for_submissions;
 mod config;
 mod filter;
+mod reddit;
 mod replay;
 mod scrape;
 mod telegram;
 use config::config::Config;
 use dotenv::dotenv;
-use futures_util::stream::StreamExt;
-use log::error;
+use filter::competition::CompetitionName;
+use reddit::listen_for_comments::listen_for_comments;
 use roux::Subreddit;
-use roux_stream::stream_submissions;
-use std::time::Duration;
+use std::sync::{Arc, Mutex};
 use teloxide::Bot;
 
-use tokio_retry::strategy::ExponentialBackoff;
+#[derive(Debug, Clone)]
+pub struct GoalSubmission {
+    pub submission_id: String,
+    pub competition: CompetitionName,
+}
 
 #[tokio::main]
 async fn main() {
     env_logger::init();
     dotenv().ok();
-    let config = Config::init();
-    let subreddit = Subreddit::new("soccer");
-    let bot = Bot::from_env();
+    let config = Arc::new(Config::init());
+    let subreddit = Arc::new(Subreddit::new("soccer"));
+    let bot = Arc::new(Bot::from_env());
 
-    // send_reply(
-    //     &bot,
-    //     "schönes Tor",
-    //     ChatId(-1000000000000 - 1273971265),
-    //     MessageId(34),
-    // )
-    // .await;
-    let (mut stream, join_handle) = stream_submissions(
-        &subreddit,
-        Duration::from_secs(5),
-        ExponentialBackoff::from_millis(5).factor(100).take(3),
-        Some(Duration::from_secs(10)),
+    // List of submissions that are goals and were posted to telegram.
+    // We want to listen for comments for this submission to find replays of that goal to post them to telegram as well.
+    let listen_for_replays_submission_ids: Arc<Mutex<Vec<GoalSubmission>>> =
+        Arc::new(Mutex::new(Vec::new()));
+
+    let (subreddit_cloned, bot_cloned, config_cloned, listen_for_replays_submission_ids_cloned) = (
+        Arc::clone(&subreddit),
+        Arc::clone(&bot),
+        Arc::clone(&config),
+        Arc::clone(&listen_for_replays_submission_ids),
     );
+    let submissions_join_handler = tokio::spawn(async {
+        listen_for_submissions(
+            subreddit_cloned,
+            bot_cloned,
+            config_cloned,
+            listen_for_replays_submission_ids_cloned,
+        )
+        .await;
+    });
 
-    while let Some(submission) = stream.next().await {
-        // `submission` is an `Err` if getting the latest submissions
-        // from Reddit failed even after retrying.
-        let Ok(submission) = submission else {
-            error!("Error getting submission: {}", submission.unwrap_err());
-            continue;
-        };
-        let url = match &submission.url {
-            Some(property) => property,
-            None => continue,
-        };
+    let (subreddit_cloned, bot_cloned, config_cloned, listen_for_replays_submission_ids_cloned) = (
+        Arc::clone(&subreddit),
+        Arc::clone(&bot),
+        Arc::clone(&config),
+        Arc::clone(&listen_for_replays_submission_ids),
+    );
+    let comments_join_handler = tokio::spawn(async {
+        listen_for_comments(
+            subreddit_cloned,
+            bot_cloned,
+            config_cloned,
+            listen_for_replays_submission_ids_cloned,
+        )
+        .await;
+    });
 
-        if submission_filter(&submission, &config.champions_league) {
-            send_video(&submission.title, &bot, url, &config.champions_league).await;
-        }
-        if submission_filter(&submission, &config.bundesliga) {
-            send_video(&submission.title, &bot, url, &config.bundesliga).await;
-        }
-        if submission_filter(&submission, &config.internationals) {
-            send_video(&submission.title, &bot, url, &config.internationals).await;
-        }
-        if submission_filter(&submission, &config.premier_league) {
-            send_video(&submission.title, &bot, url, &config.premier_league).await;
-        }
-    }
-
-    join_handle
+    submissions_join_handler
         .await
-        .expect("Error getting data from reddit")
-        .expect("Received SendError from reddit");
+        .expect("Panic while handling submissions");
+
+    comments_join_handler
+        .await
+        .expect("Panic while handling comments");
 }

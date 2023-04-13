@@ -2,7 +2,7 @@ use crate::filter::videohost::VideoHost;
 use std::str::FromStr;
 
 #[derive(Debug, Clone, PartialEq)]
-pub struct ScrapeError(String);
+pub struct ScrapeError(pub String);
 
 pub async fn scrape_video(url: String) -> Result<String, ScrapeError> {
     let video_host =
@@ -58,6 +58,8 @@ pub async fn scrape_video(url: String) -> Result<String, ScrapeError> {
             attribute = "src";
         }
         VideoHost::Streamff => {
+            // Streamff does Client side rendering so scraping will always fail.
+            // could fix this by using playwright or something similar.
             selector = "video";
             attribute = "src";
         }
