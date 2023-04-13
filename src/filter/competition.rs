@@ -1,7 +1,11 @@
-use crate::config::config::Config;
 use serde::Deserialize;
 use std::ops::Index;
 use teloxide::types::ChatId;
+
+#[cfg(test)]
+use crate::config::config::Config;
+#[cfg(test)]
+use std::env;
 
 #[derive(Debug, Deserialize)]
 pub struct Competition {
@@ -39,6 +43,7 @@ impl Competition {
         ChatId(-1000000000000 + self.chat_id)
     }
 
+    #[allow(dead_code)]
     pub fn get_chat_id_replies(&self) -> ChatId {
         ChatId(-1000000000000 + self.chat_id_replies)
     }
@@ -58,6 +63,7 @@ impl Team {
 
 #[test]
 fn is_valid_post_test() {
+    mock_env_vars();
     let config = Config::init();
     let competitions = vec![
         config.bundesliga,
@@ -77,7 +83,8 @@ fn is_valid_post_test() {
 }
 
 #[test]
-fn testCL() {
+fn test_cl() {
+    mock_env_vars();
     let champions_league = Config::init().champions_league;
     let title = "Benfica [1] - 0 Porto - Diogo Costa 10' OG";
     assert!(
@@ -87,7 +94,8 @@ fn testCL() {
 }
 
 #[test]
-fn testBundesliga() {
+fn test_bundesliga() {
+    mock_env_vars();
     let bundesliga = Config::init().bundesliga;
     let title = "Hoffenheim [1]-0 Schalke - Alex Kral (OG) 25'";
     assert!(
@@ -97,6 +105,7 @@ fn testBundesliga() {
 }
 #[test]
 fn is_not_valid_competition_test() {
+    mock_env_vars();
     let bundesliga = Config::init().bundesliga;
 
     let positive_cases = vec![
@@ -113,6 +122,7 @@ fn is_not_valid_competition_test() {
     });
 }
 
+#[cfg(test)]
 fn generate_positive_test_cases(competition: &Competition) -> Vec<String> {
     competition
         .teams
@@ -133,4 +143,16 @@ fn generate_positive_test_cases(competition: &Competition) -> Vec<String> {
             })
         })
         .collect()
+}
+
+#[cfg(test)]
+fn mock_env_vars() {
+    env::set_var("CHAT_ID_BUNDESLIGA", "123");
+    env::set_var("CHAT_ID_BUNDESLIGA_REPLIES", "123");
+    env::set_var("CHAT_ID_CHAMPIONS_LEAGUE", "123");
+    env::set_var("CHAT_ID_CHAMPIONS_LEAGUE_REPLIES", "123");
+    env::set_var("CHAT_ID_PREMIER_LEAGUE", "123");
+    env::set_var("CHAT_ID_PREMIER_LEAGUE_REPLIES", "123");
+    env::set_var("CHAT_ID_INTERNATIONALS", "123");
+    env::set_var("CHAT_ID_INTERNATIONALS_REPLIES", "123");
 }
