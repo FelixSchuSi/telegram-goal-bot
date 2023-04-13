@@ -1,8 +1,7 @@
+use crate::filter::videohost::VideoHost;
 use std::str::FromStr;
 
-use crate::filter::videohost::VideoHost;
-
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct ScrapeError(String);
 
 pub async fn scrape_video(url: String) -> Result<String, ScrapeError> {
@@ -86,4 +85,11 @@ pub async fn scrape_video(url: String) -> Result<String, ScrapeError> {
         attribute
     )))?;
     Ok(value.to_string())
+}
+
+#[tokio::test]
+async fn test_for_unkown_host() {
+    let result = scrape_video("https://streamall.me/ra_goO7Rm".to_string()).await;
+    assert!(result.is_err());
+    assert!(result.err().unwrap() == ScrapeError("Unkown VideoHost".to_string()));
 }
