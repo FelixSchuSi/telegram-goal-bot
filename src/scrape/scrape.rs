@@ -86,7 +86,13 @@ pub async fn scrape_video(url: String) -> Result<String, ScrapeError> {
         "The given DOM-Element does not have the {} attribute",
         attribute
     )))?;
-    Ok(value.to_string())
+
+    value
+        .ends_with(".mov")
+        .then_some(value.to_string())
+        .ok_or(ScrapeError(
+            ".mov files are not properly supported by telegram".to_string(),
+        ))
 }
 
 #[tokio::test]
