@@ -1,6 +1,6 @@
 use crate::{
-    config::config::Config, filter::competition::CompetitionName, telegram::send::send_video,
-    GoalSubmission,
+    config::config::Config, filter::competition::CompetitionName,
+    telegram::send::send_message_direct, GoalSubmission,
 };
 
 use futures_util::StreamExt;
@@ -61,7 +61,8 @@ pub async fn listen_for_comments(
                     "sending video with id: {} competition: {:?}",
                     goal_submission.submission_id, goal_submission.competition
                 );
-                send_video(&body, &bot, "http://google.com", competition).await;
+
+                send_message_direct(&body, &bot, competition).await;
             }
         }
     }

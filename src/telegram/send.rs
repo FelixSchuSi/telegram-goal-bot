@@ -46,6 +46,14 @@ pub async fn send_message(
     .expect("Failed to send message")
 }
 
+pub async fn send_message_direct(content: &str, bot: &Bot, competition: &Competition) -> Message {
+    info!("🟩 SENDING MESSAGE: title:\"{}", content);
+    bot.send_message(competition.get_chat_id(), content)
+        .send()
+        .await
+        .expect("Failed to send message")
+}
+
 #[allow(dead_code)]
 pub async fn send_reply(bot: &Bot, message: &str, chat_id: ChatId, reply_to_message_id: MessageId) {
     info!("🟩 SENDING REPLY: {}", message);
