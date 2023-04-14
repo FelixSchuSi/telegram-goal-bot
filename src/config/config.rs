@@ -1,4 +1,4 @@
-use crate::filter::competition::Competition;
+use crate::filter::competition::{Competition, CompetitionName};
 use std::env;
 
 #[derive(Debug)]
@@ -12,59 +12,62 @@ pub struct Config {
 impl Config {
     pub fn init() -> Config {
         Config {
-            bundesliga: Self::read_competition("bundesliga"),
-            champions_league: Self::read_competition("champions_league"),
-            premier_league: Self::read_competition("premier_league"),
-            internationals: Self::read_competition("internationals"),
+            bundesliga: Self::read_competition(CompetitionName::Bundesliga),
+            champions_league: Self::read_competition(CompetitionName::ChampionsLeague),
+            premier_league: Self::read_competition(CompetitionName::PremierLeague),
+            internationals: Self::read_competition(CompetitionName::Internationals),
         }
     }
 
-    fn read_competition(competition_name: &str) -> Competition {
+    fn read_competition(competition_name: CompetitionName) -> Competition {
         let contents: &str;
         let chat_id: i64;
         let chat_id_replies: i64;
-        if competition_name == "bundesliga" {
-            contents = include_str!("bundesliga.json");
-            chat_id = env::var("CHAT_ID_BUNDESLIGA")
-                .expect("Environment variable 'CHAT_ID_BUNDESLIGA' missing")
-                .parse()
-                .unwrap();
-            chat_id_replies = env::var("CHAT_ID_BUNDESLIGA_REPLIES")
-                .expect("Environment variable 'CHAT_ID_BUNDESLIGA_REPLIES' missing")
-                .parse()
-                .unwrap();
-        } else if competition_name == "champions_league" {
-            contents = include_str!("champions_league.json");
-            chat_id = env::var("CHAT_ID_CHAMPIONS_LEAGUE")
-                .expect("Environment variable 'CHAT_ID_CHAMPIONS_LEAGUE' missing")
-                .parse()
-                .unwrap();
-            chat_id_replies = env::var("CHAT_ID_CHAMPIONS_LEAGUE_REPLIES")
-                .expect("Environment variable 'CHAT_ID_CHAMPIONS_LEAGUE_REPLIES' missing")
-                .parse()
-                .unwrap();
-        } else if competition_name == "premier_league" {
-            contents = include_str!("premier_league.json");
-            chat_id = env::var("CHAT_ID_PREMIER_LEAGUE")
-                .expect("Environment variable 'CHAT_ID_PREMIER_LEAGUE' missing")
-                .parse()
-                .unwrap();
-            chat_id_replies = env::var("CHAT_ID_PREMIER_LEAGUE_REPLIES")
-                .expect("Environment variable 'CHAT_ID_PREMIER_LEAGUE_REPLIES' missing")
-                .parse()
-                .unwrap();
-        } else if competition_name == "internationals" {
-            contents = include_str!("internationals.json");
-            chat_id = env::var("CHAT_ID_INTERNATIONALS")
-                .expect("Environment variable 'CHAT_ID_INTERNATIONALS' missing")
-                .parse()
-                .unwrap();
-            chat_id_replies = env::var("CHAT_ID_INTERNATIONALS_REPLIES")
-                .expect("Environment variable 'CHAT_ID_INTERNATIONALS_REPLIES' missing")
-                .parse()
-                .unwrap();
-        } else {
-            panic!("Invalid competition name: {}", competition_name);
+        match competition_name {
+            CompetitionName::Bundesliga => {
+                contents = include_str!("bundesliga.json");
+                chat_id = env::var("CHAT_ID_BUNDESLIGA")
+                    .expect("Environment variable 'CHAT_ID_BUNDESLIGA' missing")
+                    .parse()
+                    .unwrap();
+                chat_id_replies = env::var("CHAT_ID_BUNDESLIGA_REPLIES")
+                    .expect("Environment variable 'CHAT_ID_BUNDESLIGA_REPLIES' missing")
+                    .parse()
+                    .unwrap();
+            }
+            CompetitionName::PremierLeague => {
+                contents = include_str!("premier_league.json");
+                chat_id = env::var("CHAT_ID_PREMIER_LEAGUE")
+                    .expect("Environment variable 'CHAT_ID_PREMIER_LEAGUE' missing")
+                    .parse()
+                    .unwrap();
+                chat_id_replies = env::var("CHAT_ID_PREMIER_LEAGUE_REPLIES")
+                    .expect("Environment variable 'CHAT_ID_PREMIER_LEAGUE_REPLIES' missing")
+                    .parse()
+                    .unwrap();
+            }
+            CompetitionName::ChampionsLeague => {
+                contents = include_str!("champions_league.json");
+                chat_id = env::var("CHAT_ID_CHAMPIONS_LEAGUE")
+                    .expect("Environment variable 'CHAT_ID_CHAMPIONS_LEAGUE' missing")
+                    .parse()
+                    .unwrap();
+                chat_id_replies = env::var("CHAT_ID_CHAMPIONS_LEAGUE_REPLIES")
+                    .expect("Environment variable 'CHAT_ID_CHAMPIONS_LEAGUE_REPLIES' missing")
+                    .parse()
+                    .unwrap();
+            }
+            CompetitionName::Internationals => {
+                contents = include_str!("internationals.json");
+                chat_id = env::var("CHAT_ID_INTERNATIONALS")
+                    .expect("Environment variable 'CHAT_ID_INTERNATIONALS' missing")
+                    .parse()
+                    .unwrap();
+                chat_id_replies = env::var("CHAT_ID_INTERNATIONALS_REPLIES")
+                    .expect("Environment variable 'CHAT_ID_INTERNATIONALS_REPLIES' missing")
+                    .parse()
+                    .unwrap();
+            }
         }
         let mut result: Competition = serde_json::from_str(contents)
             .expect(&format!("JSON deserialization of competitions failed"));
