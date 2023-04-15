@@ -57,10 +57,13 @@ pub async fn listen_for_comments(
         let all_comments_from_submission = subreddit
             .article_comments("article", Some(3), Some(200))
             .await;
+
         if all_comments_from_submission.is_err() {
             info!(
-                "Error getting all comments for submission with id: {} competition: {:?}",
-                goal_submission.submission_id, goal_submission.competition
+                "Error getting all comments for submission with id: {} competition: {:?} err: {:?}",
+                goal_submission.submission_id,
+                goal_submission.competition,
+                all_comments_from_submission.unwrap_err()
             );
             continue;
         }
