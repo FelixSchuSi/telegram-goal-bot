@@ -55,7 +55,7 @@ pub async fn listen_for_comments(
         };
 
         let all_comments_from_submission =
-            subreddit.article_comments("article", None, Some(200)).await;
+            subreddit.article_comments("article", None, Some(25)).await;
 
         if all_comments_from_submission.is_err() {
             info!(
