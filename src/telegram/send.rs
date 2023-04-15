@@ -43,7 +43,7 @@ pub async fn send_message(
     .parse_mode(ParseMode::Html)
     .send()
     .await
-    .expect("Failed to send message")
+    .expect(&format!("Failed to send message {:?}", competition.name))
 }
 
 pub async fn send_message_direct(content: &str, bot: &Bot, competition: &Competition) -> Message {
