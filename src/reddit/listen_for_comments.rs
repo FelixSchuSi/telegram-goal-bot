@@ -54,9 +54,8 @@ pub async fn listen_for_comments(
             CompetitionName::Internationals => &config.internationals,
         };
 
-        let all_comments_from_submission = subreddit
-            .article_comments("article", Some(3), Some(200))
-            .await;
+        let all_comments_from_submission =
+            subreddit.article_comments("article", None, Some(200)).await;
 
         if all_comments_from_submission.is_err() {
             info!(
