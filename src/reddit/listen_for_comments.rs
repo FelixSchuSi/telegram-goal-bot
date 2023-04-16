@@ -51,8 +51,9 @@ pub async fn listen_for_comments(
 
         if goal_submission.is_none() {
             info!(
-                "AA: Comment does not belong to a relevant submission. Submission_id of comment: {}",
-                id
+                "AA: Comment does not belong to a relevant submission. submission_id: {} comment_id: {}",
+                id,
+                comment.id.unwrap_or("unkown_id".to_string())
             );
             continue;
         }
@@ -80,18 +81,18 @@ pub async fn listen_for_comments(
         let all_comments_from_submission = all_comments_from_submission.unwrap().data.children;
         if !is_comment_alternative_angle(&comment, &all_comments_from_submission) {
             info!(
-                "AA: Comment is not a alternative angle: {} competition: {:?}",
-                comment
-                    .body
-                    .clone()
-                    .unwrap_or("AA: Comment has no body".to_string()),
+                "AA: Comment is not a alternative angle comment_id: {}, submission_id: {}, competition: {:?}",
+                comment.id.unwrap_or("AA: Comment has no id".to_string()),
+                id,
                 goal_submission.competition
             );
             continue;
         }
         info!(
-            "AA: sending video with id: {} competition: {:?}",
-            goal_submission.submission_id, goal_submission.competition
+            "AA: sending video submission_id: {} comment_id: {} competition: {:?}",
+            goal_submission.submission_id,
+            comment.id.unwrap_or("AA: Comment has no id".to_string()),
+            goal_submission.competition
         );
 
         send_message_direct(
