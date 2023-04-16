@@ -13,7 +13,12 @@ pub async fn send_video(caption: &str, bot: &Bot, url: &str, competition: &Compe
     let scraped_url = scrape_video(String::clone(&url.to_string())).await;
 
     if scraped_url.is_err() {
-        error!("Scraping failed: {}", scraped_url.err().unwrap().0);
+        error!(
+            "Scraping failed: {} caption: {} url: {}",
+            scraped_url.err().unwrap().0,
+            caption,
+            url
+        );
         return send_message(caption, bot, url, competition).await;
     }
     let scraped_url = scraped_url.unwrap();
@@ -26,7 +31,13 @@ pub async fn send_video(caption: &str, bot: &Bot, url: &str, competition: &Compe
         .await;
 
     if msg.is_err() {
-        error!("Scraping failed: {} {}", msg.unwrap_err(), scraped_url);
+        error!(
+            "Scraping failed: {} scraped_url: {} caption: {} url: {}",
+            msg.unwrap_err(),
+            scraped_url,
+            caption,
+            url
+        );
         return send_message(caption, bot, url, competition).await;
     }
 
