@@ -31,7 +31,13 @@ pub async fn listen_for_comments(
         // from Reddit failed even after retrying.
         let comment = comment.unwrap();
         let id = match comment.link_id.clone() {
-            None => continue,
+            None => {
+                info!(
+                    "Comment does not have a linked submission, comment_id: {}",
+                    comment.id.unwrap_or("unkown_id".to_string())
+                );
+                continue;
+            }
             Some(id) => id.replace("t3_", ""),
         };
 
@@ -44,6 +50,10 @@ pub async fn listen_for_comments(
             .map(|gs| gs.clone());
 
         if goal_submission.is_none() {
+            info!(
+                "Comment does not belong to a relevant submission. Submission_id of comment: {}",
+                id
+            );
             continue;
         }
         let goal_submission = goal_submission.unwrap();
