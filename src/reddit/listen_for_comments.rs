@@ -33,7 +33,7 @@ pub async fn listen_for_comments(
         let id = match comment.link_id.clone() {
             None => {
                 info!(
-                    "Comment does not have a linked submission, comment_id: {}",
+                    "AA: Comment does not have a linked submission, comment_id: {}",
                     comment.id.unwrap_or("unkown_id".to_string())
                 );
                 continue;
@@ -51,7 +51,7 @@ pub async fn listen_for_comments(
 
         if goal_submission.is_none() {
             info!(
-                "Comment does not belong to a relevant submission. Submission_id of comment: {}",
+                "AA: Comment does not belong to a relevant submission. Submission_id of comment: {}",
                 id
             );
             continue;
@@ -70,7 +70,7 @@ pub async fn listen_for_comments(
 
         if all_comments_from_submission.is_err() {
             info!(
-                "Error getting all comments for submission with id: {} competition: {:?} err: {:?}",
+                "AA: Error getting all comments for submission with id: {} competition: {:?} err: {:?}",
                 goal_submission.submission_id,
                 goal_submission.competition,
                 all_comments_from_submission.unwrap_err()
@@ -80,22 +80,26 @@ pub async fn listen_for_comments(
         let all_comments_from_submission = all_comments_from_submission.unwrap().data.children;
         if !is_comment_alternative_angle(&comment, &all_comments_from_submission) {
             info!(
-                "Comment is not a alternative angle: {} competition: {:?}",
+                "AA: Comment is not a alternative angle: {} competition: {:?}",
                 comment
                     .body
                     .clone()
-                    .unwrap_or("Comment has no body".to_string()),
+                    .unwrap_or("AA: Comment has no body".to_string()),
                 goal_submission.competition
             );
             continue;
         }
         info!(
-            "sending video with id: {} competition: {:?}",
+            "AA: sending video with id: {} competition: {:?}",
             goal_submission.submission_id, goal_submission.competition
         );
 
         send_message_direct(
-            &comment.body.clone().unwrap_or("Replay".to_string()).clone(),
+            &comment
+                .body
+                .clone()
+                .unwrap_or("AA: Replay".to_string())
+                .clone(),
             &bot,
             competition,
         )
@@ -104,22 +108,21 @@ pub async fn listen_for_comments(
 
     join_handle
         .await
-        .expect("Error getting data from reddit while streaming comments")
-        .expect("Received SendError from reddit while streaming comments");
+        .expect("AA: Error getting data from reddit while streaming comments")
+        .expect("AA: Received SendError from reddit while streaming comments");
 }
 
-fn is_comment_alternative_angle<'a>(
-    comment: &'a SubredditCommentsData,
+fn is_comment_alternative_angle(
+    comment: &SubredditCommentsData,
     all_comments_from_submission: &Vec<BasicThing<SubredditCommentsData>>,
 ) -> bool {
-    if is_single_comment_alternative_angle(comment) {
-        return true;
-    }
+    // if is_single_comment_alternative_angle(comment) {
+    //     return true;
+    // }
     if comment.parent_id.is_none() {
         return false;
     }
     let parent_id = comment.parent_id.clone().unwrap().clone();
-
     let parent_comment = all_comments_from_submission
         .iter()
         .find(|potential_parent_comment| {
@@ -131,17 +134,17 @@ fn is_comment_alternative_angle<'a>(
                 .to_owned();
             potential_parent_id == parent_id
         });
-
     if parent_comment.is_none() {
         return false;
     }
-    if parent_comment.unwrap().data.parent_id.is_none() {
+    let parent_comment = &parent_comment.unwrap().data;
+    if is_single_comment_alternative_angle(parent_comment) {
+        return true;
+    }
+    if parent_comment.parent_id.is_none() {
         return false;
     }
-    return is_comment_alternative_angle(
-        &parent_comment.unwrap().data,
-        all_comments_from_submission,
-    );
+    return is_comment_alternative_angle(parent_comment, all_comments_from_submission);
 }
 
 fn is_single_comment_alternative_angle(comment: &SubredditCommentsData) -> bool {
