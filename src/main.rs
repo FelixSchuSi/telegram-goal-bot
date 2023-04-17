@@ -8,7 +8,8 @@ mod telegram;
 use config::config::Config;
 use dotenv::dotenv;
 use filter::competition::CompetitionName;
-use reddit::listen_for_comments::listen_for_comments;
+// use reddit::listen_for_comments::listen_for_comments;
+use reddit::search_for_alternative_angles_in_submission_comments::search_for_alternative_angles_in_submission_comments;
 use roux::Subreddit;
 use std::sync::{Arc, Mutex};
 use teloxide::Bot;
@@ -47,15 +48,14 @@ async fn main() {
         )
         .await;
     });
-
     let (subreddit_cloned, bot_cloned, config_cloned, listen_for_replays_submission_ids_cloned) = (
         Arc::clone(&subreddit),
         Arc::clone(&bot),
         Arc::clone(&config),
         Arc::clone(&listen_for_replays_submission_ids),
     );
-    let comments_join_handler = tokio::spawn(async {
-        listen_for_comments(
+    let alternative_angles_join_handler = tokio::spawn(async {
+        search_for_alternative_angles_in_submission_comments(
             subreddit_cloned,
             bot_cloned,
             config_cloned,
@@ -63,12 +63,30 @@ async fn main() {
         )
         .await;
     });
+    // let (subreddit_cloned, bot_cloned, config_cloned, listen_for_replays_submission_ids_cloned) = (
+    //     Arc::clone(&subreddit),
+    //     Arc::clone(&bot),
+    //     Arc::clone(&config),
+    //     Arc::clone(&listen_for_replays_submission_ids),
+    // );
+    // let comments_join_handler = tokio::spawn(async {
+    //     listen_for_comments(
+    //         subreddit_cloned,
+    //         bot_cloned,
+    //         config_cloned,
+    //         listen_for_replays_submission_ids_cloned,
+    //     )
+    //     .await;
+    // });
 
     submissions_join_handler
         .await
         .expect("Panic while handling submissions");
 
-    comments_join_handler
+    alternative_angles_join_handler
         .await
-        .expect("Panic while handling comments");
+        .expect("Panic while handling alternative angles");
+    // comments_join_handler
+    //     .await
+    //     .expect("Panic while handling comments");
 }
