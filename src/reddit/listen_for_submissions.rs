@@ -1,3 +1,9 @@
+use crate::{
+    config::config::Config,
+    filter::{competition::CompetitionName, filter::submission_filter},
+    telegram::send::send_video,
+    GoalSubmission,
+};
 use futures_util::StreamExt;
 use log::error;
 use roux::Subreddit;
@@ -8,13 +14,6 @@ use std::{
 };
 use teloxide::Bot;
 use tokio_retry::strategy::ExponentialBackoff;
-
-use crate::{
-    config::config::Config,
-    filter::{competition::CompetitionName, filter::submission_filter},
-    telegram::send::send_video,
-    GoalSubmission,
-};
 
 pub async fn listen_for_submissions(
     subreddit: Arc<Subreddit>,
@@ -48,6 +47,7 @@ pub async fn listen_for_submissions(
                 .push(GoalSubmission {
                     submission_id: submission.id.clone(),
                     competition: CompetitionName::ChampionsLeague,
+                    sent_comment_ids: Vec::new(),
                 });
         }
         if submission_filter(&submission, &config.bundesliga) {
@@ -58,6 +58,7 @@ pub async fn listen_for_submissions(
                 .push(GoalSubmission {
                     submission_id: submission.id.clone(),
                     competition: CompetitionName::Bundesliga,
+                    sent_comment_ids: Vec::new(),
                 });
         }
         if submission_filter(&submission, &config.internationals) {
@@ -68,6 +69,7 @@ pub async fn listen_for_submissions(
                 .push(GoalSubmission {
                     submission_id: submission.id.clone(),
                     competition: CompetitionName::Internationals,
+                    sent_comment_ids: Vec::new(),
                 });
         }
         if submission_filter(&submission, &config.premier_league) {
@@ -78,6 +80,7 @@ pub async fn listen_for_submissions(
                 .push(GoalSubmission {
                     submission_id: submission.id.clone(),
                     competition: CompetitionName::PremierLeague,
+                    sent_comment_ids: Vec::new(),
                 });
         }
     }

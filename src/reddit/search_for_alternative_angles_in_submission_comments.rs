@@ -50,6 +50,15 @@ pub async fn search_for_alternative_angles_in_submission_comments(
                 if !is_aa_comment(comment) {
                     continue;
                 }
+
+                let skip = replay_submission_ids_copied.iter().find(|e| {
+                    e.submission_id == goal_submission.submission_id
+                        && e.sent_comment_ids.contains(&comment.id.clone().unwrap())
+                });
+                if skip.is_some() {
+                    continue;
+                }
+
                 let content = comment.body.as_ref().unwrap();
                 let comp = match goal_submission.competition {
                     CompetitionName::Bundesliga => &config.bundesliga,
@@ -57,6 +66,17 @@ pub async fn search_for_alternative_angles_in_submission_comments(
                     CompetitionName::ChampionsLeague => &config.champions_league,
                     CompetitionName::Internationals => &config.internationals,
                 };
+                {
+                    let id = comment.id.clone().unwrap();
+                    let goal = listen_for_replays_submission_ids.lock().unwrap();
+                    let goal = goal
+                        .iter()
+                        .find(|x| x.submission_id == goal_submission.submission_id);
+                    if goal.is_some() {
+                        let mut sent_comment_ids = goal.unwrap().to_owned().sent_comment_ids;
+                        sent_comment_ids.push(id);
+                    }
+                }
                 send_message_direct(&content, &bot, comp).await;
             }
         }

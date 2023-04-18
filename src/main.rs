@@ -18,6 +18,7 @@ use teloxide::Bot;
 pub struct GoalSubmission {
     pub submission_id: String,
     pub competition: CompetitionName,
+    pub sent_comment_ids: Vec<String>,
 }
 
 #[tokio::main]
