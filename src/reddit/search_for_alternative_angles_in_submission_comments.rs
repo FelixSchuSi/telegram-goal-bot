@@ -59,7 +59,7 @@ pub async fn search_for_alternative_angles_in_submission_comments(
                     continue;
                 }
 
-                let content = comment.body.as_ref().unwrap();
+                let mut content = comment.body.clone().unwrap();
                 let comp = match goal_submission.competition {
                     CompetitionName::Bundesliga => &config.bundesliga,
                     CompetitionName::PremierLeague => &config.premier_league,
@@ -77,6 +77,7 @@ pub async fn search_for_alternative_angles_in_submission_comments(
                         sent_comment_ids.push(id);
                     }
                 }
+                content.push_str(comment.id.clone().unwrap().as_str());
                 send_message_direct(&content, &bot, comp).await;
             }
         }
