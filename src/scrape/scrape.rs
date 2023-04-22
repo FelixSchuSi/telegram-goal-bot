@@ -87,17 +87,27 @@ pub async fn scrape_video(url: String) -> Result<String, ScrapeError> {
         attribute
     )))?;
 
-    value
-        .ends_with(".mov")
+    (!value.ends_with(".mov"))
         .then_some(value.to_string())
         .ok_or(ScrapeError(
             ".mov files are not properly supported by telegram".to_string(),
         ))
 }
 
-#[tokio::test]
-async fn test_for_unkown_host() {
-    let result = scrape_video("https://streamall.me/ra_goO7Rm".to_string()).await;
-    assert!(result.is_err());
-    assert!(result.err().unwrap() == ScrapeError("Unkown VideoHost".to_string()));
+mod tests {
+    use super::*;
+
+    #[tokio::test]
+    async fn test_for_unkown_host() {
+        let result = scrape_video("https://streamall.me/ra_goO7Rm".to_string()).await;
+        assert!(result.is_err());
+        assert!(result.err().unwrap() == ScrapeError("Unkown VideoHost".to_string()));
+    }
+
+    #[tokio::test]
+    async fn test_streamin_1() {
+        let result = scrape_video("https://streamin.me/v/99dadc6d".to_string()).await;
+        assert!(result.is_ok());
+        assert!(result.unwrap() == "https://cdn.discordapp.com/attachments/1093271807102038049/1099336438090313778/99dadc6d.mp4".to_string());
+    }
 }
