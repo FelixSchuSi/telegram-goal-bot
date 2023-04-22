@@ -16,6 +16,7 @@ pub enum VideoHost {
     Streamgg,
     Streamin,
     Dubz,
+    Streambug,
 }
 #[derive(Debug, PartialEq, Eq)]
 pub struct UnkownVideoHostError;
@@ -43,6 +44,7 @@ impl FromStr for VideoHost {
             "streamgg" => Ok(VideoHost::Streamgg),
             "streamin" => Ok(VideoHost::Streamin),
             "dubz" => Ok(VideoHost::Dubz),
+            "streambug" => Ok(VideoHost::Streambug),
             _ => Err(UnkownVideoHostError),
         }
     }
@@ -64,6 +66,7 @@ impl fmt::Display for VideoHost {
             VideoHost::Streamgg => write!(f, "streamgg"),
             VideoHost::Streamin => write!(f, "streamin"),
             VideoHost::Dubz => write!(f, "dubz"),
+            VideoHost::Streambug => write!(f, "streambug"),
         }
     }
 }

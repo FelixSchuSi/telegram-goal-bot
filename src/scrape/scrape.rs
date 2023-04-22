@@ -75,6 +75,12 @@ pub async fn scrape_video(url: String) -> Result<String, ScrapeError> {
             selector = "video";
             attribute = "src";
         }
+        VideoHost::Streambug => {
+            // Streamff does Client side rendering so scraping will always fail.
+            // could fix this by using playwright or something similar.
+            selector = "video";
+            attribute = "src";
+        }
     };
     let title_selector = scraper::Selector::parse(selector).map_err(|_| {
         ScrapeError("The given String could not be parsed to a CSS selector".to_string())
