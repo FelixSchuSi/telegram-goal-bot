@@ -1,7 +1,7 @@
 use crate::{
     config::config::Config,
     filter::{competition::CompetitionName, filter::submission_filter},
-    telegram::send::send_video,
+    telegram::send::{get_latest_message_id_of_group, send_video},
     GoalSubmission,
 };
 use futures_util::StreamExt;
@@ -41,6 +41,10 @@ pub async fn listen_for_submissions(
         };
         if submission_filter(&submission, &config.champions_league) {
             send_video(&submission.title, &bot, url, &config.champions_league).await;
+            let reply_id =
+                get_latest_message_id_of_group(&bot, config.champions_league.get_chat_id_replies())
+                    .await
+                    .0;
             listen_for_replays_submission_ids
                 .lock()
                 .unwrap()
@@ -48,10 +52,15 @@ pub async fn listen_for_submissions(
                     submission_id: submission.id.clone(),
                     competition: CompetitionName::ChampionsLeague,
                     sent_comment_ids: Vec::new(),
+                    reply_id,
                 });
         }
         if submission_filter(&submission, &config.bundesliga) {
             send_video(&submission.title, &bot, url, &config.bundesliga).await;
+            let reply_id =
+                get_latest_message_id_of_group(&bot, config.bundesliga.get_chat_id_replies())
+                    .await
+                    .0;
             listen_for_replays_submission_ids
                 .lock()
                 .unwrap()
@@ -59,10 +68,15 @@ pub async fn listen_for_submissions(
                     submission_id: submission.id.clone(),
                     competition: CompetitionName::Bundesliga,
                     sent_comment_ids: Vec::new(),
+                    reply_id,
                 });
         }
         if submission_filter(&submission, &config.internationals) {
             send_video(&submission.title, &bot, url, &config.internationals).await;
+            let reply_id =
+                get_latest_message_id_of_group(&bot, config.internationals.get_chat_id_replies())
+                    .await
+                    .0;
             listen_for_replays_submission_ids
                 .lock()
                 .unwrap()
@@ -70,10 +84,15 @@ pub async fn listen_for_submissions(
                     submission_id: submission.id.clone(),
                     competition: CompetitionName::Internationals,
                     sent_comment_ids: Vec::new(),
+                    reply_id,
                 });
         }
         if submission_filter(&submission, &config.premier_league) {
             send_video(&submission.title, &bot, url, &config.premier_league).await;
+            let reply_id =
+                get_latest_message_id_of_group(&bot, config.premier_league.get_chat_id_replies())
+                    .await
+                    .0;
             listen_for_replays_submission_ids
                 .lock()
                 .unwrap()
@@ -81,6 +100,7 @@ pub async fn listen_for_submissions(
                     submission_id: submission.id.clone(),
                     competition: CompetitionName::PremierLeague,
                     sent_comment_ids: Vec::new(),
+                    reply_id,
                 });
         }
     }

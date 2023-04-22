@@ -19,7 +19,7 @@ pub async fn send_video(caption: &str, bot: &Bot, url: &str, competition: &Compe
             caption,
             url
         );
-        return send_message(caption, bot, url, competition).await;
+        return send_link(caption, bot, url, competition).await;
     }
     let scraped_url = scraped_url.unwrap();
     let input_file = InputFile::url(Url::parse(&scraped_url).expect("invalid url"));
@@ -38,18 +38,13 @@ pub async fn send_video(caption: &str, bot: &Bot, url: &str, competition: &Compe
             caption,
             url
         );
-        return send_message(caption, bot, url, competition).await;
+        return send_link(caption, bot, url, competition).await;
     }
 
     msg.unwrap()
 }
 
-pub async fn send_message(
-    caption: &str,
-    bot: &Bot,
-    url: &str,
-    competition: &Competition,
-) -> Message {
+pub async fn send_link(caption: &str, bot: &Bot, url: &str, competition: &Competition) -> Message {
     info!(
         "🟩 SENDING MESSAGE: title:\"{}\" OG link: \"{}\"",
         caption, url
@@ -73,13 +68,75 @@ pub async fn send_message_direct(content: &str, bot: &Bot, competition: &Competi
         .expect("Failed to send message")
 }
 
-#[allow(dead_code)]
-pub async fn send_reply(bot: &Bot, message: &str, chat_id: ChatId, reply_to_message_id: MessageId) {
-    info!("🟩 SENDING REPLY: {}", message);
-    bot.send_message(chat_id, message)
-        .parse_mode(ParseMode::Html)
-        .reply_to_message_id(reply_to_message_id)
+// We do not have a proper way to get the messageid of the last message in a group
+// As a workaround we send a message, get the message_id of that message and then immediately delete it
+pub async fn get_latest_message_id_of_group(bot: &Bot, chat_id: ChatId) -> MessageId {
+    let message = bot
+        .send_message(chat_id, "temp")
         .send()
         .await
         .expect("Failed to send message");
+    bot.delete_message(chat_id, message.id)
+        .send()
+        .await
+        .expect("Failed to delete message");
+    // MessageId(message.id.0 - 1)
+    message.id
+}
+
+pub async fn reply_with_retries(
+    bot: &Bot,
+    message: &str,
+    chat_id: ChatId,
+    reply_to_message_id: MessageId,
+) {
+    let mut latest_message_id = reply_to_message_id.clone();
+
+    loop {
+        let message = bot
+            .send_message(chat_id, message)
+            .parse_mode(ParseMode::Html)
+            .reply_to_message_id(latest_message_id)
+            .send()
+            .await;
+
+        if message.is_ok() {
+            break;
+        };
+
+        latest_message_id = MessageId(latest_message_id.0 - 1);
+    }
+}
+mod tests {
+    use super::*;
+    use crate::config::config::Config;
+    use dotenv::dotenv;
+    use std::sync::Arc;
+
+    #[tokio::test]
+    #[ignore]
+    async fn test_send_message() {
+        dotenv().ok();
+        let config = Arc::new(Config::init());
+        let bot = Arc::new(Bot::from_env());
+
+        let mut latest_message_id =
+            get_latest_message_id_of_group(&bot, config.bundesliga.get_chat_id_replies()).await;
+
+        loop {
+            let message = bot
+                .send_message(config.bundesliga.get_chat_id_replies(), "test reply")
+                .reply_to_message_id(latest_message_id)
+                .send()
+                .await;
+
+            if message.is_ok() {
+                break;
+            };
+
+            latest_message_id = MessageId(latest_message_id.0 - 1);
+        }
+
+        assert_eq!(true, true);
+    }
 }

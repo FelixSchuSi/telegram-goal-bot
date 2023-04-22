@@ -1,6 +1,6 @@
 use crate::{
-    config::config::Config, filter::competition::CompetitionName, replay,
-    telegram::send::send_message_direct, GoalSubmission,
+    config::config::Config, filter::competition::CompetitionName,
+    telegram::send::reply_with_retries, GoalSubmission,
 };
 use jsonpath_rust::JsonPathFinder;
 use roux::{
@@ -11,7 +11,12 @@ use std::{
     sync::{Arc, Mutex},
     time::Duration,
 };
-use teloxide::Bot;
+use teloxide::{
+    payloads::SendMessageSetters,
+    requests::{Request, Requester},
+    types::{MessageId, ParseMode},
+    Bot,
+};
 use tokio::time;
 
 pub async fn search_for_alternative_angles_in_submission_comments(
@@ -113,7 +118,14 @@ async fn process_goal_submission_for_alternative_angles(
             comment.id.as_ref().unwrap().to_string(),
         ));
         println!("{}", content);
-        send_message_direct(&content, &bot, competition).await;
+
+        reply_with_retries(
+            &bot,
+            &content,
+            competition.get_chat_id_replies(),
+            MessageId(goal_submission.reply_id),
+        )
+        .await;
     }
 }
 
@@ -178,7 +190,7 @@ mod test {
     use dotenv::dotenv;
     use roux::Subreddit;
     use std::sync::Arc;
-    use teloxide::Bot;
+    use teloxide::{types::MessageId, Bot};
 
     // TODO: Refactor this so we can mock the telegram bot
     // so that we do not send messages when testing
@@ -195,6 +207,7 @@ mod test {
             submission_id: String::from("12s8sb8"),
             competition: CompetitionName::ChampionsLeague,
             sent_comment_ids: Vec::new(),
+            reply_id: 0,
         };
 
         let listen_for_replays_submission_ids: Arc<Mutex<Vec<GoalSubmission>>> =
