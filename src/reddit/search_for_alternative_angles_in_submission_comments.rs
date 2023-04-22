@@ -2,6 +2,7 @@ use crate::{
     config::config::Config, filter::competition::CompetitionName, replay,
     telegram::send::send_message_direct, GoalSubmission,
 };
+use jsonpath_rust::JsonPathFinder;
 use roux::{
     subreddit::responses::{comments::SubredditReplies, SubredditCommentsData},
     Subreddit,
@@ -29,58 +30,90 @@ pub async fn search_for_alternative_angles_in_submission_comments(
             replay_submission_ids_copied = replay_submission_ids.clone();
         }
         for goal_submission in replay_submission_ids_copied.iter() {
-            let all_comments_from_submission = subreddit
-                .article_comments(&goal_submission.submission_id, Some(2), Some(100))
-                .await;
-            let all_comments_from_submission = match all_comments_from_submission {
-                Ok(comments) => comments,
-                Err(_) => {
-                    continue;
-                }
-            };
-            let all_comments_from_submission = all_comments_from_submission.data.children;
-
-            let mut all_comments_flattened = Vec::new();
-
-            for comment in all_comments_from_submission.iter() {
-                all_comments_flattened.extend(flatten_comment_with_replies(&comment.data));
-            }
-
-            for comment in all_comments_flattened.iter() {
-                if !is_aa_comment(comment) {
-                    continue;
-                }
-
-                let skip = replay_submission_ids_copied.iter().find(|e| {
-                    e.submission_id == goal_submission.submission_id
-                        && e.sent_comment_ids.contains(&comment.id.clone().unwrap())
-                });
-                if skip.is_some() {
-                    continue;
-                }
-
-                let mut content = comment.body.clone().unwrap();
-                let comp = match goal_submission.competition {
-                    CompetitionName::Bundesliga => &config.bundesliga,
-                    CompetitionName::PremierLeague => &config.premier_league,
-                    CompetitionName::ChampionsLeague => &config.champions_league,
-                    CompetitionName::Internationals => &config.internationals,
-                };
-                {
-                    let id = comment.id.clone().unwrap();
-                    let goal = listen_for_replays_submission_ids.lock().unwrap();
-                    let goal = goal
-                        .iter()
-                        .find(|x| x.submission_id == goal_submission.submission_id);
-                    if goal.is_some() {
-                        let mut sent_comment_ids = goal.unwrap().to_owned().sent_comment_ids;
-                        sent_comment_ids.push(id);
-                    }
-                }
-                content.push_str(comment.id.clone().unwrap().as_str());
-                send_message_direct(&content, &bot, comp).await;
-            }
+            process_goal_submission_for_alternative_angles(
+                subreddit.clone(),
+                bot.clone(),
+                config.clone(),
+                listen_for_replays_submission_ids.clone(),
+                goal_submission,
+            )
+            .await;
         }
+    }
+}
+
+async fn process_goal_submission_for_alternative_angles(
+    subreddit: Arc<Subreddit>,
+    bot: Arc<Bot>,
+    config: Arc<Config>,
+    listen_for_replays_submission_ids: Arc<Mutex<Vec<GoalSubmission>>>,
+    goal_submission: &GoalSubmission,
+) {
+    let competition = match goal_submission.competition {
+        CompetitionName::Bundesliga => &config.bundesliga,
+        CompetitionName::PremierLeague => &config.premier_league,
+        CompetitionName::ChampionsLeague => &config.champions_league,
+        CompetitionName::Internationals => &config.internationals,
+    };
+
+    let comments_depth_1 = match subreddit
+        .article_comments(&goal_submission.submission_id, Some(2), Some(100))
+        .await
+    {
+        Ok(comments) => comments,
+        Err(_) => return,
+    };
+
+    let comments_depth_1_flattened: Vec<&SubredditCommentsData> = comments_depth_1
+        .data
+        .children
+        .iter()
+        .flat_map(|comment| flatten_comment_with_replies(&comment.data))
+        .collect();
+
+    let aa_comment = match comments_depth_1_flattened
+        .iter()
+        .find(|comment| is_aa_comment(comment))
+    {
+        Some(comment) => comment,
+        None => return,
+    };
+    let aa_comment_id = aa_comment.id.clone().unwrap();
+
+    let relevant_comments = comments_depth_1_flattened
+        .iter()
+        // Only comments that are replies to the aa_comment are relevant
+        .filter(|comment| comment.parent_id.as_ref().unwrap() == &format!("t1_{}", aa_comment_id))
+        // Ignore comments that were already sent
+        .filter(|comment| {
+            // Get the current list of sent comments since it could have changed
+            let mut goal_submissions = listen_for_replays_submission_ids.lock().unwrap();
+            let goal_submission = goal_submissions
+                .iter_mut()
+                .find(|gs| gs.submission_id == goal_submission.submission_id)
+                .unwrap();
+            let sent_commets = &mut goal_submission.sent_comment_ids;
+            let res = !sent_commets.contains(&comment.id.clone().unwrap());
+            // We are sending this comment, so we should add this comment to the list of sent comments
+            sent_commets.push(comment.id.clone().unwrap());
+            return res;
+        })
+        .collect::<Vec<&&SubredditCommentsData>>();
+
+    for comment in relevant_comments {
+        let mut content = get_reddit_comment_body(
+            goal_submission.submission_id.clone(),
+            comment.id.as_ref().unwrap().to_string(),
+        )
+        .await
+        .unwrap_or_default();
+        content.push_str(&format!(
+            " <a href=\"https://old.reddit.com/r/soccer/comments/{}//{}\">reddit_src</a>",
+            goal_submission.submission_id.clone(),
+            comment.id.as_ref().unwrap().to_string(),
+        ));
+        println!("{}", content);
+        send_message_direct(&content, &bot, competition).await;
     }
 }
 
@@ -116,4 +149,77 @@ fn flatten_comment_with_replies(
         }
     }
     return result;
+}
+
+async fn get_reddit_comment_body(submission_id: String, comment_id: String) -> Option<String> {
+    let request_url = format!(
+        "https://old.reddit.com/r/soccer/comments/{}//{}.json",
+        submission_id, comment_id
+    );
+    let json_content = reqwest::get(&request_url).await.ok()?.text().await.ok()?;
+    let json_path_result =
+        JsonPathFinder::from_str(&json_content, "[1].data.children[0].data.body_html")
+            .unwrap()
+            .find();
+
+    let html_encoded = json_path_result.as_array()?[0].as_str()?.to_string();
+    let reuslt = html_escape::decode_html_entities(&html_encoded)
+        .to_string()
+        .replace("<div class=\"md\">", "")
+        .replace("</div>", "")
+        .replace("<p>", "")
+        .replace("</p>", "");
+    return Some(reuslt.to_string());
+}
+
+mod test {
+    use super::*;
+    use crate::config::config::Config;
+    use dotenv::dotenv;
+    use roux::Subreddit;
+    use std::sync::Arc;
+    use teloxide::Bot;
+
+    // TODO: Refactor this so we can mock the telegram bot
+    // so that we do not send messages when testing
+    #[tokio::test]
+    #[ignore]
+    async fn process_goal_submission_for_alternative_angles_test1() {
+        dotenv().ok();
+        let config = Arc::new(Config::init());
+        let subreddit = Arc::new(Subreddit::new("soccer"));
+        // TODO: Mock telegram bot
+        let bot = Arc::new(Bot::from_env());
+        let goal_submission = GoalSubmission {
+            // This test relies on this submission existing: https://old.reddit.com/r/soccer/comments/12s8sb8/bayern_munich_0_1_manchester_city_04_on_agg/
+            submission_id: String::from("12s8sb8"),
+            competition: CompetitionName::ChampionsLeague,
+            sent_comment_ids: Vec::new(),
+        };
+
+        let listen_for_replays_submission_ids: Arc<Mutex<Vec<GoalSubmission>>> =
+            Arc::new(Mutex::new(vec![goal_submission.clone()]));
+
+        process_goal_submission_for_alternative_angles(
+            subreddit,
+            bot,
+            config,
+            Arc::clone(&listen_for_replays_submission_ids),
+            &goal_submission,
+        )
+        .await;
+
+        assert_eq!(listen_for_replays_submission_ids.lock().unwrap().len(), 1);
+    }
+
+    #[tokio::test]
+    async fn test_reddit_comment_body() {
+        let submission_id = "12s8sb8".to_string();
+        let comment_id = "jgxcm5l".to_string();
+        let result = get_reddit_comment_body(submission_id, comment_id).await;
+        assert_eq!(
+            Some("<a href=\"https://www.ziscore.com/qa30/\">REPLAY </a>\n".to_string()),
+            result
+        );
+    }
 }

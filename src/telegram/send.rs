@@ -67,6 +67,7 @@ pub async fn send_message(
 pub async fn send_message_direct(content: &str, bot: &Bot, competition: &Competition) -> Message {
     info!("🟩 SENDING MESSAGE: title:\"{}", content);
     bot.send_message(competition.get_chat_id(), content)
+        .parse_mode(ParseMode::Html)
         .send()
         .await
         .expect("Failed to send message")

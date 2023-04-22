@@ -158,7 +158,7 @@ fn generate_positive_test_cases(competition: &Competition) -> Vec<String> {
 }
 
 #[cfg(test)]
-fn mock_env_vars() {
+pub fn mock_env_vars() {
     env::set_var("CHAT_ID_BUNDESLIGA", "123");
     env::set_var("CHAT_ID_BUNDESLIGA_REPLIES", "123");
     env::set_var("CHAT_ID_CHAMPIONS_LEAGUE", "123");
