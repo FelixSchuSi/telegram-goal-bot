@@ -98,7 +98,7 @@ fn is_valid_post_test() {
 fn test_cl() {
     mock_env_vars();
     let champions_league = Config::init().champions_league;
-    let title = "Benfica [1] - 0 Porto - Diogo Costa 10' OG";
+    let title = "Real Madrid [1] - 0 Manchester City - Diogo Costa 10' OG";
     assert!(
         champions_league.is_valid_post_title_for_competition(title),
         "\n\n cl post falsely identified: {title}\n\n",
