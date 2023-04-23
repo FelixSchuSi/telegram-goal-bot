@@ -59,15 +59,6 @@ pub async fn send_link(caption: &str, bot: &Bot, url: &str, competition: &Compet
     .expect(&format!("Failed to send message {:?}", competition.name))
 }
 
-pub async fn send_message_direct(content: &str, bot: &Bot, competition: &Competition) -> Message {
-    info!("🟩 SENDING MESSAGE: title:\"{}", content);
-    bot.send_message(competition.get_chat_id(), content)
-        .parse_mode(ParseMode::Html)
-        .send()
-        .await
-        .expect("Failed to send message")
-}
-
 // We do not have a proper way to get the messageid of the last message in a group
 // As a workaround we send a message, get the message_id of that message and then immediately delete it
 pub async fn get_latest_message_id_of_group(bot: &Bot, chat_id: ChatId) -> MessageId {
@@ -80,8 +71,7 @@ pub async fn get_latest_message_id_of_group(bot: &Bot, chat_id: ChatId) -> Messa
         .send()
         .await
         .expect("Failed to delete message");
-    // MessageId(message.id.0 - 1)
-    message.id
+    MessageId(message.id.0 - 1)
 }
 
 pub async fn reply_with_retries(
@@ -120,23 +110,30 @@ mod tests {
         let config = Arc::new(Config::init());
         let bot = Arc::new(Bot::from_env());
 
-        let mut latest_message_id =
+        let latest_message_id =
+            get_latest_message_id_of_group(&bot, config.premier_league.get_chat_id_replies()).await;
+        reply_with_retries(
+            &bot,
+            "test2",
+            config.premier_league.get_chat_id_replies(),
+            latest_message_id,
+        )
+        .await;
+
+        assert_eq!(true, true);
+    }
+
+    #[tokio::test]
+    #[ignore]
+    async fn test_() {
+        dotenv().ok();
+        let config = Arc::new(Config::init());
+        let bot = Arc::new(Bot::from_env());
+
+        let latest_message_id =
             get_latest_message_id_of_group(&bot, config.bundesliga.get_chat_id_replies()).await;
 
-        loop {
-            let message = bot
-                .send_message(config.bundesliga.get_chat_id_replies(), "test reply")
-                .reply_to_message_id(latest_message_id)
-                .send()
-                .await;
-
-            if message.is_ok() {
-                break;
-            };
-
-            latest_message_id = MessageId(latest_message_id.0 - 1);
-        }
-
+        println!("latest_message_id: {:?}", latest_message_id);
         assert_eq!(true, true);
     }
 }
