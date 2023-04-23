@@ -3,6 +3,7 @@ use crate::{
     telegram::send::reply_with_retries, GoalSubmission,
 };
 use jsonpath_rust::JsonPathFinder;
+use log::info;
 use roux::{
     subreddit::responses::{comments::SubredditReplies, SubredditCommentsData},
     Subreddit,
@@ -101,18 +102,17 @@ async fn process_goal_submission_for_alternative_angles(
         .collect::<Vec<&&SubredditCommentsData>>();
 
     for comment in relevant_comments {
-        let mut content = get_reddit_comment_body(
+        let content = get_reddit_comment_body(
             goal_submission.submission_id.clone(),
             comment.id.as_ref().unwrap().to_string(),
         )
         .await
         .unwrap_or_default();
-        content.push_str(&format!(
-            " <a href=\"https://old.reddit.com/r/soccer/comments/{}//{}\">reddit_src</a>",
-            goal_submission.submission_id.clone(),
-            comment.id.as_ref().unwrap().to_string(),
-        ));
-        println!("{}", content);
+
+        info!(
+            "Sending replay in competition: {:?}, submission_id: {:?}, content: {:?}",
+            competition.name, goal_submission.submission_id, content
+        );
 
         reply_with_retries(
             &bot,
@@ -179,13 +179,14 @@ async fn get_reddit_comment_body(submission_id: String, comment_id: String) -> O
     return Some(reuslt.to_string());
 }
 
+#[cfg(test)]
 mod test {
     use super::*;
     use crate::config::config::Config;
     use dotenv::dotenv;
     use roux::Subreddit;
     use std::sync::Arc;
-    use teloxide::{types::MessageId, Bot};
+    use teloxide::Bot;
 
     // TODO: Refactor this so we can mock the telegram bot
     // so that we do not send messages when testing

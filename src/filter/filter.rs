@@ -1,9 +1,8 @@
-use std::str::FromStr;
-
 #[allow(unused_imports)]
 use chrono::Utc;
-use log::info;
+use log::{info, trace};
 use roux::subreddit::responses::SubmissionsData;
+use std::str::FromStr;
 
 use super::{competition::Competition, videohost::VideoHost};
 
@@ -18,16 +17,18 @@ pub fn submission_filter(submission: &SubmissionsData, competition: &Competition
     let lower_title = submission.title.to_lowercase();
     let mut title_split = lower_title.split_whitespace();
 
-    info!(
+    trace!(
         "Checking submission for competition {:?}: {}",
-        competition.name, submission.title
+        competition.name,
+        submission.title
     );
 
     // Check if the title contains two teams of the specified competition
     if !competition.is_valid_post_title_for_competition(&submission.title) {
-        info!(
+        trace!(
             "Title does not contain two teams of {:?}: {}",
-            competition.name, submission.title
+            competition.name,
+            submission.title
         );
         return false;
     }
@@ -35,13 +36,13 @@ pub fn submission_filter(submission: &SubmissionsData, competition: &Competition
     // Titles of goal videos are expected to be in the format: "team1 [1] - [0] team2"
     // So a valid title has to contain a hyphen
     if !title_split.any(|s| s.contains("-")) {
-        info!("Title does not contain a hyphen: {}", submission.title);
+        trace!("Title does not contain a hyphen: {}", submission.title);
         return false;
     }
 
     // Ignore all u7 to u21 games
     if title_split.any(|s| UNDER_7_TO_UNDER_21.contains(&s)) {
-        info!(
+        trace!(
             "Title contains an age group (u7 to u21): {}",
             submission.title
         );
@@ -50,13 +51,13 @@ pub fn submission_filter(submission: &SubmissionsData, competition: &Competition
 
     // Also ignore womens games
     if title_split.any(|s| s == "w") {
-        info!("Title contains a womens game: {}", submission.title);
+        trace!("Title contains a womens game: {}", submission.title);
         return false;
     }
 
     // Check if the video is hosted on one of the specified VideoHosts
     if VideoHost::from_str(&host).is_err() {
-        info!("Video is not hosted on a valid host: {}", &host);
+        trace!("Video is not hosted on a valid host: {}", &host);
         return false;
     }
 

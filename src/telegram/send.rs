@@ -97,6 +97,7 @@ pub async fn reply_with_retries(
         latest_message_id = MessageId(latest_message_id.0 - 1);
     }
 }
+#[cfg(test)]
 mod tests {
     use super::*;
     use crate::config::config::Config;

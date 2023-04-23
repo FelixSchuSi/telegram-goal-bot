@@ -100,6 +100,7 @@ pub async fn scrape_video(url: String) -> Result<String, ScrapeError> {
         ))
 }
 
+#[cfg(test)]
 mod tests {
     use super::*;
 
