@@ -21,7 +21,18 @@ pub async fn send_video(caption: &str, bot: &Bot, url: &str, competition: &Compe
         return send_link(caption, bot, url, competition).await;
     }
     let scraped_url = scraped_url.unwrap();
-    let input_file = InputFile::url(Url::parse(&scraped_url).expect("invalid url"));
+    let scraped_parsed_url = Url::parse(&scraped_url);
+    if scraped_parsed_url.is_err() {
+        error!(
+            "Scraping failed: {} scraped_url: {} caption: {} url: {}",
+            scraped_parsed_url.err().unwrap(),
+            scraped_url,
+            caption,
+            url
+        );
+        return send_link(caption, bot, url, competition).await;
+    }
+    let input_file = InputFile::url(scraped_parsed_url.expect("invalid url"));
 
     let msg = bot
         .send_video(competition.get_chat_id(), input_file)
