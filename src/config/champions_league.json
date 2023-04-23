@@ -2,17 +2,23 @@
   "name": "champions_league",
   "teams": [
     {
-      "aliases": ["paris", "saint", "germain", "psg"],
-      "min_matches_needed": 1
-    },
-    {
-      "aliases": ["bayern", "m\u00fcnchen", "munchen", "munich"],
-      "min_matches_needed": 1
-    },
-    {
       "aliases": ["ac", "milan", "mailand", "calcio"],
       "min_matches_needed": 1
     },
+    {
+      "aliases": ["real", "madrid"],
+      "min_matches_needed": 2
+    },
+    {
+      "aliases": ["inter"],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": ["manchester", "city", "man"],
+      "min_matches_needed": 2
+    }
+  ],
+  "relegated_teams": [
     {
       "aliases": ["br\u00fcgge", "brugge"],
       "min_matches_needed": 1
@@ -38,10 +44,6 @@
       "min_matches_needed": 1
     },
     {
-      "aliases": ["real", "madrid"],
-      "min_matches_needed": 2
-    },
-    {
       "aliases": ["frankfurt", "eintracht", "sge"],
       "min_matches_needed": 1
     },
@@ -54,15 +56,17 @@
       "min_matches_needed": 1
     },
     {
-      "aliases": ["inter"],
+      "aliases": ["porto"],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["porto"],
+      "aliases": ["paris", "saint", "germain", "psg"],
       "min_matches_needed": 1
-    }
-  ],
-  "relegated_teams": [
+    },
+    {
+      "aliases": ["bayern", "m\u00fcnchen", "munchen", "munich"],
+      "min_matches_needed": 1
+    },
     {
       "aliases": ["zenit", "petersburg"],
       "min_matches_needed": 1
@@ -142,10 +146,6 @@
     {
       "aliases": ["ajax", "amsterdam"],
       "min_matches_needed": 1
-    },
-    {
-      "aliases": ["manchester", "city", "man"],
-      "min_matches_needed": 2
     },
     {
       "aliases": ["rennes"],

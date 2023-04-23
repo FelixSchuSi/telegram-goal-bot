@@ -11,12 +11,7 @@ use std::{
     sync::{Arc, Mutex},
     time::Duration,
 };
-use teloxide::{
-    payloads::SendMessageSetters,
-    requests::{Request, Requester},
-    types::{MessageId, ParseMode},
-    Bot,
-};
+use teloxide::{types::MessageId, Bot};
 use tokio::time;
 
 pub async fn search_for_alternative_angles_in_submission_comments(
