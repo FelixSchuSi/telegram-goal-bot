@@ -72,7 +72,7 @@ pub async fn scrape_video(url: String) -> Result<String, ScrapeError> {
             attribute = "src";
         }
         VideoHost::Dubz => {
-            selector = "video";
+            selector = "video > source";
             attribute = "src";
         }
         VideoHost::Streambug => {
