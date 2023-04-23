@@ -5,7 +5,7 @@ use crate::{
     GoalSubmission,
 };
 use futures_util::StreamExt;
-use log::error;
+use log::{error, info};
 use roux::Subreddit;
 use roux_stream::stream_submissions;
 use std::{
@@ -13,6 +13,7 @@ use std::{
     time::Duration,
 };
 use teloxide::Bot;
+use tokio::time::sleep;
 use tokio_retry::strategy::ExponentialBackoff;
 
 pub async fn listen_for_submissions(
@@ -41,10 +42,15 @@ pub async fn listen_for_submissions(
         };
         if submission_filter(&submission, &config.champions_league) {
             send_video(&submission.title, &bot, url, &config.champions_league).await;
+            sleep(Duration::from_secs(20)).await;
             let reply_id =
                 get_latest_message_id_of_group(&bot, config.champions_league.get_chat_id_replies())
                     .await
                     .0;
+            info!(
+                    "MessageId found of submission - MessageId: {:?}, submission_title: {:?}, submission_id: {:?}",
+                    reply_id, submission.title, submission.id
+                );
             listen_for_replays_submission_ids
                 .lock()
                 .unwrap()
@@ -57,10 +63,15 @@ pub async fn listen_for_submissions(
         }
         if submission_filter(&submission, &config.bundesliga) {
             send_video(&submission.title, &bot, url, &config.bundesliga).await;
+            sleep(Duration::from_secs(20)).await;
             let reply_id =
                 get_latest_message_id_of_group(&bot, config.bundesliga.get_chat_id_replies())
                     .await
                     .0;
+            info!(
+                    "MessageId found of submission - MessageId: {:?}, submission_title: {:?}, submission_id: {:?}",
+                    reply_id, submission.title, submission.id
+                );
             listen_for_replays_submission_ids
                 .lock()
                 .unwrap()
@@ -73,10 +84,15 @@ pub async fn listen_for_submissions(
         }
         if submission_filter(&submission, &config.internationals) {
             send_video(&submission.title, &bot, url, &config.internationals).await;
+            sleep(Duration::from_secs(20)).await;
             let reply_id =
                 get_latest_message_id_of_group(&bot, config.internationals.get_chat_id_replies())
                     .await
                     .0;
+            info!(
+                    "MessageId found of submission - MessageId: {:?}, submission_title: {:?}, submission_id: {:?}",
+                    reply_id, submission.title, submission.id
+                );
             listen_for_replays_submission_ids
                 .lock()
                 .unwrap()
@@ -89,10 +105,15 @@ pub async fn listen_for_submissions(
         }
         if submission_filter(&submission, &config.premier_league) {
             send_video(&submission.title, &bot, url, &config.premier_league).await;
+            sleep(Duration::from_secs(20)).await;
             let reply_id =
                 get_latest_message_id_of_group(&bot, config.premier_league.get_chat_id_replies())
                     .await
                     .0;
+            info!(
+                "MessageId found of submission - MessageId: {:?}, submission_title: {:?}, submission_id: {:?}",
+                reply_id, submission.title, submission.id
+            );
             listen_for_replays_submission_ids
                 .lock()
                 .unwrap()
