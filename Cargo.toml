@@ -10,6 +10,7 @@ chrono = "0.4.24"
 dotenv = "0.15.0"
 env_logger = "0.10.0"
 futures-util = "0.3.28"
+headless_chrome = {git = "https://github.com/atroche/rust-headless-chrome", features = ["fetch"]}
 html-escape = "0.2.13"
 jsonpath-rust = "0.3.0"
 log = "0.4.17"
