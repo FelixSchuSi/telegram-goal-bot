@@ -1,10 +1,12 @@
 use std::error::Error;
 
 use headless_chrome::protocol::cdp::Page;
-use headless_chrome::Browser;
+use headless_chrome::{Browser, LaunchOptions};
 
 fn scrape_with_browser(url: &str, selector: &str, attribute: &str) -> Result<(), Box<dyn Error>> {
-    let browser = Browser::default()?;
+    let launch_options = LaunchOptions::default_builder().build()?;
+
+    let browser = Browser::new(launch_options)?;
 
     let tab = browser.new_tab()?;
 
@@ -22,6 +24,7 @@ fn scrape_with_browser(url: &str, selector: &str, attribute: &str) -> Result<(),
     Ok(())
 }
 
+#[cfg(test)]
 mod tests {
     use super::*;
 
