@@ -83,7 +83,7 @@ pub async fn scrape_video(url: String) -> Result<String, ScrapeError> {
             client_side_rendered = true;
         }
     };
-    let mut value: String;
+    let value: String;
     if client_side_rendered {
         let res = scrape_with_browser(&url, selector, attribute);
         value = res.map_err(|_| {

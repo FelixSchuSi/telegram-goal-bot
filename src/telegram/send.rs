@@ -147,4 +147,40 @@ mod tests {
         println!("latest_message_id: {:?}", latest_message_id);
         assert_eq!(true, true);
     }
+
+    #[tokio::test]
+    #[ignore]
+    async fn test_streamin() {
+        dotenv().ok();
+        let config = Arc::new(Config::init());
+        let bot = Arc::new(Bot::from_env());
+
+        let message = send_video(
+            "Schalke [1]-1 Werder Bremen - Sepp van den Berg 81'",
+            &bot,
+            "https://streamin.me/v/b861d517",
+            &config.bundesliga,
+        )
+        .await;
+
+        assert!(message.video().is_some());
+    }
+
+    #[tokio::test]
+    #[ignore]
+    async fn test_streamin_1() {
+        dotenv().ok();
+        let config = Arc::new(Config::init());
+        let bot = Arc::new(Bot::from_env());
+
+        let message = send_video(
+            "Schalke 0-[1] Werder Bremen - Marvin Ducksch 18'",
+            &bot,
+            "https://streamin.one/v/3e6983e6",
+            &config.bundesliga,
+        )
+        .await;
+
+        assert!(message.video().is_some());
+    }
 }

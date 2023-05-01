@@ -231,4 +231,26 @@ mod test {
             result
         );
     }
+
+    #[tokio::test]
+    #[ignore]
+    async fn test_reply() {
+        dotenv().ok();
+        let config = Arc::new(Config::init());
+        // TODO: Mock telegram bot
+        let bot = Arc::new(Bot::from_env());
+        let goal_submission = GoalSubmission {
+            submission_id: String::from("1316fru"),
+            competition: CompetitionName::PremierLeague,
+            sent_comment_ids: Vec::new(),
+            reply_id: 1938,
+        };
+        reply_with_retries(
+            &bot,
+            "TEST: Reply auf Tottenham [2] - 2 Manchester United - Heung-min Son 79'",
+            config.premier_league.get_chat_id_replies(),
+            MessageId(goal_submission.reply_id),
+        )
+        .await;
+    }
 }
