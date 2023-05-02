@@ -9,7 +9,8 @@ use roux::{
     Subreddit,
 };
 use std::{
-    sync::{Arc, Mutex},
+    borrow::{Borrow, BorrowMut},
+    sync::{Arc, Mutex, MutexGuard},
     time::Duration,
 };
 use teloxide::{types::MessageId, Bot};
@@ -27,7 +28,17 @@ pub async fn search_for_alternative_angles_in_submission_comments(
 
         let replay_submission_ids_copied: Vec<GoalSubmission>;
         {
-            let replay_submission_ids = listen_for_replays_submission_ids.lock().unwrap();
+            let mut replay_submission_ids = listen_for_replays_submission_ids.lock().unwrap();
+            let new_listen_for_replays_submission_ids: Vec<GoalSubmission> = replay_submission_ids
+                .clone()
+                .into_iter()
+                .filter(|goal_submission| {
+                    (goal_submission.added_time.time() - chrono::offset::Local::now().time())
+                        .num_hours()
+                        <= 1
+                })
+                .collect();
+            *replay_submission_ids = new_listen_for_replays_submission_ids;
             replay_submission_ids_copied = replay_submission_ids.clone();
         }
         for goal_submission in replay_submission_ids_copied.iter() {
@@ -204,6 +215,7 @@ mod test {
             competition: CompetitionName::ChampionsLeague,
             sent_comment_ids: Vec::new(),
             reply_id: 0,
+            added_time: chrono::offset::Local::now(),
         };
 
         let listen_for_replays_submission_ids: Arc<Mutex<Vec<GoalSubmission>>> =
@@ -244,6 +256,7 @@ mod test {
             competition: CompetitionName::PremierLeague,
             sent_comment_ids: Vec::new(),
             reply_id: 1938,
+            added_time: chrono::offset::Local::now(),
         };
         reply_with_retries(
             &bot,

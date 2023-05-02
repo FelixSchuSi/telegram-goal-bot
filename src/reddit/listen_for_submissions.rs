@@ -59,6 +59,7 @@ pub async fn listen_for_submissions(
                     competition: CompetitionName::ChampionsLeague,
                     sent_comment_ids: Vec::new(),
                     reply_id,
+                    added_time: chrono::offset::Local::now(),
                 });
         }
         if submission_filter(&submission, &config.bundesliga) {
@@ -80,6 +81,7 @@ pub async fn listen_for_submissions(
                     competition: CompetitionName::Bundesliga,
                     sent_comment_ids: Vec::new(),
                     reply_id,
+                    added_time: chrono::offset::Local::now(),
                 });
         }
         if submission_filter(&submission, &config.internationals) {
@@ -101,6 +103,7 @@ pub async fn listen_for_submissions(
                     competition: CompetitionName::Internationals,
                     sent_comment_ids: Vec::new(),
                     reply_id,
+                    added_time: chrono::offset::Local::now(),
                 });
         }
         if submission_filter(&submission, &config.premier_league) {
@@ -122,6 +125,7 @@ pub async fn listen_for_submissions(
                     competition: CompetitionName::PremierLeague,
                     sent_comment_ids: Vec::new(),
                     reply_id,
+                    added_time: chrono::offset::Local::now(),
                 });
         }
     }

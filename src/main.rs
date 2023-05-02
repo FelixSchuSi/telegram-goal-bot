@@ -4,6 +4,7 @@ mod filter;
 mod reddit;
 mod scrape;
 mod telegram;
+use chrono::{DateTime, Local};
 use config::config::Config;
 use dotenv::dotenv;
 use filter::competition::CompetitionName;
@@ -18,6 +19,7 @@ pub struct GoalSubmission {
     pub competition: CompetitionName,
     pub sent_comment_ids: Vec<String>,
     pub reply_id: i32,
+    pub added_time: DateTime<Local>,
 }
 
 #[tokio::main]
