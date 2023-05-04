@@ -174,7 +174,18 @@ async fn get_reddit_comment_body(submission_id: String, comment_id: String) -> O
         "https://old.reddit.com/r/soccer/comments/{}//{}.json",
         submission_id, comment_id
     );
-    let json_content = reqwest::get(&request_url).await.ok()?.text().await.ok()?;
+    let client = reqwest::Client::builder()
+        .user_agent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36")
+        .build().unwrap();
+    let json_content = client
+        .get(&request_url)
+        .send()
+        .await
+        .ok()?
+        .text()
+        .await
+        .ok()?;
+
     let json_path_result =
         JsonPathFinder::from_str(&json_content, "[1].data.children[0].data.body_html")
             .unwrap()
