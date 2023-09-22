@@ -1,428 +1,233 @@
 {
   "teams": [
     {
-      "names": [
-        "paris",
-        "saint",
-        "germain",
-        "psg"
-      ],
-      "min_matches": 1
-    },
-    {
-      "names": [
-        "bayern",
-        "m\u00fcnchen",
-        "munchen",
-        "munich"
-      ],
-      "min_matches": 1
-    },
-    {
-      "names": [
-        "ac",
-        "milan",
-        "mailand",
-        "calcio"
-      ],
-      "min_matches": 1
-    },
-    {
-      "names": [
-        "br\u00fcgge",
-        "brugge"
-      ],
-      "min_matches": 1
-    },
-    {
-      "names": [
-        "tottenham",
-        "hotspur",
-        "spurs"
-      ],
-      "min_matches": 1
-    },
-    {
-      "names": [
-        "benfica"
-      ],
-      "min_matches": 1
-    },
-    {
-      "names": [
-        "dortmund",
-        "bvb"
-      ],
-      "min_matches": 1
-    },
-    {
-      "names": [
-        "chelsea"
-      ],
-      "min_matches": 1
-    },
-    {
-      "names": [
-        "liverpool"
-      ],
-      "min_matches": 1
-    },
-    {
-      "names": [
-        "real",
-        "madrid"
-      ],
+      "names": ["real", "madrid"],
       "min_matches": 2
     },
     {
-      "names": [
-          "frankfurt",
-          "eintracht",
-          "sge"
-      ],
+      "names": ["manchester", "city", "man"],
+      "min_matches": 2
+    },
+    {
+      "names": ["paris", "saint", "germain", "psg"],
       "min_matches": 1
     },
     {
-      "names": [
-        "ssc",
-        "neapel",
-        "napoli"
-      ],
+      "names": ["sevillia"],
       "min_matches": 1
     },
     {
-      "names": [
-        "leipzig"
-      ],
+      "names": ["dortmund"],
       "min_matches": 1
     },
     {
-      "names": [
-        "inter"
-      ],
+      "names": ["lazio"],
       "min_matches": 1
     },
     {
-      "names": [
-        "porto"
-      ],
+      "names": ["barcelona", "barca"],
+      "min_matches": 1
+    },
+    {
+      "names": ["manchester", "united", "man", "utd"],
+      "min_matches": 2
+    },
+    {
+      "names": ["leipzig"],
+      "min_matches": 1
+    },
+    {
+      "names": ["porto"],
+      "min_matches": 1
+    },
+    {
+      "names": ["bayern", "m\u00fcnchen", "munchen", "munich"],
+      "min_matches": 1
+    },
+    {
+      "names": ["schachtar", "donezk", "shakhtar", "donetsk"],
+      "min_matches": 1
+    },
+    {
+      "names": ["inter"],
+      "min_matches": 1
+    },
+    {
+      "names": ["atl\u00e9tico", "atletico"],
+      "min_matches": 1
+    },
+    {
+      "names": ["salzburg"],
+      "min_matches": 1
+    },
+    {
+      "names": ["ssc", "neapel", "napoli"],
+      "min_matches": 1
+    },
+    {
+      "names": ["roter", "stern", "belgrad", "red", "star"],
+      "min_matches": 1
+    },
+    {
+      "names": ["galatasaray"],
+      "min_matches": 1
+    },
+    {
+      "names": ["benfica"],
+      "min_matches": 1
+    },
+    {
+      "names": ["union"],
+      "min_matches": 1
+    },
+    {
+      "names": ["braga"],
+      "min_matches": 1
+    },
+    {
+      "names": ["sociedad"],
+      "min_matches": 1
+    },
+    {
+      "names": ["psv", "eindhoven"],
+      "min_matches": 1
+    },
+    {
+      "names": ["copenhagen", "fck"],
+      "min_matches": 1
+    },
+    {
+      "names": ["lens"],
+      "min_matches": 1
+    },
+    {
+      "names": ["arsenal", "gunners"],
+      "min_matches": 1
+    },
+    {
+      "names": ["feyenoord"],
+      "min_matches": 1
+    },
+    {
+      "names": ["antwerp", "antwerpen", "royal"],
+      "min_matches": 1
+    },
+    {
+      "names": ["young", "boys", "bern"],
+      "min_matches": 1
+    },
+    {
+      "names": ["ac", "milan"],
+      "min_matches": 1
+    },
+    {
+      "names": ["newcastle"],
+      "min_matches": 1
+    },
+    {
+      "names": ["celtic"],
       "min_matches": 1
     }
   ],
   "relegated_teams": [
     {
-      "names": [
-        "zenit",
-        "petersburg"
-      ],
+      "names": ["chelsea"],
       "min_matches": 1
     },
     {
-      "names": [
-        "young",
-        "boys",
-        "bern"
-      ],
+      "names": ["rennes"],
       "min_matches": 1
     },
     {
-      "names": [
-        "wolfsburg"
-      ],
+      "names": ["zenit", "petersburg"],
       "min_matches": 1
     },
     {
-      "names": [
-        "villarreal"
-      ],
+      "names": ["br\u00fcgge", "brugge"],
       "min_matches": 1
     },
     {
-      "names": [
-        "sporting",
-        "cp",
-        "lisbon"
-      ],
+      "names": ["juventus", "turin", "juve"],
       "min_matches": 1
     },
     {
-      "names": [
-        "sheriff",
-        "tiraspol"
-      ],
+      "names": ["budapest", "ferencvaros"],
       "min_matches": 1
     },
     {
-      "names": [
-        "schachtar",
-        "donezk",
-        "shakhtar",
-        "donetsk",
-        "shakhtar"
-      ],
+      "names": ["dynamo", "kiew", "kyiven", "Kyiv"],
       "min_matches": 1
     },
     {
-      "names": [
-        "sevillia",
-        "sevilla"
-      ],
+      "names": ["liverpool"],
       "min_matches": 1
     },
     {
-      "names": [
-        "salzburg"
-      ],
+      "names": ["midtjylland"],
       "min_matches": 1
     },
     {
-      "names": [
-        "paris",
-        "saint",
-        "germain",
-        "psg"
-      ],
+      "names": ["atalanta", "bergamo"],
       "min_matches": 1
     },
     {
-      "names": [
-        "manchester",
-        "united",
-        "man",
-        "utd"
-      ],
-      "min_matches": 2
-    },
-    {
-      "names": [
-        "malm\u00F6",
-        "malmo",
-        "malmoe",
-        "ff"
-      ],
+      "names": ["ajax", "amsterdam"],
       "min_matches": 1
     },
     {
-      "names": [
-        "lille",
-        "osc",
-        "losc"
-      ],
+      "names": ["krasnodar"],
       "min_matches": 1
     },
     {
-      "names": [
-        "juventus",
-        "turin",
-        "juve"
-      ],
+      "names": ["basaksehir"],
       "min_matches": 1
     },
     {
-      "names": [
-        "dynamo",
-        "kiew",
-        "kyiven",
-        "Kyiv"
-      ],
+      "names": ["olympiakos", "pir\u00e4us", "piraus", "olympiacos"],
       "min_matches": 1
     },
     {
-      "names": [
-        "be\u015Fikta\u015F",
-        "istanbul",
-        "besiktas"
-      ],
+      "names": ["olympique", "marseille"],
       "min_matches": 1
     },
     {
-      "names": [
-        "barcelona",
-        "barca"
-      ],
+      "names": ["lok", "moskau", "lokomotiv", "moskow", "lokomotive"],
       "min_matches": 1
     },
     {
-      "names": [
-        "atl\u00e9tico",
-        "atletico"
-      ],
+      "names": ["m\u00f6nchengladbach", "monchengladbach", "gladbach"],
       "min_matches": 1
     },
     {
-      "names": [
-        "atalanta",
-        "bergamo"
-      ],
+      "names": ["tottenham", "hotspur", "spurs"],
       "min_matches": 1
     },
     {
-      "names": [
-        "ajax",
-        "amsterdam"
-      ],
+      "names": ["valencia"],
       "min_matches": 1
     },
     {
-      "names": [
-        "manchester",
-        "city",
-        "man"
-      ],
-      "min_matches": 2
-    },
-    {
-      "names": [
-        "rennes"
-      ],
+      "names": ["olympique", "lyon"],
       "min_matches": 1
     },
     {
-      "names": [
-        "lazio"
-      ],
+      "names": ["dinamo", "zagreb", "dynamo"],
       "min_matches": 1
     },
     {
-      "names": [
-        "budapest",
-        "ferencvaros"
-      ],
+      "names": ["genk"],
       "min_matches": 1
     },
     {
-      "names": [
-        "midtjylland"
-      ],
+      "names": ["lille", "osc"],
       "min_matches": 1
     },
     {
-      "names": [
-        "krasnodar"
-      ],
+      "names": ["lokomotiv"],
       "min_matches": 1
     },
     {
-      "names": [
-        "basaksehir"
-      ],
-      "min_matches": 1
-    },
-    {
-      "names": [
-        "olympiakos",
-        "pir\u00e4us",
-        "piraus",
-        "olympiacos"
-      ],
-      "min_matches": 1
-    },
-    {
-      "names": [
-        "olympique",
-        "marseille"
-      ],
-      "min_matches": 1
-    },
-    {
-      "names": [
-        "lok",
-        "moskau",
-        "lokomotiv",
-        "moskow",
-        "lokomotive"
-      ],
-      "min_matches": 1
-    },
-    {
-      "names": [
-        "m\u00f6nchengladbach",
-        "monchengladbach",
-        "gladbach"
-      ],
-      "min_matches": 1
-    },
-    {
-      "names": [
-        "dortmund"
-      ],
-      "min_matches": 1
-    },
-    {
-      "id": "003",
-      "names": [
-        "leipzig"
-      ],
-      "min_matches": 1
-    },
-    {
-      "names": [
-        "real",
-        "madrid"
-      ],
-      "min_matches": 2
-    },
-    {
-      "names": [
-        "valencia"
-      ],
-      "min_matches": 1
-    },
-    {
-      "names": [
-        "olympique",
-        "lyon"
-      ],
-      "min_matches": 1
-    },
-    {
-      "names": [
-        "roter",
-        "stern",
-        "belgrad",
-        "red",
-        "star"
-      ],
-      "min_matches": 1
-    },
-    {
-      "names": [
-        "dinamo",
-        "zagreb",
-        "dynamo"
-      ],
-      "min_matches": 1
-    },
-    {
-      "names": [
-        "galatasaray"
-      ],
-      "min_matches": 1
-    },
-    {
-      "names": [
-        "genk"
-      ],
-      "min_matches": 1
-    },
-    {
-      "names": [
-        "lokomotiv"
-      ],
-      "min_matches": 1
-    },
-    {
-      "names": [
-        "salzburg"
-      ],
-      "min_matches": 1
-    },
-    {
-      "names": [
-        "slavia",
-        "praha",
-        "prag"
-      ],
+      "names": ["slavia", "praha", "prag"],
       "min_matches": 1
     }
   ]
