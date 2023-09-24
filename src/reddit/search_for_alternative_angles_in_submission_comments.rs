@@ -4,9 +4,9 @@ use crate::{
 };
 use jsonpath_rust::JsonPathFinder;
 use log::info;
-use std::time::Duration;
 use roux::comment::CommentData;
 use roux::MaybeReplies;
+use std::time::Duration;
 use teloxide::types::MessageId;
 use tokio::time;
 
@@ -19,9 +19,7 @@ fn is_aa_comment(comment: &CommentData) -> bool {
             .contains("Mirrors / Alternative Angles");
 }
 
-fn flatten_comment_with_replies(
-    comment_tree: &CommentData,
-) -> Vec<&CommentData> {
+fn flatten_comment_with_replies(comment_tree: &CommentData) -> Vec<&CommentData> {
     let mut result: Vec<&CommentData> = Vec::new();
     result.push(&comment_tree);
 

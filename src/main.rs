@@ -36,26 +36,31 @@ async fn main() {
     let listen_for_replays_submission_ids: Arc<Mutex<Vec<GoalSubmission>>> =
         Arc::new(Mutex::new(Vec::new()));
 
-    let mut reddit_handle_submissions = create_reddit_handle(Arc::clone(&listen_for_replays_submission_ids)).await;
-    let mut reddit_handle_comments = create_reddit_handle(Arc::clone(&listen_for_replays_submission_ids)).await;
+    let mut reddit_handle_submissions =
+        create_reddit_handle(Arc::clone(&listen_for_replays_submission_ids)).await;
+    let mut reddit_handle_comments =
+        create_reddit_handle(Arc::clone(&listen_for_replays_submission_ids)).await;
 
     future::join(
         reddit_handle_submissions.listen_for_submissions(),
         reddit_handle_comments.search_for_alternative_angles_in_submission_comments(),
     )
-        .await;
+    .await;
 }
 
-
-pub async fn create_reddit_handle(listen_for_replays_submission_ids: Arc<Mutex<Vec<GoalSubmission>>>) -> RedditHandle {
-    let client = Reddit::new(&env::var("REDDIT_USER_AGENT").expect("REDDIT_USER_AGENT must be present"),
-                             &env::var("REDDIT_CLIENT_ID").expect("REDDIT_CLIENT_ID must be present"),
-                             &env::var("REDDIT_CLIENT_SECRET").expect("REDDIT_CLIENT_SECRET must be present"))
-        .username(&env::var("REDDIT_USERNAME").expect("REDDIT_USERNAME must be present"))
-        .password(&env::var("REDDIT_PASSWORD").expect("REDDIT_PASSWORD must be present"))
-        .login()
-        .await
-        .unwrap();
+pub async fn create_reddit_handle(
+    listen_for_replays_submission_ids: Arc<Mutex<Vec<GoalSubmission>>>,
+) -> RedditHandle {
+    let client = Reddit::new(
+        &env::var("REDDIT_USER_AGENT").expect("REDDIT_USER_AGENT must be present"),
+        &env::var("REDDIT_CLIENT_ID").expect("REDDIT_CLIENT_ID must be present"),
+        &env::var("REDDIT_CLIENT_SECRET").expect("REDDIT_CLIENT_SECRET must be present"),
+    )
+    .username(&env::var("REDDIT_USERNAME").expect("REDDIT_USERNAME must be present"))
+    .password(&env::var("REDDIT_PASSWORD").expect("REDDIT_PASSWORD must be present"))
+    .login()
+    .await
+    .unwrap();
     let config = Arc::new(Config::init());
     let bot = Arc::new(Bot::from_env());
 

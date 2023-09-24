@@ -5,8 +5,8 @@ use std::{
 
 use futures_util::StreamExt;
 use log::{error, info};
-use roux::Subreddit;
 use roux::util::RouxError;
+use roux::Subreddit;
 use roux_stream::{stream_submissions, StreamError};
 use teloxide::Bot;
 use tokio::time::sleep;
@@ -15,8 +15,8 @@ use tokio_retry::strategy::ExponentialBackoff;
 use crate::{
     config::config::Config,
     filter::{competition::CompetitionName, filter::submission_filter},
-    GoalSubmission,
     telegram::send::{get_latest_message_id_of_group, send_video},
+    GoalSubmission,
 };
 
 pub struct RedditHandle {
@@ -85,14 +85,14 @@ impl RedditHandle {
                     url,
                     &self.config.champions_league,
                 )
-                    .await;
+                .await;
                 sleep(Duration::from_secs(20)).await;
                 let reply_id = get_latest_message_id_of_group(
                     &&self.bot,
                     self.config.champions_league.get_chat_id_replies(),
                 )
-                    .await
-                    .0;
+                .await
+                .0;
                 info!(
                         "MessageId found of submission - MessageId: {:?}, submission_title: {:?}, submission_id: {:?}",
                         reply_id, submission.title, submission.id
@@ -115,8 +115,8 @@ impl RedditHandle {
                     &self.bot,
                     self.config.bundesliga.get_chat_id_replies(),
                 )
-                    .await
-                    .0;
+                .await
+                .0;
                 info!(
                         "MessageId found of submission - MessageId: {:?}, submission_title: {:?}, submission_id: {:?}",
                         reply_id, submission.title, submission.id
@@ -139,14 +139,14 @@ impl RedditHandle {
                     url,
                     &self.config.internationals,
                 )
-                    .await;
+                .await;
                 sleep(Duration::from_secs(20)).await;
                 let reply_id = get_latest_message_id_of_group(
                     &self.bot,
                     self.config.internationals.get_chat_id_replies(),
                 )
-                    .await
-                    .0;
+                .await
+                .0;
                 info!(
                         "MessageId found of submission - MessageId: {:?}, submission_title: {:?}, submission_id: {:?}",
                         reply_id, submission.title, submission.id
@@ -169,14 +169,14 @@ impl RedditHandle {
                     url,
                     &self.config.premier_league,
                 )
-                    .await;
+                .await;
                 sleep(Duration::from_secs(20)).await;
                 let reply_id = get_latest_message_id_of_group(
                     &self.bot,
                     self.config.premier_league.get_chat_id_replies(),
                 )
-                    .await
-                    .0;
+                .await
+                .0;
                 info!(
                     "MessageId found of submission - MessageId: {:?}, submission_title: {:?}, submission_id: {:?}",
                     reply_id, submission.title, submission.id

@@ -25,7 +25,6 @@ pub struct ScrapeError(pub String);
 //     }
 // }
 
-
 pub async fn scrape_video(url: String) -> Result<String, ScrapeError> {
     let video_host =
         VideoHost::from_str(&url).map_err(|_| ScrapeError("Unkown VideoHost".to_string()))?;
@@ -124,7 +123,9 @@ pub async fn scrape_video(url: String) -> Result<String, ScrapeError> {
     };
 
     if scrape_result.is_ok() && scrape_result.clone().unwrap().ends_with(".mov") {
-        return Err(ScrapeError("Scrape Error: .mov files are not properly supported by telegram".to_string()));
+        return Err(ScrapeError(
+            "Scrape Error: .mov files are not properly supported by telegram".to_string(),
+        ));
     }
 
     return scrape_result;

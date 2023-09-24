@@ -1,8 +1,8 @@
 #[allow(unused_imports)]
 use chrono::Utc;
 use log::{info, trace};
-use std::str::FromStr;
 use roux::submission::SubmissionData;
+use std::str::FromStr;
 
 use super::{competition::Competition, videohost::VideoHost};
 
