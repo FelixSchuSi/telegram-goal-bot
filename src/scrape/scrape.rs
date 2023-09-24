@@ -1,119 +1,133 @@
-use crate::filter::videohost::VideoHost;
 use std::str::FromStr;
 
-use super::scrape_with_browser::scrape_with_browser;
+use crate::filter::videohost::VideoHost;
+use crate::scrape::scrape_with_browser::scrape_with_browser;
+use crate::scrape::scrape_without_browser::scrape_without_browser;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct ScrapeError(pub String);
+
+// impl From<Error> for ScrapeError {
+//     fn from(value: Error) -> Self {
+//         ScrapeError("Reqwest error:".to_string())
+//     }
+// }
+//
+// impl From<anyhow::Error> for ScrapeError {
+//     fn from(value: anyhow::Error) -> Self {
+//         ScrapeError("Browser error:".to_string())
+//     }
+// }
+//
+// impl From<SelectorErrorKind<'_>> for ScrapeError {
+//     fn from(value: SelectorErrorKind) -> Self {
+//         ScrapeError("The given String could not be parsed to a CSS selector".to_string())
+//     }
+// }
+
 
 pub async fn scrape_video(url: String) -> Result<String, ScrapeError> {
     let video_host =
         VideoHost::from_str(&url).map_err(|_| ScrapeError("Unkown VideoHost".to_string()))?;
 
-    let response = reqwest::get(&url)
-        .await
-        .map_err(|_| ScrapeError("Request to VideoHost site failed".to_string()))?
-        .text()
-        .await
-        .map_err(|_| ScrapeError("Getting text Response from Request failed".to_string()))?;
-
-    let document = scraper::Html::parse_document(&response);
-    let selector: &str;
-    let attribute: &str;
-    let mut client_side_rendered: bool = false;
-    let _ = match video_host {
+    let scrape_result: Result<String, ScrapeError> = match video_host {
         VideoHost::Streamwo => {
-            selector = "body video > source";
-            attribute = "src";
-            // TODO: scraping Streamwo is more complicated.
+            let selector = "body video > source";
+            let attribute = "src";
+            let result = scrape_without_browser(&url, selector, attribute).await;
+            result.map(|ok_value| {
+                if ok_value.starts_with(".") {
+                    return "https://streamwo.com".to_string() + &*ok_value.replace(".", "");
+                }
+                return ok_value;
+            })
         }
         VideoHost::Streamja => {
-            selector = "video > source";
-            attribute = "src";
+            let selector = "video > source";
+            let attribute = "src";
+            scrape_without_browser(&url, selector, attribute).await
         }
         VideoHost::Streamye => {
-            selector = "body video > source";
-            attribute = "src";
-            // TODO: scraping streamye is more complicated.
+            let selector = "body video > source";
+            let attribute = "src";
+            let result = scrape_without_browser(&url, selector, attribute).await;
+            result.map(|ok_value| {
+                if ok_value.starts_with(".") {
+                    return "https://streamye.com".to_string() + &*ok_value.replace(".", "");
+                }
+                return ok_value;
+            })
         }
         VideoHost::Streamable => {
-            selector = "div > video";
-            attribute = "src";
+            let selector = "div > video";
+            let attribute = "src";
+            scrape_without_browser(&url, selector, attribute).await
         }
         VideoHost::Imgtc => {
-            selector = "div#player>iframe";
-            attribute = "src";
+            let selector = "div#player>iframe";
+            let attribute = "src";
+            scrape_without_browser(&url, selector, attribute).await
         }
         VideoHost::Clippituser => {
-            selector = "#player-container";
-            attribute = "data-hd-file";
+            let selector = "#player-container";
+            let attribute = "data-hd-file";
+            scrape_without_browser(&url, selector, attribute).await
         }
         VideoHost::Vimeo => {
-            selector = "div#player>iframe";
-            attribute = "src";
+            let selector = "div#player>iframe";
+            let attribute = "src";
+            scrape_without_browser(&url, selector, attribute).await
         }
         VideoHost::Streamvi => {
-            selector = "video > source";
-            attribute = "src";
+            let selector = "video > source";
+            let attribute = "src";
+            scrape_without_browser(&url, selector, attribute).await
         }
         VideoHost::Juststream => {
-            selector = "div#player>iframe";
-            attribute = "src";
+            let selector = "div#player>iframe";
+            let attribute = "src";
+            scrape_without_browser(&url, selector, attribute).await
         }
         VideoHost::Streamff => {
-            selector = "video";
-            attribute = "src";
-            client_side_rendered = true;
+            let selector = "video";
+            let attribute = "src";
+            scrape_with_browser(&url, selector, attribute)
         }
         VideoHost::Streamgg => {
-            selector = "video > source";
-            attribute = "src";
+            let selector = "video > source";
+            let attribute = "src";
+            scrape_without_browser(&url, selector, attribute).await
         }
         VideoHost::Streamin => {
-            selector = "video";
-            attribute = "src";
+            let selector = "video";
+            let attribute = "src";
+            let result = scrape_without_browser(&url, selector, attribute).await;
+            result.map(|ok_value| {
+                if ok_value.starts_with(".") {
+                    return "https://streamye.com".to_string() + &*ok_value.replace(".", "");
+                }
+                return ok_value;
+            })
         }
         VideoHost::Dubz => {
-            selector = "video > source";
-            attribute = "src";
+            let selector = "video > source";
+            let attribute = "src";
+            scrape_without_browser(&url, selector, attribute).await
+            // Dubz has some clever blocking mechanism.
+            // The site blocks this block both if we do a server side or a client side scrape
         }
         VideoHost::Streambug => {
-            selector = "video";
-            attribute = "src";
-            client_side_rendered = true;
+            let selector = "video";
+            let attribute = "src";
+            scrape_with_browser(&url, selector, attribute)
         }
     };
-    let value: String;
-    if client_side_rendered {
-        let res = scrape_with_browser(&url, selector, attribute);
-        value = res.map_err(|_| {
-            ScrapeError(format!(
-            "Client Side Scraping failed for host: {:?} url: {:?} seletor: {:?} attribute: {:?}",
-            video_host, url, selector, attribute
-        ))
-        })?;
-    } else {
-        let title_selector = scraper::Selector::parse(selector).map_err(|_| {
-            ScrapeError("The given String could not be parsed to a CSS selector".to_string())
-        })?;
-        let element = document.select(&title_selector).next().ok_or(ScrapeError(
-            "No Element matching the CSS Selector present in the scraped site".to_string(),
-        ))?;
-        value = element
-            .value()
-            .attr(attribute)
-            .ok_or(ScrapeError(format!(
-                "The given DOM-Element does not have the {} attribute",
-                attribute
-            )))?
-            .to_owned();
+
+    if scrape_result.is_ok() && scrape_result.clone().unwrap().ends_with(".mov") {
+        return Err(ScrapeError("Scrape Error: .mov files are not properly supported by telegram".to_string()));
     }
 
-    (!value.ends_with(".mov"))
-        .then_some(value.to_string())
-        .ok_or(ScrapeError(
-            ".mov files are not properly supported by telegram".to_string(),
-        ))
+    return scrape_result;
 }
 
 #[cfg(test)]
@@ -131,7 +145,7 @@ mod tests {
     async fn test_streamin_1() {
         let result = scrape_video("https://streamin.me/v/99dadc6d".to_string()).await;
         assert!(result.is_ok());
-        assert!(result.unwrap() == "https://cdn.discordapp.com/attachments/1093271807102038049/1099336438090313778/99dadc6d.mp4".to_string());
+        assert!(result.unwrap() == "https://downloader.disk.yandex.ru/disk/6b74e9862df24b84052f9874c03dc23a953f5593619a4c67d57ea663649983d8/651096a4/MuDSbA9z5TnczT15nZM5t48mFaNo47yRELa2uYBDsKAhbc-Zc2sJKjaB7yIimz_hlK73GjhtT4QASMs0u9Ka5Q%3D%3D?uid=465360380&filename=99dadc6d.mp4&disposition=attachment&hash=&limit=0&content_type=video%2Fmp4&owner_uid=465360380&fsize=11871274&hid=c663608021832d16b1eab202d97ec9a2&media_type=video&tknv=v2&etag=51b5cbe01eab6829a15d2fe4fd4da538&expires=1695585555#t=0.1".to_string());
     }
 
     #[tokio::test]
@@ -139,5 +153,13 @@ mod tests {
         let result = scrape_video("https://streamff.com/v/qagwUNlcwP".to_string()).await;
         assert!(result.is_ok());
         assert!(result.unwrap() == "https://files.catbox.moe/3cdo9q.mp4".to_string());
+    }
+
+    #[tokio::test]
+    #[ignore]
+    async fn test_haaland() {
+        let result = scrape_video("https://dubz.link/c/3ea24e".to_string()).await;
+        assert!(result.is_ok());
+        assert!(result.unwrap() == "https://dubzalt.com/storage/videos/3ea24e.mp4".to_string());
     }
 }

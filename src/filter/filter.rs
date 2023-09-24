@@ -1,8 +1,8 @@
 #[allow(unused_imports)]
 use chrono::Utc;
 use log::{info, trace};
-use roux::subreddit::responses::SubmissionsData;
 use std::str::FromStr;
+use roux::submission::SubmissionData;
 
 use super::{competition::Competition, videohost::VideoHost};
 
@@ -12,7 +12,7 @@ const UNDER_7_TO_UNDER_21: [&str; 15] = [
 ];
 
 #[allow(dead_code)]
-pub fn submission_filter(submission: &SubmissionsData, competition: &Competition) -> bool {
+pub fn submission_filter(submission: &SubmissionData, competition: &Competition) -> bool {
     let host = submission.url.to_owned().unwrap_or_default();
     let lower_title = submission.title.to_lowercase();
     let mut title_split = lower_title.split_whitespace();
