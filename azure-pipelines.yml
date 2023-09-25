@@ -1,22 +1,21 @@
 trigger:
-- master
+  - master
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: "ubuntu-latest"
 
 steps:
-- task: SSH@0
-  inputs:
-    sshEndpoint: 'uberspace'
-    runOptions: 'commands'
-    commands: |
-      cd BuliTorBot && git pull
-      /home/felixs/bin/pm2 delete all || :
-      cd BuliTorBot && /home/felixs/bin/pm2 start bash_scripts/internationals.sh -o logs/internationalsLogs.log
-      cd BuliTorBot && /home/felixs/bin/pm2 start bash_scripts/cl.sh -o logs/clLogs.log
-      cd BuliTorBot && /home/felixs/bin/pm2 start bash_scripts/prem.sh -o logs/premLogs.log
-      cd BuliTorBot && /home/felixs/bin/pm2 start bash_scripts/buli.sh -o logs/buliLogs.log
-      cd BuliTorBot && /home/felixs/bin/pm2 start bash_scripts/reply.sh -o logs/replyLogs.log
-      cd BuliTorBot && /home/felixs/bin/pm2 start bash_scripts/formula1.sh -o logs/formula1.log
-    failOnStdErr: false
-  displayName: 'ssh task in uberspace VM'
+  - task: SSH@0
+    inputs:
+      sshEndpoint: "uberspace"
+      runOptions: "commands"
+      commands: |
+        cd BuliTorBot && git pull
+        /home/felixs/bin/pm2 delete all || :
+        cd BuliTorBot && /home/felixs/bin/pm2 start bash_scripts/internationals.sh -o logs/internationalsLogs.log
+        cd BuliTorBot && /home/felixs/bin/pm2 start bash_scripts/cl.sh -o logs/clLogs.log
+        cd BuliTorBot && /home/felixs/bin/pm2 start bash_scripts/prem.sh -o logs/premLogs.log
+        cd BuliTorBot && /home/felixs/bin/pm2 start bash_scripts/buli.sh -o logs/buliLogs.log
+        cd BuliTorBot && /home/felixs/bin/pm2 start bash_scripts/formula1.sh -o logs/formula1.log
+      failOnStdErr: false
+    displayName: "ssh task in uberspace VM"
