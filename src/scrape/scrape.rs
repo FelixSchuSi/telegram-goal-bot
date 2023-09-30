@@ -53,7 +53,7 @@ fn scrape_from_html(html: &Html, video_host: &VideoHost) -> Result<String, Scrap
             let attribute = "src";
             let result = scrape_html(&html, selector, attribute);
             result.map(|ok_value| {
-                if ok_value.starts_with(".") {
+                if ok_value.starts_with(".") || ok_value.starts_with("/") {
                     return "https://streamwo.com".to_string() + &*ok_value.replace(".", "");
                 }
                 return ok_value;
@@ -69,7 +69,7 @@ fn scrape_from_html(html: &Html, video_host: &VideoHost) -> Result<String, Scrap
             let attribute = "src";
             let result = scrape_html(&html, selector, attribute);
             result.map(|ok_value| {
-                if ok_value.starts_with(".") {
+                if ok_value.starts_with(".") || ok_value.starts_with("/") {
                     return "https://streamye.com".to_string() + &*ok_value.replace(".", "");
                 }
                 return ok_value;
@@ -120,7 +120,7 @@ fn scrape_from_html(html: &Html, video_host: &VideoHost) -> Result<String, Scrap
             let attribute = "src";
             let result = scrape_html(&html, selector, attribute);
             result.map(|ok_value| {
-                if ok_value.starts_with(".") {
+                if ok_value.starts_with(".") || ok_value.starts_with("/") {
                     return "https://streamin.me".to_string() + &*ok_value.replace(".", "");
                 }
                 return ok_value;
@@ -198,7 +198,6 @@ mod tests {
             "https://downloader.disk.yandex.ru/disk/03b2c3594d930264936225b4c60942749197ab817bea7fa0b6186045ece1625a/651869b1/MuDSbA9z5TnczT15nZM5t_czefaxmCDPZwCdDLSQCMp7FrmgoYiNmVfHfKua7VduccOi7PHXRlia4KZ_quswZw%3D%3D?uid=465360380&filename=fa0ebe20.mp4&disposition=attachment&hash=&limit=0&content_type=video%2Fmp4&owner_uid=465360380&fsize=5753860&hid=d7e20ba9d8e8c4f1ef414f214e51337a&media_type=video&tknv=v2&etag=1f364dfd1d2940e84ce167d06b886bf5&expires=1696098737#t=0.1".to_string()
         );
     }
-
 
     #[tokio::test]
     async fn test_with_request_streamff01() {
