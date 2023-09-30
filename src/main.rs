@@ -4,6 +4,7 @@ use std::sync::{Arc, Mutex};
 use chrono::{DateTime, Local};
 use dotenv::dotenv;
 use futures_util::future;
+use log::info;
 use roux::{Reddit, Subreddit};
 use teloxide::Bot;
 
@@ -31,6 +32,8 @@ async fn main() {
     env_logger::init();
     dotenv().ok();
 
+    info!("successfully read dotenv");
+
     // List of submissions that are goals and were posted to telegram.
     // We want to listen for comments for this submission to find replays of that goal to post them to telegram as well.
     let listen_for_replays_submission_ids: Arc<Mutex<Vec<GoalSubmission>>> =
@@ -41,6 +44,8 @@ async fn main() {
     let mut reddit_handle_comments =
         create_reddit_handle(Arc::clone(&listen_for_replays_submission_ids)).await;
 
+    info!("reddit comment handle and reddit submission handle successfully started");
+
     future::join(
         reddit_handle_submissions.listen_for_submissions(),
         reddit_handle_comments.search_for_alternative_angles_in_submission_comments(),
@@ -48,7 +53,7 @@ async fn main() {
     .await;
 }
 
-pub async fn create_reddit_handle(
+async fn create_reddit_handle(
     listen_for_replays_submission_ids: Arc<Mutex<Vec<GoalSubmission>>>,
 ) -> RedditHandle {
     let client = Reddit::new(

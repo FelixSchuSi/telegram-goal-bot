@@ -1,14 +1,17 @@
-use super::listen_for_submissions::RedditHandle;
-use crate::{
-    filter::competition::CompetitionName, telegram::send::reply_with_retries, GoalSubmission,
-};
+use std::time::Duration;
+
 use jsonpath_rust::JsonPathFinder;
 use log::info;
 use roux::comment::CommentData;
 use roux::MaybeReplies;
-use std::time::Duration;
 use teloxide::types::MessageId;
 use tokio::time;
+
+use crate::{
+    filter::competition::CompetitionName, telegram::send::reply_with_retries, GoalSubmission,
+};
+
+use super::listen_for_submissions::RedditHandle;
 
 fn is_aa_comment(comment: &CommentData) -> bool {
     return comment.body.is_some()
@@ -189,12 +192,14 @@ impl RedditHandle {
 
 #[cfg(test)]
 mod test {
-    use super::*;
-    use crate::config::config::Config;
-    use dotenv::dotenv;
-    use roux::Subreddit;
     use std::sync::Arc;
+
+    use dotenv::dotenv;
     use teloxide::Bot;
+
+    use crate::config::config::Config;
+
+    use super::*;
 
     // TODO: Refactor this so we can mock the telegram bot
     // so that we do not send messages when testing

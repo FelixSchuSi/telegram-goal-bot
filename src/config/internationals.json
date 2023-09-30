@@ -2,95 +2,168 @@
   "name": "internationals",
   "teams": [
     {
-      "aliases": ["turkey", "tur"],
+      "aliases": [
+        "turkey",
+        "tur"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["italy", "ita"],
+      "aliases": [
+        "italy",
+        "ita"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["wales", "wal"],
+      "aliases": [
+        "wales",
+        "wal"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["switzerland", "swi"],
+      "aliases": [
+        "switzerland",
+        "swi"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["denmark", "dnk"],
+      "aliases": [
+        "denmark",
+        "dnk"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["finland", "fin"],
+      "aliases": [
+        "finland",
+        "fin"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["belgium", "bel"],
+      "aliases": [
+        "belgium",
+        "bel"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["russia", "rus", "russian"],
+      "aliases": [
+        "russia",
+        "rus",
+        "russian"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["netherlands", "holland", "netherland", "nld"],
+      "aliases": [
+        "netherlands",
+        "holland",
+        "netherland",
+        "nld"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["macedonia", "north", "mkd"],
+      "aliases": [
+        "macedonia",
+        "north",
+        "mkd"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["england", "eng"],
+      "aliases": [
+        "england",
+        "eng"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["croatia", "cro"],
+      "aliases": [
+        "croatia",
+        "cro"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["scotland", "sco"],
+      "aliases": [
+        "scotland",
+        "sco"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["czech", "cze"],
+      "aliases": [
+        "czech",
+        "cze"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["spain", "esp"],
+      "aliases": [
+        "spain",
+        "esp"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["sweden", "swe"],
+      "aliases": [
+        "sweden",
+        "swe"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["poland", "pol"],
+      "aliases": [
+        "poland",
+        "pol"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["slovakia", "svk"],
+      "aliases": [
+        "slovakia",
+        "svk"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["hungary", "hun"],
+      "aliases": [
+        "hungary",
+        "hun"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["portugal", "por"],
+      "aliases": [
+        "portugal",
+        "por"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["france", "fra"],
+      "aliases": [
+        "france",
+        "fra"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["germany", "ger"],
+      "aliases": [
+        "germany",
+        "ger"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["ukraine", "ukr"],
+      "aliases": [
+        "ukraine",
+        "ukr"
+      ],
       "min_matches_needed": 1
     }
   ]

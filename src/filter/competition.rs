@@ -1,11 +1,12 @@
-use serde::Deserialize;
+#[cfg(test)]
+use std::env;
 use std::ops::Index;
+
+use serde::Deserialize;
 use teloxide::types::ChatId;
 
 #[cfg(test)]
 use crate::config::config::Config;
-#[cfg(test)]
-use std::env;
 
 #[derive(Debug, Deserialize, Clone)]
 pub enum CompetitionName {
@@ -109,12 +110,13 @@ fn test_cl() {
 fn test_bundesliga() {
     mock_env_vars();
     let bundesliga = Config::init().bundesliga;
-    let title = "Hoffenheim [1]-0 Schalke - Alex Kral (OG) 25'";
+    let title = "Hoffenheim 0 - [1] Borussia Dortmund - Niclas Fullkrug 18'";
     assert!(
         bundesliga.is_valid_post_title_for_competition(title),
         "\n\n bundesliga post falsely identified: {title}\n\n",
     );
 }
+
 #[test]
 fn is_not_valid_competition_test() {
     mock_env_vars();

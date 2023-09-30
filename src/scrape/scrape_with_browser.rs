@@ -1,6 +1,3 @@
-use std::error::Error;
-
-use futures_util::TryFutureExt;
 use headless_chrome::{Browser, LaunchOptions};
 
 use crate::scrape::scrape::ScrapeError;
@@ -10,7 +7,7 @@ pub fn scrape_with_browser(
     selector: &str,
     attribute: &str,
 ) -> Result<String, ScrapeError> {
-    let mut launch_options = LaunchOptions::default_builder();
+    let launch_options = LaunchOptions::default_builder();
 
     let browser = Browser::new(launch_options.build().map_err(|err| {
         ScrapeError("Error while configuring Browser: ".to_owned() + &*err.to_string())

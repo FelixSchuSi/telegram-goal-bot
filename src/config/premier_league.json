@@ -2,121 +2,202 @@
   "name": "premier_league",
   "teams": [
     {
-      "aliases": ["arsenal", "gunners", "afc"],
+      "aliases": [
+        "arsenal",
+        "gunners",
+        "afc"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["aston", "villa"],
+      "aliases": [
+        "aston",
+        "villa"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["brighton"],
+      "aliases": [
+        "brighton"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["chelsea"],
+      "aliases": [
+        "chelsea"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["crystal", "palace"],
+      "aliases": [
+        "crystal",
+        "palace"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["everton"],
+      "aliases": [
+        "everton"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["leicester"],
+      "aliases": [
+        "liverpool"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["liverpool"],
-      "min_matches_needed": 1
-    },
-    {
-      "aliases": ["manchester", "city", "man"],
+      "aliases": [
+        "manchester",
+        "city",
+        "man"
+      ],
       "min_matches_needed": 2
     },
     {
-      "aliases": ["manchester", "united", "man", "utd"],
+      "aliases": [
+        "manchester",
+        "united",
+        "man",
+        "utd"
+      ],
       "min_matches_needed": 2
     },
     {
-      "aliases": ["newcastle"],
+      "aliases": [
+        "newcastle"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["southampton"],
+      "aliases": [
+        "tottenham",
+        "hotspur",
+        "spurs"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["tottenham", "hotspur", "spurs"],
+      "aliases": [
+        "west",
+        "ham"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["west", "ham"],
+      "aliases": [
+        "wolverhampton",
+        "wanderers",
+        "wolves"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["leeds"],
+      "aliases": [
+        "norwich"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["wolverhampton", "wanderers", "wolves"],
+      "aliases": [
+        "brentford"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["norwich"],
+      "aliases": [
+        "nottingham"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["brentford"],
+      "aliases": [
+        "bournemouth"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["nottingham"],
+      "aliases": [
+        "fulham"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["bournemouth"],
+      "aliases": [
+        "luton"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["fulham"],
+      "aliases": [
+        "burnley"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
+        "sheffield",
+        "sheff"
+      ],
       "min_matches_needed": 1
     }
   ],
   "relegated_teams": [
     {
-      "aliases": ["watford"],
+      "aliases": [
+        "southampton"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["norwich"],
+      "aliases": [
+        "leeds"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["burnley"],
+      "aliases": [
+        "leicester"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["sheffield", "sheff"],
+      "aliases": [
+        "watford"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["west", "brom", "albion"],
+      "aliases": [
+        "norwich"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["fulham"],
+      "aliases": [
+        "west",
+        "brom",
+        "albion"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["huddersfield"],
+      "aliases": [
+        "fulham"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["bournemouth"],
+      "aliases": [
+        "huddersfield"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
+        "bournemouth"
+      ],
       "min_matches_needed": 1
     }
   ]

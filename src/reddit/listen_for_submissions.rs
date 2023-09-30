@@ -43,35 +43,33 @@ impl RedditHandle {
                 error!("Error getting submission: {}", err);
                 match err {
                     StreamError::TimeoutError(timeout) => {
-                        print!("is StreamError");
+                        error!("is TimeoutError");
                         error!("timeout: {}", timeout);
-                        print!("is StreamError");
                     }
                     StreamError::SourceError(e) => {
-                        print!("is SourceError");
-                        error!("rouxerror: {}", e);
+                        error!("is SourceError");
+                        error!("RouxError: {}", e);
                         match e {
-                            RouxError::Network(netE) => {
-                                print!("is RouxError::Network");
-                                error!("Network: {}", netE);
+                            RouxError::Network(net_e) => {
+                                error!("is RouxError::Network");
+                                error!("Network: {}", net_e);
                             }
-                            RouxError::Status(statE) => {
-                                print!("is RouxError::Status");
-                                error!("Status: ");
+                            RouxError::Status(stat_e) => {
+                                error!("is RouxError::Status");
+                                error!("reddit submission handler received a response of status: {}", stat_e.status());
+                                error!("response: {}", stat_e.text().await.unwrap_or("Couldnt read response.text()".to_string()));
                             }
-                            RouxError::Parse(parseE) => {
-                                print!("is RouxError::Parse");
-                                error!("Parse: {}", parseE);
+                            RouxError::Parse(parse_e) => {
+                                error!("is RouxError::Parse");
+                                error!("Parse: {}", parse_e);
                             }
                             RouxError::Auth(e) => {
-                                print!("is RouxError::Auth");
+                                error!("is RouxError::Auth");
                                 error!("Auth: {}", e);
                             }
                         }
-                        print!("is SourceError");
                     }
                 }
-                print!("ich bin hier lol");
                 continue;
             };
             let url = match &submission.url {
