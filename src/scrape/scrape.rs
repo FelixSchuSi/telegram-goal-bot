@@ -158,7 +158,7 @@ mod tests {
     }
 
     #[test]
-    fn test_without_request_streamin() {
+    fn test_without_request_streamin01() {
         let html =
             Html::parse_document(&fs::read_to_string("src/scrape/test_streamin_01.html").unwrap());
         let scrape_result = scrape_from_html(&html, &VideoHost::Streamin);
@@ -170,7 +170,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_with_request_streamin() {
+    async fn test_with_request_streamin01() {
         let result = scrape_video("https://streamin.me/v/3727f22e".to_string()).await;
         assert!(result.is_ok());
         assert_eq!(
@@ -180,7 +180,18 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_with_request_streamff() {
+    async fn test_with_request_streamin02() {
+        let result = scrape_video("https://streamin.me/v/1d981b6d".to_string()).await;
+        assert!(result.is_ok());
+        assert_eq!(
+            result.unwrap(),
+            "https://downloader.disk.yandex.ru/disk/120e783b3f4823753282ed08b88dff92d4306304a30990ddfa0be8e88a140da0/65186474/MuDSbA9z5TnczT15nZM5txl10vu2kyk2f7hYQQDQ8LHnS0IHf7DyWRtF4YbNd2e0yMqTqb5S8v1K8Mr74azPrQ%3D%3D?uid=465360380&filename=1d981b6d.mp4&disposition=attachment&hash=&limit=0&content_type=video%2Fmp4&owner_uid=465360380&fsize=4549755&hid=a8d80ec460182dbb3098aac79b800269&media_type=video&tknv=v2&etag=29fc670be24109b661408dc82d283a28&expires=1696097396#t=0.1".to_string()
+        );
+    }
+
+
+    #[tokio::test]
+    async fn test_with_request_streamff01() {
         let result = scrape_video("https://streamff.com/v/qagwUNlcwP".to_string()).await;
         assert!(result.is_ok());
         assert_eq!(
@@ -190,7 +201,7 @@ mod tests {
     }
 
     #[test]
-    fn test_without_request_dubz() {
+    fn test_without_request_dubz01() {
         let html =
             Html::parse_document(&fs::read_to_string("src/scrape/test_dubz_01.html").unwrap());
         let scrape_result = scrape_from_html(&html, &VideoHost::Dubz);
@@ -203,7 +214,7 @@ mod tests {
 
     #[tokio::test]
     #[ignore]
-    async fn test_with_request_dubz() {
+    async fn test_with_request_dubz01() {
         let result = scrape_video("https://dubz.link/c/3ea24e".to_string()).await;
         assert!(result.is_ok());
         assert_eq!(
