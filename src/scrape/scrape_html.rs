@@ -1,27 +1,12 @@
+use scraper::Html;
+
 use crate::scrape::scrape::ScrapeError;
 
-pub async fn scrape_without_browser(
-    url: &str,
-    selector: &str,
-    attribute: &str,
-) -> Result<String, ScrapeError> {
-    let response = reqwest::get(url)
-        .await
-        .map_err(|err| ScrapeError("Error while getting url: ".to_owned() + &*err.to_string()))?
-        .text()
-        .await
-        .map_err(|err| {
-            ScrapeError(
-                "Error while extracting text from response: ".to_owned() + &*err.to_string(),
-            )
-        })?;
-
-    let document = scraper::Html::parse_document(&response);
-
+pub fn scrape_html(html: &Html, selector: &str, attribute: &str) -> Result<String, ScrapeError> {
     let title_selector = scraper::Selector::parse(selector).map_err(|_| {
         ScrapeError("The given String could not be parsed to a CSS selector".to_string())
     })?;
-    let element = document
+    let element = html
         .select(&title_selector)
         .next()
         .ok_or(ScrapeError(

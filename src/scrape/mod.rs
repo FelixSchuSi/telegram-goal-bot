@@ -1,3 +1,4 @@
+mod get_html_with_browser;
+mod get_html_without_browser;
 pub mod scrape;
-pub mod scrape_with_browser;
-pub mod scrape_without_browser;
+mod scrape_html;
