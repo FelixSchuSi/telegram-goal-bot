@@ -17,11 +17,11 @@ pub struct RetryWithTimeoutOptions {
     pub url: String,
 }
 
-pub async fn scrape_video(url: String) -> Result<String, ScrapeError> {
+pub async fn scrape_video(url: &str) -> Result<String, ScrapeError> {
     let retry_options = RetryWithTimeoutOptions {
         max_retries: 5,
         timeout_ms: 10_000,
-        url,
+        url: String::from(url),
     };
 
     let scrape_result = scrape_with_retries(&retry_options).await?;
@@ -187,7 +187,7 @@ mod tests {
 
     #[tokio::test]
     async fn unkown_host() {
-        let result = scrape_video("https://streamall.me/ra_goO7Rm".to_string()).await;
+        let result = scrape_video("https://streamall.me/ra_goO7Rm").await;
         assert!(result.is_err());
         assert_eq!(
             result.err().unwrap(),
@@ -209,7 +209,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_with_request_streamin01() {
-        let result = scrape_video("https://streamin.me/v/3727f22e".to_string()).await;
+        let result = scrape_video("https://streamin.me/v/3727f22e").await;
         assert!(result.is_ok());
         // streamin is rotating the concrete source url of the videos.
         // Testing that we are able to successfully scrape is all we can do.
@@ -217,7 +217,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_with_request_streamin02() {
-        let result = scrape_video("https://streamin.me/v/1d981b6d".to_string()).await;
+        let result = scrape_video("https://streamin.me/v/1d981b6d").await;
         assert!(result.is_ok());
         // streamin is rotating the concrete source url of the videos.
         // Testing that we are able to successfully scrape is all we can do.
@@ -225,7 +225,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_with_request_streamin03() {
-        let result = scrape_video("https://streamin.me/v/fa0ebe20".to_string()).await;
+        let result = scrape_video("https://streamin.me/v/fa0ebe20").await;
         assert!(result.is_ok());
         // streamin is rotating the concrete source url of the videos.
         // Testing that we are able to successfully scrape is all we can do.
@@ -233,7 +233,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_with_request_streamff01() {
-        let result = scrape_video("https://streamff.com/v/qagwUNlcwP".to_string()).await;
+        let result = scrape_video("https://streamff.com/v/qagwUNlcwP").await;
         assert!(result.is_ok());
         assert_eq!(
             result.unwrap(),
@@ -256,7 +256,7 @@ mod tests {
     #[tokio::test]
     #[ignore]
     async fn test_with_request_dubz01() {
-        let result = scrape_video("https://dubz.link/c/3ea24e".to_string()).await;
+        let result = scrape_video("https://dubz.link/c/3ea24e").await;
         assert!(result.is_ok());
         assert_eq!(
             result.unwrap(),
@@ -266,8 +266,23 @@ mod tests {
 
     #[tokio::test]
     async fn test_with_request_dubz02() {
-        let result = scrape_video("https://streamin.me/v/9e5d5f6b".to_string()).await;
+        let result = scrape_video("https://streamin.me/v/9e5d5f6b").await;
         let err = result.unwrap_err();
         assert_eq!(err.0, String::from("Scraping of url https://streamin.me/v/9e5d5f6b failed after 5 attempts with timeout 10000"));
+    }
+
+    #[test]
+    fn test_replace() {
+        let result: Result<String, ScrapeError> = Ok(String::from("./uploads/2e5be99a.mp4#t=0.1"));
+        result
+            .map(|ok_value| {
+                if ok_value.starts_with(".") || ok_value.starts_with("/") {
+                    println!(
+                        "return {}",
+                        "https://streamin.me".to_string() + &*ok_value.replace(".", "")
+                    );
+                }
+            })
+            .expect("TODO: panic message");
     }
 }

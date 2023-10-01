@@ -10,7 +10,7 @@ use teloxide::{
 use crate::{filter::competition::Competition, scrape::scrape::scrape_video};
 
 pub async fn send_video(caption: &str, bot: &Bot, url: &str, competition: &Competition) -> Message {
-    let scraped_url = scrape_video(String::clone(&url.to_string())).await;
+    let scraped_url = scrape_video(url).await;
 
     if scraped_url.is_err() {
         error!(
