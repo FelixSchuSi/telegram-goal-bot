@@ -3,9 +3,6 @@ use std::ops::Index;
 use serde::Deserialize;
 use teloxide::types::ChatId;
 
-#[cfg(test)]
-use crate::config::config::Config;
-
 #[derive(Debug, Deserialize, Clone)]
 pub enum CompetitionName {
     #[serde(rename = "bundesliga")]
@@ -71,7 +68,9 @@ impl Team {
 
 #[cfg(test)]
 mod tests {
+    use crate::config::config::Config;
     use std::env;
+
     use super::*;
 
     #[test]
