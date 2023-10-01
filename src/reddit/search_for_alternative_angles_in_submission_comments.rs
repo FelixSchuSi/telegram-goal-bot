@@ -2,13 +2,14 @@ use std::time::Duration;
 
 use jsonpath_rust::JsonPathFinder;
 use log::info;
+use regex::Regex;
 use roux::comment::CommentData;
 use roux::MaybeReplies;
 use teloxide::types::MessageId;
 use tokio::time;
 
 use crate::{
-    filter::competition::CompetitionName, telegram::send::reply_with_retries, GoalSubmission,
+    filter::competition::CompetitionName, GoalSubmission, telegram::send::reply_with_retries,
 };
 
 use super::listen_for_submissions::RedditHandle;
@@ -16,10 +17,10 @@ use super::listen_for_submissions::RedditHandle;
 fn is_aa_comment(comment: &CommentData) -> bool {
     return comment.body.is_some()
         && comment
-            .body
-            .as_ref()
-            .unwrap()
-            .contains("Mirrors / Alternative Angles");
+        .body
+        .as_ref()
+        .unwrap()
+        .contains("Mirrors / Alternative Angles");
 }
 
 fn flatten_comment_with_replies(comment_tree: &CommentData) -> Vec<&CommentData> {
@@ -94,7 +95,7 @@ impl RedditHandle {
                         .filter(|goal_submission| {
                             (goal_submission.added_time.time()
                                 - chrono::offset::Local::now().time())
-                            .num_hours()
+                                .num_hours()
                                 <= 1
                         })
                         .collect();
@@ -150,6 +151,16 @@ impl RedditHandle {
             .filter(|comment| {
                 comment.parent_id.as_ref().unwrap() == &format!("t1_{}", aa_comment_id)
             })
+            // Only comments that contain a url are relevant
+            .filter(|comment| {
+                let url_regex = Regex::new(r"(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)").unwrap();
+                match &comment.body_html {
+                    None => false,
+                    Some(body) => {
+                        url_regex.is_match(&body)
+                    }
+                }
+            })
             // Ignore comments that were already sent
             .filter(|comment| {
                 // Get the current list of sent comments since it could have changed
@@ -171,8 +182,8 @@ impl RedditHandle {
                 goal_submission.submission_id.clone(),
                 comment.id.as_ref().unwrap().to_string(),
             )
-            .await
-            .unwrap_or_default();
+                .await
+                .unwrap_or_default();
 
             info!(
                 "Sending replay in competition: {:?}, submission_id: {:?}, content: {:?}",
@@ -185,7 +196,7 @@ impl RedditHandle {
                 competition.get_chat_id_replies(),
                 MessageId(goal_submission.reply_id),
             )
-            .await;
+                .await;
         }
     }
 }
@@ -266,6 +277,18 @@ mod test {
             config.premier_league.get_chat_id_replies(),
             MessageId(goal_submission.reply_id),
         )
-        .await;
+            .await;
+    }
+
+    #[test]
+    fn test_regex() {
+        let url_regex = Regex::new(r"(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)").unwrap();
+        assert!(url_regex.is_match("google.com"));
+        assert!(url_regex.is_match("www.google.com"));
+        assert!(url_regex.is_match("https://www.google.com"));
+        assert!(url_regex.is_match("https://google.com"));
+        assert!(url_regex.is_match("asdf https://google.com jklö"));
+        assert!(!url_regex.is_match("google"));
+        assert!(url_regex.is_match("google.com?key=value"));
     }
 }

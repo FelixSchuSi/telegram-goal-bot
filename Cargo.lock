@@ -2239,6 +2239,7 @@ dependencies = [
  "html-escape",
  "jsonpath-rust",
  "log",
+ "regex",
  "reqwest",
  "roux",
  "roux-stream",
