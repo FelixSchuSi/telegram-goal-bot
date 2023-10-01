@@ -1,8 +1,7 @@
-#[allow(unused_imports)]
-use chrono::Utc;
+use std::str::FromStr;
+
 use log::{info, trace};
 use roux::submission::SubmissionData;
-use std::str::FromStr;
 
 use super::{competition::Competition, videohost::VideoHost};
 
@@ -11,7 +10,6 @@ const UNDER_7_TO_UNDER_21: [&str; 15] = [
     "u21",
 ];
 
-#[allow(dead_code)]
 pub fn submission_filter(submission: &SubmissionData, competition: &Competition) -> bool {
     let host = submission.url.to_owned().unwrap_or_default();
     let lower_title = submission.title.to_lowercase();
@@ -60,15 +58,6 @@ pub fn submission_filter(submission: &SubmissionData, competition: &Competition)
         trace!("Video is not hosted on a valid host: {}", &host);
         return false;
     }
-
-    // Post must be younger than 3 minutes
-    // if Utc::now().timestamp() - submission.created_utc as i64 > 180 {
-    //     trace!(
-    //         "Submission is not younger than 3 minutes: {}",
-    //         submission.title
-    //     );
-    //     return false;
-    // }
 
     info!(
         "✅ Submission passed filter for competition {:?}: {:?}",

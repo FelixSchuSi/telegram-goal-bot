@@ -173,30 +173,24 @@ mod tests {
     async fn test_with_request_streamin01() {
         let result = scrape_video("https://streamin.me/v/3727f22e".to_string()).await;
         assert!(result.is_ok());
-        assert_eq!(
-            result.unwrap(),
-            "https://downloader.disk.yandex.ru/disk/93bd60a079d5726fda7721bbc65d27e96431c058d31b42dd7fb2a1c69f339f9d/65183569/MuDSbA9z5TnczT15nZM5twEz0OtIxeLw0cLxB6HQnV1NDOt2lhxpEWa_fdc4Sqp5z6QiBEyy2_PsAQ3xS9fODQ%3D%3D?uid=465360380&filename=3727f22e.mp4&disposition=attachment&hash=&limit=0&content_type=video%2Fmp4&owner_uid=465360380&fsize=20087591&hid=7c480a3c85d2da524ebd87aa41f15646&media_type=video&tknv=v2&etag=624eb7c4caff4cf91bb941a8de743347&expires=1696084952#t=0.1".to_string()
-        );
+        // streamin is rotating the concrete source url of the videos.
+        // Testing that we are able to successfully scrape is all we can do.
     }
 
     #[tokio::test]
     async fn test_with_request_streamin02() {
         let result = scrape_video("https://streamin.me/v/1d981b6d".to_string()).await;
         assert!(result.is_ok());
-        assert_eq!(
-            result.unwrap(),
-            "https://downloader.disk.yandex.ru/disk/120e783b3f4823753282ed08b88dff92d4306304a30990ddfa0be8e88a140da0/65186474/MuDSbA9z5TnczT15nZM5txl10vu2kyk2f7hYQQDQ8LHnS0IHf7DyWRtF4YbNd2e0yMqTqb5S8v1K8Mr74azPrQ%3D%3D?uid=465360380&filename=1d981b6d.mp4&disposition=attachment&hash=&limit=0&content_type=video%2Fmp4&owner_uid=465360380&fsize=4549755&hid=a8d80ec460182dbb3098aac79b800269&media_type=video&tknv=v2&etag=29fc670be24109b661408dc82d283a28&expires=1696097396#t=0.1".to_string()
-        );
+        // streamin is rotating the concrete source url of the videos.
+        // Testing that we are able to successfully scrape is all we can do.
     }
 
     #[tokio::test]
     async fn test_with_request_streamin03() {
         let result = scrape_video("https://streamin.me/v/fa0ebe20".to_string()).await;
         assert!(result.is_ok());
-        assert_eq!(
-            result.unwrap(),
-            "https://downloader.disk.yandex.ru/disk/03b2c3594d930264936225b4c60942749197ab817bea7fa0b6186045ece1625a/651869b1/MuDSbA9z5TnczT15nZM5t_czefaxmCDPZwCdDLSQCMp7FrmgoYiNmVfHfKua7VduccOi7PHXRlia4KZ_quswZw%3D%3D?uid=465360380&filename=fa0ebe20.mp4&disposition=attachment&hash=&limit=0&content_type=video%2Fmp4&owner_uid=465360380&fsize=5753860&hid=d7e20ba9d8e8c4f1ef414f214e51337a&media_type=video&tknv=v2&etag=1f364dfd1d2940e84ce167d06b886bf5&expires=1696098737#t=0.1".to_string()
-        );
+        // streamin is rotating the concrete source url of the videos.
+        // Testing that we are able to successfully scrape is all we can do.
     }
 
     #[tokio::test]
