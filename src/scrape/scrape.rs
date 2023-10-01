@@ -36,7 +36,8 @@ pub async fn scrape_video(url: String) -> Result<String, ScrapeError> {
 }
 
 async fn scrape_with_retries(options: &RetryWithTimeoutOptions) -> Result<String, ScrapeError> {
-    let video_host = VideoHost::from_str(&options.url).map_err(|_| ScrapeError("Unkown VideoHost".to_string()))?;
+    let video_host = VideoHost::from_str(&options.url)
+        .map_err(|_| ScrapeError("Unkown VideoHost".to_string()))?;
     for n in 0..options.max_retries {
         let html: Html = get_html(&options.url).await?;
         let scrape_result = scrape_from_html(&html, &video_host);
@@ -46,7 +47,10 @@ async fn scrape_with_retries(options: &RetryWithTimeoutOptions) -> Result<String
             }
             Err(err) => {
                 if n == options.max_retries {
-                    error!("Scraping of url {} failed after {} attempts with timeout {}",&options.url,  options.max_retries, options.timeout_ms);
+                    error!(
+                        "Scraping of url {} failed after {} attempts with timeout {}",
+                        &options.url, options.max_retries, options.timeout_ms
+                    );
                     return Err(err);
                 } else {
                     info!("Scraping of url {} failed in attempt no. {} out of {}. Trying again in {} ms.",&options.url, n, options.max_retries, options.timeout_ms);
@@ -54,7 +58,10 @@ async fn scrape_with_retries(options: &RetryWithTimeoutOptions) -> Result<String
             }
         }
     }
-    return Err(ScrapeError(format!("Scraping of url {} failed after {} attempts with timeout {}", &options.url, options.max_retries, options.timeout_ms)));
+    return Err(ScrapeError(format!(
+        "Scraping of url {} failed after {} attempts with timeout {}",
+        &options.url, options.max_retries, options.timeout_ms
+    )));
 }
 
 async fn get_html(url: &str) -> Result<Html, ScrapeError> {
