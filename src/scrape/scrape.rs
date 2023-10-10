@@ -4,6 +4,7 @@ use std::time::Duration;
 use log::{error, info};
 use scraper::Html;
 use tokio::time::sleep;
+use url::{ParseError, Url};
 
 use crate::filter::videohost::VideoHost;
 use crate::scrape::get_html_with_browser::get_html_with_browser;
@@ -94,12 +95,7 @@ fn scrape_from_html(html: &Html, video_host: &VideoHost) -> Result<String, Scrap
             let selector = "body video > source";
             let attribute = "src";
             let result = scrape_html(&html, selector, attribute);
-            result.map(|ok_value| {
-                if ok_value.starts_with(".") || ok_value.starts_with("/") {
-                    return "https://streamwo.com".to_string() + &*ok_value.replace(".", "");
-                }
-                return ok_value;
-            })
+            result.map(|ok_value| add_host_if_url_is_relative(&ok_value, "https://streamwo.com"))?
         }
         VideoHost::Streamja => {
             let selector = "video > source";
@@ -110,12 +106,7 @@ fn scrape_from_html(html: &Html, video_host: &VideoHost) -> Result<String, Scrap
             let selector = "body video > source";
             let attribute = "src";
             let result = scrape_html(&html, selector, attribute);
-            result.map(|ok_value| {
-                if ok_value.starts_with(".") || ok_value.starts_with("/") {
-                    return "https://streamye.com".to_string() + &*ok_value.replace(".", "");
-                }
-                return ok_value;
-            })
+            result.map(|ok_value| add_host_if_url_is_relative(&ok_value, "https://streamye.com"))?
         }
         VideoHost::Streamable => {
             let selector = "div > video";
@@ -161,12 +152,7 @@ fn scrape_from_html(html: &Html, video_host: &VideoHost) -> Result<String, Scrap
             let selector = "video";
             let attribute = "src";
             let result = scrape_html(&html, selector, attribute);
-            result.map(|ok_value| {
-                if ok_value.starts_with(".") || ok_value.starts_with("/") {
-                    return "https://streamin.me".to_string() + &*ok_value.replace(".", "");
-                }
-                return ok_value;
-            })
+            result.map(|ok_value| add_host_if_url_is_relative(&ok_value, "https://streamin.me"))?
         }
         VideoHost::Dubz => {
             let selector = "video > source";
@@ -180,6 +166,42 @@ fn scrape_from_html(html: &Html, video_host: &VideoHost) -> Result<String, Scrap
             let attribute = "src";
             scrape_html(&html, selector, attribute)
         }
+    }
+}
+
+fn add_host_if_url_is_relative(url: &str, host: &str) -> Result<String, ScrapeError> {
+    match Url::parse(url) {
+        Ok(url) => Ok(url.to_string()),
+        Err(error) => match error {
+            ParseError::RelativeUrlWithoutBase => {
+                let mut url = String::from(url);
+                let mut host = String::from(host);
+
+                if url.starts_with(".") {
+                    url = url.replacen(".", "", 1);
+                }
+                if !url.starts_with("/") {
+                    url = "/".to_owned() + &url;
+                }
+                if host.ends_with("/") {
+                    host.replace_range(host.len()..host.len(), "")
+                }
+
+                let absolute_url = host + &url;
+
+                match Url::parse(&absolute_url) {
+                    Ok(value) => Ok(value.to_string()),
+                    Err(error) => Err(ScrapeError(format!(
+                        "Concatted url is not valid: {} error: {}",
+                        absolute_url, error
+                    ))),
+                }
+            }
+            _ => Err(ScrapeError(format!(
+                "Keine gültige URL: {} Host: {} Fehler: {}",
+                url, host, error
+            ))),
+        },
     }
 }
 
@@ -281,17 +303,21 @@ mod tests {
     }
 
     #[test]
-    fn test_replace() {
-        let result: Result<String, ScrapeError> = Ok(String::from("./uploads/2e5be99a.mp4#t=0.1"));
-        result
-            .map(|ok_value| {
-                if ok_value.starts_with(".") || ok_value.starts_with("/") {
-                    println!(
-                        "return {}",
-                        "https://streamin.me".to_string() + &*ok_value.replace(".", "")
-                    );
-                }
-            })
-            .expect("TODO: panic message");
+    fn test_add_host_if_url_is_relative() {
+        assert_eq!(
+            add_host_if_url_is_relative("/uploads/fc38d308.mp4#t=0.1", "https://streamin.me"),
+            Ok("https://streamin.me/uploads/fc38d308.mp4#t=0.1".to_string())
+        );
+        assert_eq!(
+            add_host_if_url_is_relative("./uploads/2e5be99a.mp4#t=0.1", "https://streamin.me"),
+            Ok("https://streamin.me/uploads/2e5be99a.mp4#t=0.1".to_string())
+        );
+        assert_eq!(
+            add_host_if_url_is_relative(
+                "https://dubzalt.com/storage/videos/3ea24e.mp4",
+                "https://dubzalt.com"
+            ),
+            Ok("https://dubzalt.com/storage/videos/3ea24e.mp4".to_string())
+        );
     }
 }
