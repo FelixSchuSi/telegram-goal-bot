@@ -56,8 +56,17 @@ impl RedditHandle {
                             }
                             RouxError::Status(stat_e) => {
                                 error!("is RouxError::Status");
-                                error!("reddit submission handler received a response of status: {}", stat_e.status());
-                                error!("response: {}", stat_e.text().await.unwrap_or("Couldnt read response.text()".to_string()));
+                                error!(
+                                    "reddit submission handler received a response of status: {}",
+                                    stat_e.status()
+                                );
+                                error!(
+                                    "response: {}",
+                                    stat_e
+                                        .text()
+                                        .await
+                                        .unwrap_or("Couldnt read response.text()".to_string())
+                                );
                             }
                             RouxError::Parse(parse_e) => {
                                 error!("is RouxError::Parse");

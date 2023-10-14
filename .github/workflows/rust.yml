@@ -2,9 +2,9 @@ name: Rust
 
 on:
   push:
-    branches: ["rust-rewrite"]
+    branches: [ "rust-rewrite" ]
   pull_request:
-    branches: ["rust-rewrite"]
+    branches: [ "rust-rewrite" ]
 
 env:
   CARGO_TERM_COLOR: always
@@ -15,6 +15,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - name: Log Rust Version
+        run: |
+          cargo --version
+          rustc --version
       - name: Check formatting
         run: cargo fmt --all -- --check
       - name: Build
