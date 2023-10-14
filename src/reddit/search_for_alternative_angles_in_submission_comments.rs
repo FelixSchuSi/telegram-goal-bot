@@ -248,11 +248,11 @@ mod test {
 
     #[tokio::test]
     async fn test_reddit_comment_body() {
-        let submission_id = "12s8sb8".to_string();
-        let comment_id = "jgxcm5l".to_string();
+        let submission_id = "17778ok".to_string();
+        let comment_id = "k4r336t".to_string();
         let result = get_reddit_comment_body(submission_id, comment_id).await;
         assert_eq!(
-            Some("<a href=\"https://www.ziscore.com/qa30/\">REPLAY </a>\n".to_string()),
+            Some("<a href=\"https://cazn.me/m/84617f\">REPLAY </a>\n".to_string()),
             result
         );
     }
