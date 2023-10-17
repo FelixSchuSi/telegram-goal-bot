@@ -15,7 +15,7 @@ pub enum CompetitionName {
     Internationals,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Clone)]
 pub struct Competition {
     teams: Vec<Team>,
     pub name: CompetitionName,
@@ -25,7 +25,7 @@ pub struct Competition {
     pub chat_id_replies: i64,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Clone)]
 pub struct Team {
     min_matches_needed: u32,
     aliases: Vec<String>,

@@ -10,6 +10,7 @@ const UNDER_7_TO_UNDER_21: [&str; 15] = [
     "u21",
 ];
 
+/// Returns true if the submission counts as a goal video for the specified competition
 pub fn submission_filter(submission: &SubmissionData, competition: &Competition) -> bool {
     let host = submission.url.to_owned().unwrap_or_default();
     let lower_title = submission.title.to_lowercase();

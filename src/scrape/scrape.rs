@@ -14,14 +14,14 @@ use crate::scrape::scrape_html::scrape_html;
 #[derive(Debug, Clone, PartialEq)]
 pub struct ScrapeError(pub String);
 
-pub struct RetryWithTimeoutOptions {
+pub struct ScrapeRetryWithTimeoutOptions {
     pub timeout_ms: u64,
     pub max_retries: u8,
     pub url: String,
 }
 
-pub async fn scrape_video(url: &str) -> Result<String, ScrapeError> {
-    let retry_options = RetryWithTimeoutOptions {
+pub async fn scrape_video(url: &str) -> Result<Url, ScrapeError> {
+    let retry_options = ScrapeRetryWithTimeoutOptions {
         max_retries: 12,
         timeout_ms: 10_000,
         url: String::from(url),
@@ -35,13 +35,21 @@ pub async fn scrape_video(url: &str) -> Result<String, ScrapeError> {
         ));
     }
 
-    return Ok(scrape_result);
+    Url::parse(&scrape_result).map_err(|open_error| {
+        error!(
+            "Parsing the scraped url failed scrape_result: {} original url: {}",
+            scrape_result, url
+        );
+        ScrapeError(open_error.to_string())
+    })
 }
 
-async fn scrape_with_retries(options: &RetryWithTimeoutOptions) -> Result<String, ScrapeError> {
+async fn scrape_with_retries(
+    options: &ScrapeRetryWithTimeoutOptions,
+) -> Result<String, ScrapeError> {
     let video_host = VideoHost::from_str(&options.url)
         .map_err(|_| ScrapeError("Unkown VideoHost".to_string()))?;
-    for n in 0..options.max_retries {
+    for i in 0..options.max_retries {
         let html: Html = get_html(&options.url).await?;
         let scrape_result = scrape_from_html(&html, &video_host);
         match scrape_result {
@@ -49,14 +57,14 @@ async fn scrape_with_retries(options: &RetryWithTimeoutOptions) -> Result<String
                 return Ok(result);
             }
             Err(err) => {
-                if n == options.max_retries {
+                if i == options.max_retries {
                     error!(
                         "Scraping of url {} failed after {} attempts with timeout {}",
                         &options.url, options.max_retries, options.timeout_ms
                     );
                     return Err(err);
                 } else {
-                    info!("Scraping of url {} failed in attempt no. {} out of {}. Trying again in {} ms.",&options.url, n, options.max_retries, options.timeout_ms);
+                    info!("Scraping of url {} failed in attempt no. {} out of {}. Trying again in {} ms.",&options.url, i, options.max_retries, options.timeout_ms);
                     sleep(Duration::from_millis(options.timeout_ms)).await;
                     info!("Trying again...");
                 }
@@ -263,7 +271,7 @@ mod tests {
         assert!(result.is_ok());
         assert_eq!(
             result.unwrap(),
-            "https://files.catbox.moe/3cdo9q.mp4".to_string()
+            Url::parse("https://files.catbox.moe/3cdo9q.mp4").unwrap()
         );
     }
 
@@ -286,13 +294,13 @@ mod tests {
         assert!(result.is_ok());
         assert_eq!(
             result.unwrap(),
-            "https://dubzalt.com/storage/videos/3ea24e.mp4".to_string()
+            Url::parse("https://dubzalt.com/storage/videos/3ea24e.mp4").unwrap()
         );
     }
 
     #[tokio::test]
     async fn test_failed_retry() {
-        let retry_options = RetryWithTimeoutOptions {
+        let retry_options = ScrapeRetryWithTimeoutOptions {
             timeout_ms: 1,
             max_retries: 5,
             url: String::from("https://streamin.me/v/9e5d5f6b"),

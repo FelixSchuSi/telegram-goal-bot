@@ -1,7 +1,7 @@
 use crate::filter::competition::{Competition, CompetitionName};
 use std::env;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Config {
     pub bundesliga: Competition,
     pub champions_league: Competition,
@@ -9,7 +9,31 @@ pub struct Config {
     pub internationals: Competition,
 }
 
+impl IntoIterator for Config {
+    type Item = Competition;
+    type IntoIter = std::vec::IntoIter<Self::Item>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        vec![
+            self.bundesliga,
+            self.champions_league,
+            self.premier_league,
+            self.internationals,
+        ]
+        .into_iter()
+    }
+}
+
 impl Config {
+    // pub fn to_vec(&self) -> Vec<Competition> {
+    //     vec![
+    //         self.bundesliga,
+    //         self.champions_league,
+    //         self.premier_league,
+    //         self.internationals,
+    //     ]
+    // }
+
     pub fn init() -> Config {
         Config {
             bundesliga: Self::read_competition(CompetitionName::Bundesliga),

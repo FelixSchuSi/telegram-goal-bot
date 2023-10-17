@@ -247,6 +247,7 @@ mod test {
     }
 
     #[tokio::test]
+    #[ignore = "This test used to scrape a alternative angle of the goal but the reddit comment was removed"]
     async fn test_reddit_comment_body() {
         let submission_id = "17778ok".to_string();
         let comment_id = "k4r336t".to_string();
