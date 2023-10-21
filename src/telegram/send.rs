@@ -1,3 +1,6 @@
+use std::time::Duration;
+
+use log::error;
 use reqwest::Url;
 use teloxide::{
     payloads::{SendMessageSetters, SendVideoSetters},
@@ -5,6 +8,7 @@ use teloxide::{
     types::{ChatId, InputFile, Message, MessageId, ParseMode},
     Bot, RequestError,
 };
+use tokio::time::sleep;
 
 use crate::filter::competition::Competition;
 
@@ -21,6 +25,44 @@ pub async fn send_video(
     .caption(caption)
     .send()
     .await
+}
+
+pub async fn send_video_with_retries(
+    caption: &str,
+    bot: &Bot,
+    scraped_url: &Url,
+    competition: &Competition,
+) -> Result<Message, RequestError> {
+    let mut send_video_result = send_video(caption, bot, scraped_url, competition).await;
+    if send_video_result.is_ok() {
+        return send_video_result;
+    }
+
+    for i in 2..10 {
+        send_video_result = send_video(caption, bot, scraped_url, competition)
+            .await
+            .map_err(|err| {
+                error!(
+                    "Sending video failed in try {} out of 10. Error: {} caption: {}",
+                    i, err, caption
+                );
+                err
+            }).map(|res| {
+            error!(
+                "Sending video was successfull in try {} out of 10. MessageId: {} submission.title: {} ",
+                i,
+                &res.id.0,
+                caption
+            );
+            res
+        });
+
+        if send_video_result.is_ok() {
+            break;
+        }
+        sleep(Duration::from_secs(10)).await;
+    }
+    send_video_result
 }
 
 // We do not have a proper way to get the messageid of the last message in a group

@@ -3,14 +3,6 @@ use std::{
     time::Duration,
 };
 
-use futures_util::StreamExt;
-use log::{error, info};
-use roux::Subreddit;
-use roux_stream::stream_submissions;
-use teloxide::Bot;
-use tokio::time::sleep;
-use tokio_retry::strategy::ExponentialBackoff;
-
 use crate::{
     config::config::Config,
     filter::{
@@ -19,11 +11,19 @@ use crate::{
     },
     scrape::scrape::scrape_video,
     telegram::{
-        send::{get_latest_message_id_of_group, send_video},
+        send::{get_latest_message_id_of_group, send_video_with_retries},
         send_link::send_link,
     },
     GoalSubmission,
 };
+use futures_util::StreamExt;
+use log::{error, info};
+
+use roux::Subreddit;
+use roux_stream::stream_submissions;
+use teloxide::Bot;
+
+use tokio_retry::strategy::ExponentialBackoff;
 
 use super::log_roux_err::log_roux_err;
 
@@ -57,22 +57,35 @@ impl RedditHandle {
             };
 
             for competition in get_competitions_of_submission(&submission, &self.config) {
-                // TODO: Implement mechanism to retry sending video and only send a link as a fallback
-                let scraped_url = scrape_video(url).await;
-                match scraped_url {
-                    Ok(scraped_url) => {
-                        send_video(&submission.title, &self.bot, &scraped_url, &competition).await;
-                    }
-                    Err(e) => {
-                        error!(
-                            "Scraping failed: {} submission.title: {} url: {}",
-                            e.0, submission.title, url
-                        );
-                        send_link(&submission.title, &self.bot, url, &competition).await;
-                    }
+                let scrape_result = scrape_video(url).await;
+                if scrape_result.is_err() {
+                    error!(
+                        "Scraping failed: {} submission.title: {} url: {}",
+                        scrape_result.unwrap_err().0,
+                        submission.title,
+                        url
+                    );
+                    continue;
+                }
+                let scraped_url = scrape_result.unwrap();
+                let send_video_result = send_video_with_retries(
+                    &submission.title,
+                    &self.bot,
+                    &scraped_url,
+                    &competition,
+                )
+                .await;
+
+                if send_video_result.is_err() {
+                    error!(
+                        "Sending video failed in all 10 tries. Sending Link instead. Error: {} submission.title: {} url: {}",
+                        send_video_result.unwrap_err(),
+                        submission.title,
+                        url
+                    );
+                    send_link(&submission.title, &self.bot, url, &competition).await;
                 }
 
-                sleep(Duration::from_secs(20)).await;
                 let reply_id =
                     get_latest_message_id_of_group(&&self.bot, competition.get_chat_id_replies())
                         .await
