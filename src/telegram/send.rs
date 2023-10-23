@@ -69,7 +69,7 @@ pub async fn send_video_with_retries(
 // As a workaround we send a message, get the message_id of that message and then immediately delete it
 pub async fn get_latest_message_id_of_group(bot: &Bot, chat_id: ChatId) -> MessageId {
     let message = bot
-        .send_message(chat_id, " ")
+        .send_message(chat_id, ".")
         .send()
         .await
         .expect("Failed to send message");
