@@ -288,6 +288,17 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn test_without_request_dubz02() {
+        let html = get_html("https://dubz.cc/c/ce7d4c").await.unwrap();
+        let scrape_result = scrape_from_html(&html, &VideoHost::Dubz);
+
+        assert_eq!(
+            &scrape_result.unwrap(),
+            "https://dubzalt.com/storage/videos/ce7d4c.mp4"
+        );
+    }
+
+    #[tokio::test]
     #[ignore]
     async fn test_with_request_dubz01() {
         let result = scrape_video("https://dubz.link/c/3ea24e").await;

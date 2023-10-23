@@ -78,9 +78,10 @@ impl RedditHandle {
 
                 if send_video_result.is_err() {
                     error!(
-                        "Sending video failed in all 10 tries. Sending Link instead. Error: {} submission.title: {} url: {}",
+                        "Sending video failed in all 10 tries. Sending Link instead. Error: {} submission.title: {} scraped_url: {} url: {}",
                         send_video_result.unwrap_err(),
                         submission.title,
+                        scraped_url,
                         url
                     );
                     send_link(&submission.title, &self.bot, url, &competition).await;

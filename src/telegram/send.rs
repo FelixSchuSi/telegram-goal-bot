@@ -106,13 +106,10 @@ pub async fn reply_with_retries(
 
 #[cfg(test)]
 mod tests {
-    use std::sync::Arc;
-
-    use dotenv::dotenv;
-
-    use crate::config::config::Config;
-
     use super::*;
+    use crate::config::config::Config;
+    use dotenv::dotenv;
+    use std::sync::Arc;
 
     #[tokio::test]
     #[ignore]
@@ -146,5 +143,23 @@ mod tests {
 
         println!("latest_message_id: {:?}", latest_message_id);
         assert_eq!(true, true);
+    }
+
+    #[tokio::test]
+    #[ignore]
+    async fn test_dubz() {
+        dotenv().ok();
+        let config = Arc::new(Config::init());
+        let bot = Arc::new(Bot::from_env());
+
+        let res = send_video_with_retries(
+            "test",
+            &bot,
+            &Url::parse("https://dubzalt.com/storage/videos/ce7d4c.mp4").unwrap(),
+            &config.premier_league,
+        )
+        .await;
+
+        println!("res: {:?}", res.unwrap_err());
     }
 }
