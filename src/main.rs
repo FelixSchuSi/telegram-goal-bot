@@ -13,6 +13,7 @@ use filter::competition::CompetitionName;
 use reddit::listen_for_submissions::RedditHandle;
 
 mod config;
+mod download_video;
 mod filter;
 mod reddit;
 mod scrape;

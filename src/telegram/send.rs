@@ -1,7 +1,6 @@
-use std::time::Duration;
+use std::{path::PathBuf, time::Duration};
 
 use log::error;
-use reqwest::Url;
 use teloxide::{
     payloads::{SendMessageSetters, SendVideoSetters},
     requests::{Request, Requester},
@@ -15,31 +14,29 @@ use crate::filter::competition::Competition;
 pub async fn send_video(
     caption: &str,
     bot: &Bot,
-    scraped_url: &Url,
+    video: &PathBuf,
     competition: &Competition,
 ) -> Result<Message, RequestError> {
-    bot.send_video(
-        competition.get_chat_id(),
-        InputFile::url(scraped_url.clone()),
-    )
-    .caption(caption)
-    .send()
-    .await
+    bot.send_video(competition.get_chat_id(), InputFile::file(video))
+        .caption(caption)
+        .supports_streaming(true)
+        .send()
+        .await
 }
 
 pub async fn send_video_with_retries(
     caption: &str,
     bot: &Bot,
-    scraped_url: &Url,
+    video: &PathBuf,
     competition: &Competition,
 ) -> Result<Message, RequestError> {
-    let mut send_video_result = send_video(caption, bot, scraped_url, competition).await;
+    let mut send_video_result = send_video(caption, bot, video, competition).await;
     if send_video_result.is_ok() {
         return send_video_result;
     }
 
     for i in 2..10 {
-        send_video_result = send_video(caption, bot, scraped_url, competition)
+        send_video_result = send_video(caption, bot, video, competition)
             .await
             .map_err(|err| {
                 error!(
@@ -107,9 +104,12 @@ pub async fn reply_with_retries(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::config::config::Config;
+    use crate::{
+        config::config::Config, download_video::download_video::download_video_with_retries,
+    };
     use dotenv::dotenv;
-    use std::sync::Arc;
+    use std::{fs::remove_file, sync::Arc};
+    use tokio::fs;
 
     #[tokio::test]
     #[ignore]
@@ -152,14 +152,23 @@ mod tests {
         let config = Arc::new(Config::init());
         let bot = Arc::new(Bot::from_env());
 
+        let downloaded_video =
+            download_video_with_retries("https://downloader.disk.yandex.ru/disk/e8b52ed374664f4a76cef4a99abba2ebf175dece7eca9694303df3bf770a4490/653d334e/MuDSbA9z5TnczT15nZM5t-vXjxBtxqrUKkbcdLjGqS4sxjjxSFw_AzCx8cXDcG6Awi7xaQmVuiGG63m5_H150A%3D%3D?uid=465360380&filename=6022b59f.mp4&disposition=attachment&hash=&limit=0&content_type=video%2Fmp4&owner_uid=465360380&fsize=5365038&hid=d512aa5109dd00c8e746ffd2023a3ac8&media_type=video&tknv=v2&etag=e1e899a40627c96b01de5f4029a3efc2&expires=1698509646#t=0.1")
+                .await
+                .unwrap();
         let res = send_video_with_retries(
-            "test",
+            "Crystal Palace [1] - 2 Tottenham - Jordan Ayew 90+4'",
             &bot,
-            &Url::parse("https://dubzalt.com/storage/videos/ce7d4c.mp4").unwrap(),
+            &downloaded_video,
             &config.premier_league,
         )
         .await;
 
-        println!("res: {:?}", res.unwrap_err());
+        let cloned1 = downloaded_video.clone();
+        let cloned2 = downloaded_video.clone();
+        assert!(fs::metadata(downloaded_video).await.is_ok());
+        remove_file(cloned1).unwrap();
+        assert!(fs::metadata(cloned2).await.is_err());
+        assert!(res.is_ok())
     }
 }

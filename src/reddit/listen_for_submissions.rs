@@ -1,10 +1,12 @@
 use std::{
+    fs::remove_file,
     sync::{Arc, Mutex},
     time::Duration,
 };
 
 use crate::{
     config::config::Config,
+    download_video::download_video::download_video_with_retries,
     filter::{
         competition::CompetitionName,
         get_competitions_of_submission::get_competitions_of_submission,
@@ -68,14 +70,27 @@ impl RedditHandle {
                     continue;
                 }
                 let scraped_url = scrape_result.unwrap();
+
+                let downloaded_video = download_video_with_retries(&scraped_url.to_string()).await;
+                if downloaded_video.is_err() {
+                    error!(
+                        "Downloading video failed in all 10 tries. Error: {} submission.title: {} scraped_url: {} url: {}",
+                        downloaded_video.unwrap_err(),
+                        submission.title,
+                        scraped_url,
+                        url
+                    );
+                    continue;
+                }
+                let download_video = downloaded_video.unwrap();
                 let send_video_result = send_video_with_retries(
                     &submission.title,
                     &self.bot,
-                    &scraped_url,
+                    &download_video,
                     &competition,
                 )
                 .await;
-
+                remove_file(download_video).expect("Failed to delete file");
                 if send_video_result.is_err() {
                     error!(
                         "Sending video failed in all 10 tries. Sending Link instead. Error: {} submission.title: {} scraped_url: {} url: {}",
