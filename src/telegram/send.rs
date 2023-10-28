@@ -19,6 +19,8 @@ pub async fn send_video(
 ) -> Result<Message, RequestError> {
     bot.send_video(competition.get_chat_id(), InputFile::file(video))
         .caption(caption)
+        .width(1920)
+        .height(1080)
         .supports_streaming(true)
         .send()
         .await
@@ -57,7 +59,7 @@ pub async fn send_video_with_retries(
         if send_video_result.is_ok() {
             break;
         }
-        sleep(Duration::from_secs(10)).await;
+        sleep(Duration::from_secs(30)).await;
     }
     send_video_result
 }
@@ -67,6 +69,7 @@ pub async fn send_video_with_retries(
 pub async fn get_latest_message_id_of_group(bot: &Bot, chat_id: ChatId) -> MessageId {
     let message = bot
         .send_message(chat_id, ".")
+        .disable_notification(true)
         .send()
         .await
         .expect("Failed to send message");
@@ -163,6 +166,29 @@ mod tests {
             &config.premier_league,
         )
         .await;
+
+        let cloned1 = downloaded_video.clone();
+        let cloned2 = downloaded_video.clone();
+        assert!(fs::metadata(downloaded_video).await.is_ok());
+        remove_file(cloned1).unwrap();
+        assert!(fs::metadata(cloned2).await.is_err());
+        assert!(res.is_ok())
+    }
+
+    #[tokio::test]
+    #[ignore]
+    async fn test_dubz01() {
+        dotenv().ok();
+        let config = Arc::new(Config::init());
+        let bot = Arc::new(Bot::from_env());
+
+        let downloaded_video =
+            download_video_with_retries("https://dubzalt.com/storage/videos/e3457f.mp4")
+                .await
+                .unwrap();
+        let res =
+            send_video_with_retries("test123", &bot, &downloaded_video, &config.premier_league)
+                .await;
 
         let cloned1 = downloaded_video.clone();
         let cloned2 = downloaded_video.clone();
