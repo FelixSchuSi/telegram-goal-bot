@@ -11,3 +11,5 @@
 /target
 secrets.json
 .env
+.test.env
+.prod.env

@@ -122,15 +122,16 @@ mod tests {
         let bot = Arc::new(Bot::from_env());
 
         let latest_message_id =
-            get_latest_message_id_of_group(&bot, config.premier_league.get_chat_id_replies()).await;
+            get_latest_message_id_of_group(&bot, config.bundesliga_2.get_chat_id_replies()).await;
         reply_with_retries(
             &bot,
             "test2",
-            config.premier_league.get_chat_id_replies(),
+            config.bundesliga_2.get_chat_id_replies(),
             latest_message_id,
         )
         .await;
 
+        println!("latest_message_id: {:?}", latest_message_id);
         assert_eq!(true, true);
     }
 
@@ -142,7 +143,7 @@ mod tests {
         let bot = Arc::new(Bot::from_env());
 
         let latest_message_id =
-            get_latest_message_id_of_group(&bot, config.bundesliga.get_chat_id_replies()).await;
+            get_latest_message_id_of_group(&bot, config.bundesliga_2.get_chat_id_replies()).await;
 
         println!("latest_message_id: {:?}", latest_message_id);
         assert_eq!(true, true);

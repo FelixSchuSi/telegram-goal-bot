@@ -115,6 +115,7 @@ impl RedditHandle {
     ) {
         let competition = match goal_submission.competition {
             CompetitionName::Bundesliga => &self.config.bundesliga,
+            CompetitionName::Bundesliga2 => &self.config.bundesliga_2,
             CompetitionName::PremierLeague => &self.config.premier_league,
             CompetitionName::ChampionsLeague => &self.config.champions_league,
             CompetitionName::Internationals => &self.config.internationals,

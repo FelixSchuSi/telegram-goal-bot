@@ -4,6 +4,7 @@ use std::env;
 #[derive(Debug, Clone)]
 pub struct Config {
     pub bundesliga: Competition,
+    pub bundesliga_2: Competition,
     pub champions_league: Competition,
     pub premier_league: Competition,
     pub internationals: Competition,
@@ -16,6 +17,7 @@ impl IntoIterator for Config {
     fn into_iter(self) -> Self::IntoIter {
         vec![
             self.bundesliga,
+            self.bundesliga_2,
             self.champions_league,
             self.premier_league,
             self.internationals,
@@ -25,18 +27,10 @@ impl IntoIterator for Config {
 }
 
 impl Config {
-    // pub fn to_vec(&self) -> Vec<Competition> {
-    //     vec![
-    //         self.bundesliga,
-    //         self.champions_league,
-    //         self.premier_league,
-    //         self.internationals,
-    //     ]
-    // }
-
     pub fn init() -> Config {
         Config {
             bundesliga: Self::read_competition(CompetitionName::Bundesliga),
+            bundesliga_2: Self::read_competition(CompetitionName::Bundesliga2),
             champions_league: Self::read_competition(CompetitionName::ChampionsLeague),
             premier_league: Self::read_competition(CompetitionName::PremierLeague),
             internationals: Self::read_competition(CompetitionName::Internationals),
@@ -56,6 +50,17 @@ impl Config {
                     .unwrap();
                 chat_id_replies = env::var("CHAT_ID_BUNDESLIGA_REPLIES")
                     .expect("Environment variable 'CHAT_ID_BUNDESLIGA_REPLIES' missing")
+                    .parse()
+                    .unwrap();
+            }
+            CompetitionName::Bundesliga2 => {
+                contents = include_str!("bundesliga_2.json");
+                chat_id = env::var("CHAT_ID_BUNDESLIGA_2")
+                    .expect("Environment variable 'CHAT_ID_BUNDESLIGA_2' missing")
+                    .parse()
+                    .unwrap();
+                chat_id_replies = env::var("CHAT_ID_BUNDESLIGA_2_REPLIES")
+                    .expect("Environment variable 'CHAT_ID_BUNDESLIGA_2_REPLIES' missing")
                     .parse()
                     .unwrap();
             }

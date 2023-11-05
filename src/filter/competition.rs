@@ -3,10 +3,12 @@ use std::ops::Index;
 use serde::Deserialize;
 use teloxide::types::ChatId;
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Deserialize, Clone, PartialEq)]
 pub enum CompetitionName {
     #[serde(rename = "bundesliga")]
     Bundesliga,
+    #[serde(rename = "bundesliga_2")]
+    Bundesliga2,
     #[serde(rename = "premier_league")]
     PremierLeague,
     #[serde(rename = "champions_league")]
@@ -79,6 +81,7 @@ mod tests {
         let config = Config::init();
         let competitions = vec![
             config.bundesliga,
+            config.bundesliga_2,
             config.champions_league,
             config.premier_league,
             config.internationals,
@@ -113,6 +116,17 @@ mod tests {
         assert!(
             bundesliga.is_valid_post_title_for_competition(title),
             "\n\n bundesliga post falsely not identified: {title}\n\n",
+        );
+    }
+
+    #[test]
+    fn test_bundesliga_2() {
+        mock_env_vars();
+        let bundesliga_2 = Config::init().bundesliga_2;
+        let title = "Hannover [1]-0 Eintracht Braunschweig - Fabian Kunze 12'";
+        assert!(
+            bundesliga_2.is_valid_post_title_for_competition(title),
+            "\n\n bundesliga 2 post falsely not identified: {title}\n\n",
         );
     }
 
@@ -171,6 +185,8 @@ mod tests {
     fn mock_env_vars() {
         env::set_var("CHAT_ID_BUNDESLIGA", "123");
         env::set_var("CHAT_ID_BUNDESLIGA_REPLIES", "123");
+        env::set_var("CHAT_ID_BUNDESLIGA_2", "123");
+        env::set_var("CHAT_ID_BUNDESLIGA_2_REPLIES", "123");
         env::set_var("CHAT_ID_CHAMPIONS_LEAGUE", "123");
         env::set_var("CHAT_ID_CHAMPIONS_LEAGUE_REPLIES", "123");
         env::set_var("CHAT_ID_PREMIER_LEAGUE", "123");
