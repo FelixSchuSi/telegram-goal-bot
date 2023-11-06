@@ -54,6 +54,13 @@ impl RedditHandle {
             };
 
             for competition in get_competitions_of_submission(&submission, &self.config) {
+                if self.check_if_submission_was_already_posted(&competition, &submission) {
+                    info!(
+                        "Submission was already posted. Skipping this submission. submission.title: {} submission.id: {} url: {}",
+                        submission.title, submission.id, url
+                    );
+                    continue;
+                }
                 let scrape_result = scrape_video(url).await;
                 if scrape_result.is_err() {
                     error!(
@@ -133,5 +140,17 @@ impl RedditHandle {
                 reply_id,
                 added_time: chrono::offset::Local::now(),
             });
+    }
+
+    fn check_if_submission_was_already_posted(
+        &mut self,
+        competition: &Competition,
+        submission: &SubmissionData,
+    ) -> bool {
+        let submissions = self.listen_for_replays_submission_ids.lock().unwrap();
+        let result = submissions
+            .iter()
+            .find(|e| e.submission_id == submission.id && e.competition == competition.name);
+        result.is_some()
     }
 }
