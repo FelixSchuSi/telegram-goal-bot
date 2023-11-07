@@ -91,8 +91,18 @@ async fn get_html(url: &str) -> Result<Html, ScrapeError> {
         | VideoHost::Streamvi
         | VideoHost::Juststream
         | VideoHost::Streamgg
-        | VideoHost::Streamin
-        | VideoHost::Dubz => get_html_without_browser(&url).await,
+        | VideoHost::Streamin => get_html_without_browser(&url).await,
+        VideoHost::Dubz => {
+            // Dubz has some clever blocking mechanism. They use cloudflare ddos/bot protection which is hard to bypass.
+            // However this protection is only enabled on 'dubz.link' and 'dubz.co' but not on 'dubz.cc'.
+            // Urls on dubz are valid across all Top Level Domains.
+            // Therefore we manually change the url from '.link' and '.co' to '.cc' to bypass the ddos protection.
+            let source_url = String::from(url);
+            let target_url = source_url
+                .replacen(".link", ".cc", 1)
+                .replacen(".co", ".cc", 1);
+            get_html_without_browser(&target_url).await
+        }
         VideoHost::Streambug | VideoHost::Streamff => get_html_with_browser(&url, "video").await,
     }
 }
@@ -166,8 +176,6 @@ fn scrape_from_html(html: &Html, video_host: &VideoHost) -> Result<String, Scrap
             let selector = "video > source";
             let attribute = "src";
             scrape_html(&html, selector, attribute)
-            // Dubz has some clever blocking mechanism.
-            // The site blocks this block both if we do a server side or a client side scrape
         }
         VideoHost::Streambug => {
             let selector = "video";
@@ -299,13 +307,19 @@ mod tests {
     }
 
     #[tokio::test]
-    #[ignore]
     async fn test_with_request_dubz01() {
         let result = scrape_video("https://dubz.link/c/3ea24e").await;
         assert!(result.is_ok());
         assert_eq!(
             result.unwrap(),
             Url::parse("https://dubzalt.com/storage/videos/3ea24e.mp4").unwrap()
+        );
+
+        let result = scrape_video("https://dubz.link/c/79fc7e").await;
+        assert!(result.is_ok());
+        assert_eq!(
+            result.unwrap(),
+            Url::parse("https://dubzalt.com/storage/videos/79fc7e.mp4").unwrap()
         );
     }
 
