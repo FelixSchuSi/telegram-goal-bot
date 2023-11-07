@@ -1,9 +1,8 @@
-use std::str::FromStr;
-
+use super::{competition::Competition, videohost::VideoHost};
+use chrono::Utc;
 use log::{info, trace};
 use roux::submission::SubmissionData;
-
-use super::{competition::Competition, videohost::VideoHost};
+use std::str::FromStr;
 
 const UNDER_7_TO_UNDER_21: [&str; 15] = [
     "u7", "u8", "u9", "u10", "u11", "u12", "u13", "u14", "u15", "u16", "u17", "u18", "u19", "u20",
@@ -49,7 +48,7 @@ pub fn submission_filter(submission: &SubmissionData, competition: &Competition)
     }
 
     // Also ignore womens games
-    if title_split.any(|s| s == "w") {
+    if title_split.any(|s| s.to_lowercase() == "w") {
         trace!("Title contains a womens game: {}", submission.title);
         return false;
     }
@@ -60,9 +59,19 @@ pub fn submission_filter(submission: &SubmissionData, competition: &Competition)
         return false;
     }
 
+    // Submission must be younger than 10 minutes
+    if Utc::now().timestamp() - submission.created_utc as i64 > 600 {
+        trace!(
+            "Submission is not younger than 10 minutes: {} {}",
+            submission.title,
+            submission.id
+        );
+        return false;
+    }
+
     info!(
-        "✅ Submission passed filter for competition {:?}: {:?}",
-        competition.name, submission.title
+        "✅ Submission passed filter for competition {:?}: {:?} {}",
+        competition.name, submission.title, submission.id
     );
     true
 }
