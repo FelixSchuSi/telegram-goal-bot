@@ -48,7 +48,7 @@ pub fn submission_filter(submission: &SubmissionData, competition: &Competition)
     }
 
     // Also ignore womens games
-    if title_split.any(|s| s == "w") {
+    if title_split.any(|s| s.to_lowercase() == "w") {
         trace!("Title contains a womens game: {}", submission.title);
         return false;
     }
