@@ -59,12 +59,12 @@ async fn scrape_with_retries(
             Err(err) => {
                 if i == options.max_retries {
                     error!(
-                        "Scraping of url {} failed after {} attempts with timeout {}",
-                        &options.url, options.max_retries, options.timeout_ms
+                        "Scraping of url {} failed after {} attempts with timeout {}: {}",
+                        &options.url, options.max_retries, options.timeout_ms, err.0
                     );
                     return Err(err);
                 } else {
-                    info!("Scraping of url {} failed in attempt no. {} out of {}. Trying again in {} ms.",&options.url, i, options.max_retries, options.timeout_ms);
+                    info!("Scraping of url {} failed in attempt no. {} out of {}: {} Trying again in {} ms.",&options.url, i, options.max_retries, err.0, options.timeout_ms);
                     sleep(Duration::from_millis(options.timeout_ms)).await;
                     info!("Trying again...");
                 }
