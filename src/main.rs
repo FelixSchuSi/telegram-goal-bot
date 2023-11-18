@@ -39,7 +39,6 @@ async fn main() {
                 record.args()
             )
         })
-        .filter(Some("logger_example"), LevelFilter::Info)
         .init();
 
     dotenv().ok();
