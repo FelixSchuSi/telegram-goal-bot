@@ -173,9 +173,9 @@ fn scrape_from_html(html: &Html, video_host: &VideoHost) -> Result<String, Scrap
             result.map(|ok_value| add_host_if_url_is_relative(&ok_value, "https://streamin.me"))?
         }
         VideoHost::Dubz => {
-            let selector = "video > source";
             let attribute = "src";
-            scrape_html(&html, selector, attribute)
+            scrape_html(&html, "video > source", attribute)
+                .or_else(|_| scrape_html(&html, "video", attribute))
         }
         VideoHost::Streambug => {
             let selector = "video";
@@ -297,18 +297,11 @@ mod tests {
 
     #[tokio::test]
     async fn test_with_request_dubz01() {
-        // let result = scrape_video("https://dubz.link/c/3ea24e").await;
-        // assert!(result.is_ok());
-        // assert_eq!(
-        //     result.unwrap(),
-        //     Url::parse("https://dubzalt.com/storage/videos/3ea24e.mp4").unwrap()
-        // );
-
-        let result = scrape_video("https://dubz.link/c/79fc7e").await;
+        let result = scrape_video("https://dubz.link/v/akm002").await;
         assert!(result.is_ok());
         assert_eq!(
             result.unwrap(),
-            Url::parse("https://dubzalt.com/storage/videos/79fc7e.mp4").unwrap()
+            Url::parse("https://squeelab.com/uploaded/1700257299.mp4#t=0.1").unwrap()
         );
     }
 
