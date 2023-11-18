@@ -1,17 +1,15 @@
-use std::env;
-use std::sync::{Arc, Mutex};
-
 use chrono::{DateTime, Local};
-use dotenv::dotenv;
-use futures_util::future;
-use log::info;
-use roux::{Reddit, Subreddit};
-use teloxide::Bot;
-
 use config::config::Config;
+use dotenv::dotenv;
 use filter::competition::CompetitionName;
+use futures_util::future;
+use log::{error, info};
 use reddit::listen_for_submissions::RedditHandle;
-
+use roux::{Reddit, Subreddit};
+use std::env;
+use std::io::Write;
+use std::sync::{Arc, Mutex};
+use teloxide::Bot;
 mod config;
 mod download_video;
 mod filter;
@@ -30,10 +28,20 @@ pub struct GoalSubmission {
 
 #[tokio::main]
 async fn main() {
-    env_logger::init();
+    env_logger::Builder::new()
+        .format(|buf, record| {
+            writeln!(
+                buf,
+                "[{}:{} {}] {}",
+                record.file().unwrap_or("unknown"),
+                record.line().unwrap_or(0),
+                record.level(),
+                record.args()
+            )
+        })
+        .init();
     dotenv().ok();
-
-    info!("successfully read dotenv");
+    error!("successfully read dotenv");
 
     // List of submissions that are goals and were posted to telegram.
     // We want to listen for comments for this submission to find replays of that goal to post them to telegram as well.
