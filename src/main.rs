@@ -3,7 +3,7 @@ use config::config::Config;
 use dotenv::dotenv;
 use filter::competition::CompetitionName;
 use futures_util::future;
-use log::{error, info};
+use log::info;
 use reddit::listen_for_submissions::RedditHandle;
 use roux::{Reddit, Subreddit};
 use std::env;
@@ -41,7 +41,7 @@ async fn main() {
         })
         .init();
     dotenv().ok();
-    error!("successfully read dotenv");
+    info!("successfully read dotenv");
 
     // List of submissions that are goals and were posted to telegram.
     // We want to listen for comments for this submission to find replays of that goal to post them to telegram as well.
