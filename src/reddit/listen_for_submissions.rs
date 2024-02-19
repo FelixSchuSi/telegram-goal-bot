@@ -36,9 +36,11 @@ impl RedditHandle {
         let (mut stream, join_handle) = stream_submissions(
             &self.subreddit,
             Duration::from_secs(30),
-            ExponentialBackoff::from_millis(10000).factor(100).take(3),
+            ExponentialBackoff::from_millis(100).factor(10).take(3),
             Some(Duration::from_secs(10)),
         );
+
+        info!("Started listening for reddit submissions!");
 
         while let Some(submission) = stream.next().await {
             // `submission` is an `Err` if getting the latest submissions
