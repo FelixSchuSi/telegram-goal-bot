@@ -40,7 +40,7 @@ impl RedditHandle {
             Some(Duration::from_secs(10)),
         );
 
-        info!("Started listening for reddit submissions!");
+        error!("Started listening for reddit submissions!");
 
         while let Some(submission) = stream.next().await {
             // `submission` is an `Err` if getting the latest submissions
