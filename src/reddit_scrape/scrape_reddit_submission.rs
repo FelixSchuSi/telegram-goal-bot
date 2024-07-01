@@ -1,12 +1,8 @@
-use std::iter::zip;
-
-use chrono::{DateTime, Local, TimeZone, Utc};
-use headless_chrome::browser::tab::Binding;
-use scraper::Html;
-
 use crate::scrape::{
     get_html_with_browser::get_html_with_browser, scrape::ScrapeError, scrape_html::scrape_html,
 };
+use chrono::DateTime;
+use std::iter::zip;
 
 #[derive(Debug)]
 pub struct SubmissionScrape {
@@ -15,11 +11,12 @@ pub struct SubmissionScrape {
     pub title: String,
 }
 
-#[derive(Debug)]
-pub struct SubredditScrapeItem {
-    pub submission_id: String,
-    pub link: String,
+#[derive(Debug, Clone)]
+pub struct RedditSubmission {
+    pub id: String,
+    pub url: String,
     pub title: String,
+    pub created_utc: i64,
 }
 
 pub async fn scrape_reddit_submission(
@@ -43,8 +40,7 @@ pub async fn scrape_reddit_submission(
     });
 }
 
-pub async fn scrape_all_submission_from_subreddit_page(
-) -> Result<Vec<SubredditScrapeItem>, ScrapeError> {
+pub async fn scrape_submissions() -> Result<Vec<RedditSubmission>, ScrapeError> {
     let url = "https://old.reddit.com/r/soccer/new/";
 
     let html = get_html_with_browser(&url, "a.title").await?;
@@ -62,6 +58,11 @@ pub async fn scrape_all_submission_from_subreddit_page(
     })?;
     let video_link_attr = "href";
 
+    let created_timestamp_selector = scraper::Selector::parse(".live-timestamp").map_err(|_| {
+        ScrapeError("The given String could not be parsed to a CSS selector".to_string())
+    })?;
+    let created_timestamp_attr = "datetime";
+
     let titles: Vec<String> = html
         .select(&title_selector)
         .map(|t: scraper::ElementRef| t.inner_html())
@@ -75,16 +76,30 @@ pub async fn scrape_all_submission_from_subreddit_page(
         .filter_map(|t: scraper::ElementRef| t.value().attr(video_link_attr))
         .collect();
 
-    println!("{:?}", submission_ids);
-    return Ok(zip(zip(titles, submission_ids), video_links)
-        .map(|((title, submission_id), video_link)| {
-            return SubredditScrapeItem {
-                link: video_link.to_string(),
-                submission_id: submission_id.to_string(),
-                title: title,
-            };
+    let created_timestamps: Vec<i64> = html
+        .select(&created_timestamp_selector)
+        .filter_map(|t: scraper::ElementRef| t.value().attr(created_timestamp_attr))
+        .map(|e| {
+            return DateTime::parse_from_rfc3339(e)
+                .map(|e| e.naive_utc())
+                .unwrap_or(DateTime::UNIX_EPOCH.naive_utc())
+                .timestamp();
         })
-        .collect());
+        .collect();
+
+    return Ok(zip(
+        zip(zip(titles, submission_ids), video_links),
+        created_timestamps,
+    )
+    .map(|(((title, submission_id), video_link), created_utc)| {
+        return RedditSubmission {
+            url: video_link.to_string(),
+            id: submission_id.to_string(),
+            title,
+            created_utc,
+        };
+    })
+    .collect());
 }
 
 #[cfg(test)]
@@ -94,7 +109,7 @@ mod tests {
     #[tokio::test]
     async fn first_scrape() {
         let scrape_result = scrape_reddit_submission("1dl5kig").await.unwrap();
-        println!("{:?}", scrape_result);
+
         assert_eq!(scrape_result.link, "https://streamff.co/v/UqV95HVXAk");
         assert_eq!(scrape_result.submission_id, "1dl5kig");
         assert_eq!(
@@ -104,8 +119,17 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn scrape_submissions() {
-        let scrape_result = scrape_all_submission_from_subreddit_page().await.unwrap();
-        println!("{:?}", scrape_result);
+    async fn scrape_submissionss() {
+        let scrape_result = scrape_submissions().await.unwrap();
+        assert_eq!(scrape_result.len(), 28);
+        for res in scrape_result {
+            assert_ne!(res.url, "");
+            assert_ne!(res.id, "");
+            assert_ne!(res.title, "");
+
+            assert!(res.url.len() > 1);
+            assert!(res.id.len() > 1);
+            assert!(res.title.len() > 1);
+        }
     }
 }
