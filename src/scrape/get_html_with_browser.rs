@@ -4,7 +4,11 @@ use scraper::Html;
 use crate::scrape::scrape::ScrapeError;
 
 pub async fn get_html_with_browser(url: &str, selector: &str) -> Result<Html, ScrapeError> {
-    let launch_options = LaunchOptions::default_builder();
+    let mut launch_options_builder = LaunchOptions::default_builder();
+    let launch_options = launch_options_builder
+        .headless(false)
+        // .sandbox(true)
+        .window_size(Some((1920, 1080)));
     let browser = Browser::new(launch_options.build().map_err(|err| {
         ScrapeError("Error while configuring Browser: ".to_owned() + &*err.to_string())
     })?)

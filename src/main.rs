@@ -1,89 +1,154 @@
-use chrono::{DateTime, Local};
+use chrono::{DateTime, Utc};
 use config::config::Config;
 use dotenv::dotenv;
 use filter::competition::CompetitionName;
-use futures_util::future;
+use filter::get_competitions_of_submission::get_competitions_of_submission;
 use log::info;
-use reddit::listen_for_submissions::RedditHandle;
-use roux::{Reddit, Subreddit};
-use std::env;
+use reddit_scrape::scrape_reddit_submission::{scrape_submissions, RedditSubmission};
 use std::io::Write;
-use std::sync::{Arc, Mutex};
+use std::time::Duration;
+use telegram::send_link::send_link;
 use teloxide::Bot;
+use tokio::time::{self, Interval};
 mod config;
 mod download_video;
 mod filter;
-mod reddit;
+mod reddit_scrape;
 mod scrape;
 mod telegram;
 
 #[derive(Debug, Clone)]
-pub struct GoalSubmission {
-    pub submission_id: String,
+pub struct TelegramSubmission {
+    pub reddit_submission: RedditSubmission,
     pub competition: CompetitionName,
     pub sent_comment_ids: Vec<String>,
-    pub reply_id: i32,
-    pub added_time: DateTime<Local>,
+    pub telegram_reply_id: i32,
+}
+
+#[derive(Debug)]
+pub struct TelegramGoalBot {
+    pub posted_telegram_submissions: Vec<TelegramSubmission>,
+    pub config: Config,
+    pub interval: Interval,
+    pub telegram_bot: Bot,
 }
 
 #[tokio::main]
 async fn main() {
-    env_logger::Builder::new()
-        .format(|buf, record| {
-            writeln!(
-                buf,
-                "[{}:{} {}] {}",
-                record.file().unwrap_or("unknown"),
-                record.line().unwrap_or(0),
-                record.level(),
-                record.args()
+    let mut bot = TelegramGoalBot::init();
+
+    loop {
+        bot.interval.tick().await;
+
+        let scraped_submissions = scrape_submissions().await.unwrap();
+
+        info!("{:?}", scraped_submissions);
+
+        let mut filtered_submissions = bot.filter_submissions(scraped_submissions);
+
+        info!("{:?}", filtered_submissions);
+
+        for submission in filtered_submissions.clone() {
+            let comp = bot
+                .config
+                .clone()
+                .into_iter()
+                .find(|e| e.name == submission.competition)
+                .unwrap();
+
+            send_link(
+                &submission.reddit_submission.title,
+                &bot.telegram_bot,
+                &submission.reddit_submission.url,
+                &comp,
             )
-        })
-        .init();
-    dotenv().ok();
-    info!("successfully read dotenv");
+            .await;
+        }
 
-    // List of submissions that are goals and were posted to telegram.
-    // We want to listen for comments for this submission to find replays of that goal to post them to telegram as well.
-    let listen_for_replays_submission_ids: Arc<Mutex<Vec<GoalSubmission>>> =
-        Arc::new(Mutex::new(Vec::new()));
+        bot.posted_telegram_submissions
+            .append(&mut filtered_submissions);
 
-    let mut reddit_handle_submissions =
-        create_reddit_handle(Arc::clone(&listen_for_replays_submission_ids)).await;
-    let mut reddit_handle_comments =
-        create_reddit_handle(Arc::clone(&listen_for_replays_submission_ids)).await;
-
-    info!("reddit comment handle and reddit submission handle successfully started");
-
-    future::join(
-        reddit_handle_submissions.listen_for_submissions(),
-        reddit_handle_comments.search_for_alternative_angles_in_submission_comments(),
-    )
-    .await;
+        bot.cleanup_posted_telegram_submissions();
+    }
 }
 
-async fn create_reddit_handle(
-    listen_for_replays_submission_ids: Arc<Mutex<Vec<GoalSubmission>>>,
-) -> RedditHandle {
-    let client = Reddit::new(
-        &env::var("REDDIT_USER_AGENT").expect("REDDIT_USER_AGENT must be present"),
-        &env::var("REDDIT_CLIENT_ID").expect("REDDIT_CLIENT_ID must be present"),
-        &env::var("REDDIT_CLIENT_SECRET").expect("REDDIT_CLIENT_SECRET must be present"),
-    )
-    .username(&env::var("REDDIT_USERNAME").expect("REDDIT_USERNAME must be present"))
-    .password(&env::var("REDDIT_PASSWORD").expect("REDDIT_PASSWORD must be present"))
-    .login()
-    .await
-    .unwrap();
-    let config = Arc::new(Config::init());
-    let bot = Arc::new(Bot::from_env());
+impl TelegramGoalBot {
+    pub fn init() -> TelegramGoalBot {
+        env_logger::Builder::new()
+            .filter_level(log::LevelFilter::Info)
+            .format(|buf, record| {
+                writeln!(
+                    buf,
+                    "[{}:{} {}] {}",
+                    record.file().unwrap_or("unknown"),
+                    record.line().unwrap_or(0),
+                    record.level(),
+                    record.args()
+                )
+            })
+            .init();
+        dotenv().ok();
+        let interval = time::interval(Duration::from_secs(30));
+        return TelegramGoalBot {
+            config: Config::init(),
+            posted_telegram_submissions: Vec::new(),
+            interval,
+            telegram_bot: Bot::from_env(),
+        };
+    }
 
-    let subreddit = Subreddit::new_oauth("soccer", &client.client);
+    pub fn filter_submissions(
+        &self,
+        reddit_submissions: Vec<RedditSubmission>,
+    ) -> Vec<TelegramSubmission> {
+        return reddit_submissions
+            .iter()
+            .filter_map(|submission| self.filter_submission(submission.to_owned()))
+            .flat_map(|reddit_submission| {
+                let tmp: Vec<TelegramSubmission> =
+                    get_competitions_of_submission(&reddit_submission, &self.config)
+                        .iter()
+                        .map(|competition| TelegramSubmission {
+                            reddit_submission: reddit_submission.clone(),
+                            competition: competition.name.clone(),
+                            sent_comment_ids: Vec::new(),
+                            telegram_reply_id: 0,
+                        })
+                        .collect();
+                return tmp;
+            })
+            .collect();
+    }
 
-    RedditHandle {
-        subreddit,
-        bot,
-        config,
-        listen_for_replays_submission_ids: Arc::clone(&listen_for_replays_submission_ids),
+    fn filter_submission(&self, submission: RedditSubmission) -> Option<RedditSubmission> {
+        let comps = get_competitions_of_submission(&submission, &self.config);
+        if comps.len() == 0 {
+            return None;
+        }
+
+        if self
+            .posted_telegram_submissions
+            .iter()
+            .find(|e| e.reddit_submission.id == submission.id)
+            .is_some()
+        {
+            return None;
+        }
+
+        return Some(submission);
+    }
+
+    pub fn cleanup_posted_telegram_submissions(&mut self) {
+        self.posted_telegram_submissions = self
+            .posted_telegram_submissions
+            .iter()
+            .filter(|submission| {
+                DateTime::from_timestamp(submission.reddit_submission.created_utc, 0)
+                    .map_or(false, |datetime| {
+                        datetime > Utc::now() - Duration::from_secs(60 * 60)
+                    })
+            })
+            .map(|submission| submission.to_owned())
+            .collect()
     }
 }

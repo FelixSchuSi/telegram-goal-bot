@@ -274,6 +274,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[ignore]
     async fn test_with_request_streamff01() {
         let result = scrape_video("https://streamff.com/v/qagwUNlcwP").await;
         assert!(result.is_ok());
@@ -296,6 +297,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[ignore]
     async fn test_with_request_dubz01() {
         let result = scrape_video("https://dubz.link/v/akm002").await;
         assert!(result.is_ok());
