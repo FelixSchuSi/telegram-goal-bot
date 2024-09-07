@@ -36,8 +36,10 @@ pub struct TelegramGoalBot {
 #[tokio::main]
 async fn main() {
     println!("Starting TelegramGoalBot init");
+    info!("Starting TelegramGoalBot init");
     let mut bot = TelegramGoalBot::init();
     println!("TelegramGoalBot init successful!");
+    info!("TelegramGoalBot init successful!");
 
     loop {
         bot.interval.tick().await;

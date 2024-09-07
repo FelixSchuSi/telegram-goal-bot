@@ -25,6 +25,7 @@ RUN chmod 777 /usr/local/bin/telegram-goal-bot
 USER appuser
 # COPY .env .env
 # COPY .env /usr/local/bin/.env
+ENV RUST_LOG=debug
 COPY entrypoint.sh entrypoint.sh
 
 CMD ["bash", "./entrypoint.sh"]
