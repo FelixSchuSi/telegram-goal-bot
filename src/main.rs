@@ -1,13 +1,16 @@
+// use anyhow::Ok;
 use chrono::{DateTime, Utc};
 use config::config::Config;
+use core::result::Result::Ok;
 use dotenv::dotenv;
+use download_video::download_video::download_video_with_retries;
 use filter::competition::CompetitionName;
 use filter::get_competitions_of_submission::get_competitions_of_submission;
 use log::info;
 use reddit_scrape::scrape_reddit_submission::{scrape_submissions, RedditSubmission};
 use std::io::Write;
 use std::time::Duration;
-use telegram::send_link::send_link;
+use telegram::{send::send_video_with_retries, send_link::send_link};
 use teloxide::Bot;
 use tokio::time::{self, Interval};
 mod config;
@@ -60,13 +63,45 @@ async fn main() {
                 .find(|e| e.name == submission.competition)
                 .unwrap();
 
-            send_link(
-                &submission.reddit_submission.title,
-                &bot.telegram_bot,
-                &submission.reddit_submission.url,
-                &comp,
-            )
-            .await;
+            let downloaded_video =
+                download_video_with_retries(&submission.reddit_submission.url).await;
+
+            match downloaded_video {
+                Err(_) => {
+                    send_link(
+                        &submission.reddit_submission.title,
+                        &bot.telegram_bot,
+                        &submission.reddit_submission.url,
+                        &comp,
+                    )
+                    .await;
+                }
+                Ok(video_path) => {
+                    let sent_video = send_video_with_retries(
+                        &submission.reddit_submission.title,
+                        &bot.telegram_bot,
+                        &video_path,
+                        &comp,
+                    )
+                    .await;
+
+                    match sent_video {
+                        Ok(_) => info!(
+                            "Erfolgreich video gesendet {}",
+                            video_path.to_str().unwrap_or("")
+                        ),
+                        Err(_) => {
+                            send_link(
+                                &submission.reddit_submission.title,
+                                &bot.telegram_bot,
+                                &submission.reddit_submission.url,
+                                &comp,
+                            )
+                            .await;
+                        }
+                    }
+                }
+            }
         }
 
         bot.posted_telegram_submissions

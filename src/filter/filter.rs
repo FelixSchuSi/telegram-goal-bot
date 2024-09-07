@@ -58,14 +58,14 @@ pub fn submission_filter(submission: &RedditSubmission, competition: &Competitio
         return false;
     }
 
-    // Submission must be younger than 10 minutes
-    if Utc::now().timestamp() - submission.created_utc as i64 > 600 {
-        info!(
-            "Submission is not younger than 10 minutes: {} {}",
-            submission.title, submission.id
-        );
-        return false;
-    }
+    // // Submission must be younger than 10 minutes
+    // if Utc::now().timestamp() - submission.created_utc as i64 > 600 {
+    //     info!(
+    //         "Submission is not younger than 10 minutes: {} {}",
+    //         submission.title, submission.id
+    //     );
+    //     return false;
+    // }
 
     info!(
         "✅ Submission passed filter for competition {:?}: {:?} {}",

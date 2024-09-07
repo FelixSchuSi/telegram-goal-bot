@@ -11,7 +11,7 @@ async fn download_video(url: &str) -> Result<PathBuf, String> {
         .await
         .map_err(|e| format!("Failed to extract bytes form downloaded video: {}", e))?;
 
-    let filename = PathBuf::from(format!("{}.mp4", random_string(30)));
+    let filename = PathBuf::from(format!("/tmp/{}.mp4", random_string(30)));
 
     let mut file = File::create(&filename)
         .await
@@ -35,8 +35,8 @@ pub async fn download_video_with_retries(url: &str) -> Result<PathBuf, String> {
             break;
         }
         warn!(
-            "Downloading video failed in try {} out of 10. url: {}, trying again in 10 seconds",
-            i, url
+            "Downloading video failed in try {} out of 10. url: {}, trying again in 10 seconds. err: {}",
+            i, url, download_video_result.err().unwrap_or("".to_string())
         );
         sleep(Duration::from_secs(10)).await;
         download_video_result = download_video(url).await;

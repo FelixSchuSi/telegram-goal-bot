@@ -52,6 +52,13 @@
     },
     {
       "aliases": [
+        "ireland",
+        "irl"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
         "russia",
         "rus",
         "russian"
@@ -156,6 +163,13 @@
       "aliases": [
         "germany",
         "ger"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
+        "georgia",
+        "geo"
       ],
       "min_matches_needed": 1
     },

@@ -8,6 +8,7 @@ pub async fn get_html_with_browser(url: &str, selector: &str) -> Result<Html, Sc
     let launch_options = launch_options_builder
         .headless(false)
         // .sandbox(true)
+        .port(Some(8001))
         .window_size(Some((1920, 1080)));
     let browser = Browser::new(launch_options.build().map_err(|err| {
         ScrapeError("Error while configuring Browser: ".to_owned() + &*err.to_string())
