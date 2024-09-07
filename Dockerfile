@@ -22,4 +22,8 @@ COPY --from=builder /app/target/release/telegram-goal-bot /usr/local/bin
 RUN adduser appuser
 RUN chmod 777 /usr/local/bin/telegram-goal-bot
 USER appuser
-CMD Xvfb :0 -ac -screen 0 1920x1080x24 -nolisten tcp & telegram-goal-bot
+# COPY .env .env
+# COPY .env /usr/local/bin/.env
+COPY entrypoint.sh entrypoint.sh
+
+CMD ["bash", "./entrypoint.sh"]
