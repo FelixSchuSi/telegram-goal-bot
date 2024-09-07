@@ -16,8 +16,9 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y xvfb chromium
 RUN rm -rf /var/lib/apt/lists/*
 RUN apt-get install -y xvfb
-RUN Xvfb :0 -ac -screen 0 1920x1080x24 -nolisten tcp &
-ENV DISPLAY=:0
+ENV DISPLAY=:321
+RUN Xvfb $DISPLAY -ac -screen 0 1920x1080x24 -nolisten tcp &
+
 COPY --from=builder /app/target/release/telegram-goal-bot /usr/local/bin
 RUN adduser appuser
 RUN chmod 777 /usr/local/bin/telegram-goal-bot
