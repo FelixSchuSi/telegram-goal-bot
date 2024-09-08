@@ -25,6 +25,10 @@ pub async fn get_html_with_browser(url: &str, selector: &str) -> Result<Html, Sc
     tab.navigate_to(url).map_err(|err| {
         ScrapeError("Error while navigating to URL: ".to_owned() + &*err.to_string())
     })?;
+    let tmp = tab.get_content().map_err(|err| {
+        ScrapeError("Could not extract html from browser: ".to_owned() + &*err.to_string())
+    })?;
+    println!("here comes the html: {}", tmp.as_str());
     tab.wait_for_element(selector).map_err(|err| {
         ScrapeError("Could not find Element for given Selector: ".to_owned() + &*err.to_string())
     })?;
