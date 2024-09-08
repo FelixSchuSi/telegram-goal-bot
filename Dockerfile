@@ -8,7 +8,9 @@ RUN cargo chef prepare --recipe-path recipe.json
 FROM chef AS builder 
 COPY --from=planner /app/recipe.json recipe.json
 RUN cargo chef cook --release --recipe-path recipe.json
-COPY . .
+COPY src src
+COPY Cargo.toml Cargo.toml
+COPY Cargo.lock Cargo.lock
 RUN cargo build --release --bin telegram-goal-bot
 
 FROM debian:stable

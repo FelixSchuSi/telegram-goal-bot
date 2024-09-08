@@ -9,7 +9,7 @@ pub async fn get_html_with_browser(url: &str, selector: &str) -> Result<Html, Sc
     let mut launch_options_builder = LaunchOptions::default_builder();
     let launch_options = launch_options_builder
         .headless(false)
-        // .sandbox(true)
+        .sandbox(false)
         .port(Some(8001))
         .idle_browser_timeout(Duration::from_secs(90))
         .window_size(Some((1920, 1080)));
