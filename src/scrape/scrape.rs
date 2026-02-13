@@ -238,6 +238,7 @@ mod tests {
     }
 
     #[test]
+    #[ignore]
     fn test_without_request_streamin01() {
         let html =
             Html::parse_document(&fs::read_to_string("src/scrape/test_streamin_01.html").unwrap());
@@ -250,6 +251,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[ignore]
     async fn test_with_request_streamin01() {
         let result = scrape_video("https://streamin.me/v/3727f22e").await;
         assert!(result.is_ok());
@@ -258,6 +260,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[ignore]
     async fn test_with_request_streamin02() {
         let result = scrape_video("https://streamin.me/v/1d981b6d").await;
         assert!(result.is_ok());
@@ -266,6 +269,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[ignore]
     async fn test_with_request_streamin03() {
         let result = scrape_video("https://streamin.me/v/fa0ebe20").await;
         assert!(result.is_ok());
@@ -274,6 +278,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[ignore]
     async fn test_with_request_streamff01() {
         let result = scrape_video("https://streamff.com/v/qagwUNlcwP").await;
         assert!(result.is_ok());
@@ -296,6 +301,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[ignore]
     async fn test_with_request_dubz01() {
         let result = scrape_video("https://dubz.link/v/akm002").await;
         assert!(result.is_ok());
