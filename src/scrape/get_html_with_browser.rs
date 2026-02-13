@@ -31,6 +31,7 @@ mod tests {
     use crate::scrape::get_html_with_browser::get_html_with_browser;
 
     #[tokio::test]
+    #[ignore]
     async fn test_example_org() {
         let html = get_html_with_browser("https://www.example.org", "h1").await;
         let html = html.unwrap();
@@ -43,6 +44,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[ignore]
     async fn test_kickbase_plus() {
         let html =
             get_html_with_browser("https://kickbaseplus.fabian-fischer.com/#/", ".headline").await;
