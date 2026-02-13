@@ -27,4 +27,5 @@ tokio-retry = "0.3.0"
 url = "2.3.1"
 regex = "1.9.5"
 rand = "0.8.5"
+base64 = "0.22.1"
 

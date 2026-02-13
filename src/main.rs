@@ -1,3 +1,4 @@
+use crate::reddit::refresh_client::refresh_client;
 use chrono::{DateTime, Local};
 use config::config::Config;
 use dotenv::dotenv;
@@ -5,8 +6,7 @@ use filter::competition::CompetitionName;
 use futures_util::future;
 use log::{error, info};
 use reddit::listen_for_submissions::RedditHandle;
-use roux::{Reddit, Subreddit};
-use std::env;
+use roux::Subreddit;
 use std::io::Write;
 use std::sync::{Arc, Mutex};
 use teloxide::Bot;
@@ -65,20 +65,11 @@ async fn main() {
 async fn create_reddit_handle(
     listen_for_replays_submission_ids: Arc<Mutex<Vec<GoalSubmission>>>,
 ) -> RedditHandle {
-    let client = Reddit::new(
-        &env::var("REDDIT_USER_AGENT").expect("REDDIT_USER_AGENT must be present"),
-        &env::var("REDDIT_CLIENT_ID").expect("REDDIT_CLIENT_ID must be present"),
-        &env::var("REDDIT_CLIENT_SECRET").expect("REDDIT_CLIENT_SECRET must be present"),
-    )
-    .username(&env::var("REDDIT_USERNAME").expect("REDDIT_USERNAME must be present"))
-    .password(&env::var("REDDIT_PASSWORD").expect("REDDIT_PASSWORD must be present"))
-    .login()
-    .await
-    .unwrap();
+    let client = refresh_client().await.unwrap();
     let config = Arc::new(Config::init());
     let bot = Arc::new(Bot::from_env());
 
-    let subreddit = Subreddit::new_oauth("soccer", &client.client);
+    let subreddit = Subreddit::new_oauth("soccer", &client);
 
     RedditHandle {
         subreddit,
