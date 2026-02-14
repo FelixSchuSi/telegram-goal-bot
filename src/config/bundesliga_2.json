@@ -2,173 +2,317 @@
   "name": "bundesliga_2",
   "teams": [
     {
-      "aliases": ["pauli"],
+      "aliases": [
+        "hannover",
+        "h96"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["hsv", "hamburg", "hambourg"],
+      "aliases": [
+        "dusseldorf",
+        "d\u00fcsseldorf",
+        "duesseldorf"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["hannover", "h96"],
+      "aliases": [
+        "kiel"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["dusseldorf", "d\u00fcsseldorf", "duesseldorf"],
+      "aliases": [
+        "furth",
+        "f\u00fcrth",
+        "fuerth"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["kiel"],
+      "aliases": [
+        "wiesbaden"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["furth", "f\u00fcrth", "fuerth"],
+      "aliases": [
+        "elversberg"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["wiesbaden"],
+      "aliases": [
+        "nurnberg",
+        "nuernberg",
+        "n\u00fcrnberg"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["elversberg"],
+      "aliases": [
+        "paderborn"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["nurnberg", "nuernberg", "n\u00fcrnberg"],
+      "aliases": [
+        "hertha"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["paderborn"],
+      "aliases": [
+        "magdeburg"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["hertha"],
+      "aliases": [
+        "rostock"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["magdeburg"],
+      "aliases": [
+        "schalke",
+        "s04",
+        "shalke"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["rostock"],
+      "aliases": [
+        "karlsruhe",
+        "ksc"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["schalke", "s04", "shalke"],
+      "aliases": [
+        "osnabr\u00fcck",
+        "osnabruck",
+        "osnabrueck"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["karlsruhe"],
+      "aliases": [
+        "braunschweig"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["osnabr\u00fcck", "osnabruck", "osnabrueck"],
+      "aliases": [
+        "darmstadt"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["braunschweig"],
+      "aliases": [
+        "kaiserslautern",
+        "fck"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
+        "bochum"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
+        "arminia",
+        "bielefeld"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
+        "preu\u00dfen",
+        "m\u00fcnster",
+        "scp"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
+        "dynamo",
+        "dresden"
+      ],
       "min_matches_needed": 1
     }
   ],
   "relegated_teams": [
     {
-      "aliases": ["bayern", "m\u00fcnchen", "munchen", "munich"],
+      "aliases": [
+        "pauli"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["gladbach", "m\u00f6nchengladbach", "monchengladbach"],
+      "aliases": [
+        "hsv",
+        "hamburg",
+        "hambourg"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["leipzig"],
+      "aliases": [
+        "bayern",
+        "m\u00fcnchen",
+        "munchen",
+        "munich"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["freiburg"],
+      "aliases": [
+        "gladbach",
+        "m\u00f6nchengladbach",
+        "monchengladbach"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["hoffenheim"],
+      "aliases": [
+        "leipzig"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["dortmund"],
+      "aliases": [
+        "freiburg"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["leverkusen", "bayer"],
+      "aliases": [
+        "hoffenheim"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["frankfurt", "sge"],
+      "aliases": [
+        "dortmund"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["wolfsburg"],
+      "aliases": [
+        "leverkusen",
+        "bayer"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["union"],
+      "aliases": [
+        "frankfurt",
+        "sge"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["werder", "bremen", "svw"],
+      "aliases": [
+        "wolfsburg"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["augsburg", "fca"],
+      "aliases": [
+        "union"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["mainz"],
+      "aliases": [
+        "werder",
+        "bremen",
+        "svw"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["k\u00f6ln", "koln", "cologne"],
+      "aliases": [
+        "augsburg",
+        "fca"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["vfb", "stuttgart"],
+      "aliases": [
+        "mainz"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["bochum"],
+      "aliases": [
+        "k\u00f6ln",
+        "koln",
+        "cologne"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["heidenheim"],
+      "aliases": [
+        "vfb",
+        "stuttgart"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["darmstadt"],
+      "aliases": [
+        "heidenheim"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["hertha"],
+      "aliases": [
+        "darmstadt"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["arminia", "bielefeld"],
+      "aliases": [
+        "hertha"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["schalke", "shalke", "s04"],
+      "aliases": [
+        "schalke",
+        "shalke",
+        "s04"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["hannover"],
+      "aliases": [
+        "hannover"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["hamburg", "hsv"],
+      "aliases": [
+        "hamburg",
+        "hsv"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["paderborn"],
+      "aliases": [
+        "paderborn"
+      ],
       "min_matches_needed": 1
     },
     {
-      "aliases": ["d\u00fcsseldorf", "dusseldorf"],
+      "aliases": [
+        "d\u00fcsseldorf",
+        "dusseldorf"
+      ],
       "min_matches_needed": 1
     }
   ]

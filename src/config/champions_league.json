@@ -3,6 +3,33 @@
   "teams": [
     {
       "aliases": [
+        "dortmund",
+        "bvb"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
+        "atalanta",
+        "bergamo"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
+        "arsenal",
+        "gunners"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
+        "benfica"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
         "real",
         "madrid"
       ],
@@ -18,28 +45,22 @@
     },
     {
       "aliases": [
+        "sporting"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
+        "monaco"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
         "paris",
         "saint",
         "germain",
         "psg"
-      ],
-      "min_matches_needed": 1
-    },
-    {
-      "aliases": [
-        "sevillia"
-      ],
-      "min_matches_needed": 1
-    },
-    {
-      "aliases": [
-        "dortmund"
-      ],
-      "min_matches_needed": 1
-    },
-    {
-      "aliases": [
-        "lazio"
       ],
       "min_matches_needed": 1
     },
@@ -52,22 +73,35 @@
     },
     {
       "aliases": [
-        "manchester",
-        "united",
-        "man",
-        "utd"
-      ],
-      "min_matches_needed": 2
-    },
-    {
-      "aliases": [
-        "leipzig"
+        "chelsea"
       ],
       "min_matches_needed": 1
     },
     {
       "aliases": [
-        "porto"
+        "galatasaray"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
+        "juventus",
+        "turin",
+        "juve"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
+        "liverpool"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
+        "tottenham",
+        "hotspur",
+        "spurs"
       ],
       "min_matches_needed": 1
     },
@@ -82,10 +116,17 @@
     },
     {
       "aliases": [
-        "schachtar",
-        "donezk",
-        "shakhtar",
-        "donetsk"
+        "olympiakos",
+        "pir\u00e4us",
+        "piraus",
+        "olympiacos"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
+        "bayer",
+        "leverkusen"
       ],
       "min_matches_needed": 1
     },
@@ -97,118 +138,10 @@
     },
     {
       "aliases": [
-        "atl\u00e9tico",
-        "atletico"
-      ],
-      "min_matches_needed": 1
-    },
-    {
-      "aliases": [
-        "salzburg"
-      ],
-      "min_matches_needed": 1
-    },
-    {
-      "aliases": [
-        "ssc",
-        "neapel",
-        "napoli"
-      ],
-      "min_matches_needed": 1
-    },
-    {
-      "aliases": [
-        "roter",
-        "stern",
-        "belgrad",
-        "red",
-        "star"
-      ],
-      "min_matches_needed": 1
-    },
-    {
-      "aliases": [
-        "galatasaray"
-      ],
-      "min_matches_needed": 1
-    },
-    {
-      "aliases": [
-        "benfica"
-      ],
-      "min_matches_needed": 1
-    },
-    {
-      "aliases": [
-        "union"
-      ],
-      "min_matches_needed": 1
-    },
-    {
-      "aliases": [
-        "braga"
-      ],
-      "min_matches_needed": 1
-    },
-    {
-      "aliases": [
-        "sociedad"
-      ],
-      "min_matches_needed": 1
-    },
-    {
-      "aliases": [
-        "psv",
-        "eindhoven"
-      ],
-      "min_matches_needed": 1
-    },
-    {
-      "aliases": [
-        "copenhagen",
-        "fck"
-      ],
-      "min_matches_needed": 1
-    },
-    {
-      "aliases": [
-        "lens"
-      ],
-      "min_matches_needed": 1
-    },
-    {
-      "aliases": [
-        "arsenal",
-        "gunners"
-      ],
-      "min_matches_needed": 1
-    },
-    {
-      "aliases": [
-        "feyenoord"
-      ],
-      "min_matches_needed": 1
-    },
-    {
-      "aliases": [
-        "antwerp",
-        "antwerpen",
-        "royal"
-      ],
-      "min_matches_needed": 1
-    },
-    {
-      "aliases": [
-        "young",
-        "boys",
-        "bern"
-      ],
-      "min_matches_needed": 1
-    },
-    {
-      "aliases": [
-        "ac",
-        "milan"
+        "bodo",
+        "glimt",
+        "bod\u00f8",
+        "bodoe"
       ],
       "min_matches_needed": 1
     },
@@ -220,7 +153,21 @@
     },
     {
       "aliases": [
-        "celtic"
+        "qarabag"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
+        "br\u00fcgge",
+        "brugge"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
+        "atl\u00e9tico",
+        "atletico"
       ],
       "min_matches_needed": 1
     }
@@ -247,21 +194,6 @@
     },
     {
       "aliases": [
-        "br\u00fcgge",
-        "brugge"
-      ],
-      "min_matches_needed": 1
-    },
-    {
-      "aliases": [
-        "juventus",
-        "turin",
-        "juve"
-      ],
-      "min_matches_needed": 1
-    },
-    {
-      "aliases": [
         "budapest",
         "ferencvaros"
       ],
@@ -278,20 +210,7 @@
     },
     {
       "aliases": [
-        "liverpool"
-      ],
-      "min_matches_needed": 1
-    },
-    {
-      "aliases": [
         "midtjylland"
-      ],
-      "min_matches_needed": 1
-    },
-    {
-      "aliases": [
-        "atalanta",
-        "bergamo"
       ],
       "min_matches_needed": 1
     },
@@ -311,15 +230,6 @@
     {
       "aliases": [
         "basaksehir"
-      ],
-      "min_matches_needed": 1
-    },
-    {
-      "aliases": [
-        "olympiakos",
-        "pir\u00e4us",
-        "piraus",
-        "olympiacos"
       ],
       "min_matches_needed": 1
     },
@@ -345,14 +255,6 @@
         "m\u00f6nchengladbach",
         "monchengladbach",
         "gladbach"
-      ],
-      "min_matches_needed": 1
-    },
-    {
-      "aliases": [
-        "tottenham",
-        "hotspur",
-        "spurs"
       ],
       "min_matches_needed": 1
     },
@@ -401,6 +303,161 @@
         "slavia",
         "praha",
         "prag"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
+        "paris",
+        "saint",
+        "germain",
+        "psg"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
+        "sevillia"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
+        "lazio"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
+        "barcelona",
+        "barca"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
+        "manchester",
+        "united",
+        "man",
+        "utd"
+      ],
+      "min_matches_needed": 2
+    },
+    {
+      "aliases": [
+        "leipzig"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
+        "porto"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
+        "schachtar",
+        "donezk",
+        "shakhtar",
+        "donetsk"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
+        "salzburg"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
+        "ssc",
+        "neapel",
+        "napoli"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
+        "roter",
+        "stern",
+        "belgrad",
+        "red",
+        "star"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
+        "union"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
+        "braga"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
+        "sociedad"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
+        "psv",
+        "eindhoven"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
+        "copenhagen",
+        "fck"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
+        "lens"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
+        "feyenoord"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
+        "antwerp",
+        "antwerpen",
+        "royal"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
+        "young",
+        "boys",
+        "bern"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
+        "ac",
+        "milan"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
+        "celtic"
       ],
       "min_matches_needed": 1
     }

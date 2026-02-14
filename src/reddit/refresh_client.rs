@@ -26,6 +26,7 @@ pub async fn refresh_client() -> Result<Client, RedditError> {
     let reddit_client_id = std::env::var("REDDIT_CLIENT_ID").unwrap();
     let refresh_token = std::env::var("REDDIT_REFRESH_TOKEN").unwrap();
     let user_agent = std::env::var("REDDIT_USER_AGENT").unwrap();
+    let http_proxy = std::env::var("REDDIT_HTTP_PROXY").unwrap();
 
     let form = [
         ("grant_type", "refresh_token"),
@@ -60,7 +61,11 @@ pub async fn refresh_client() -> Result<Client, RedditError> {
             header::HeaderValue::from_str(&user_agent).unwrap(),
         );
 
-        let client = Client::builder().default_headers(headers).build().unwrap();
+        let client = Client::builder()
+            .proxy(reqwest::Proxy::all(&http_proxy)?)
+            .default_headers(headers)
+            .build()
+            .unwrap();
         error!("Successfully refreshed Reddit access token");
         Ok(client)
     }
