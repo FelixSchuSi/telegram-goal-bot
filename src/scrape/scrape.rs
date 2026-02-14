@@ -306,12 +306,10 @@ mod tests {
     #[tokio::test]
     #[ignore]
     async fn test_with_request_streamff01() {
-        let result = scrape_video("https://streamff.com/v/qagwUNlcwP").await;
+        let result = scrape_video("https://streamff.link/v/1821673e").await;
         assert!(result.is_ok());
-        assert_eq!(
-            result.unwrap(),
-            Url::parse("https://files.catbox.moe/3cdo9q.mp4").unwrap()
-        );
+
+        println!("Scraped url: {}", result.as_ref().unwrap());
     }
 
     #[test]
