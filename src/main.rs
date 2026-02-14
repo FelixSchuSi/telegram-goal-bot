@@ -29,6 +29,7 @@ pub struct GoalSubmission {
 #[tokio::main]
 async fn main() {
     env_logger::Builder::new()
+        .filter_level(log::LevelFilter::Trace)
         .format(|buf, record| {
             writeln!(
                 buf,

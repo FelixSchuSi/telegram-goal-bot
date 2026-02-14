@@ -16,6 +16,10 @@ pub async fn log_roux_err(err: StreamError<RouxError>) {
                 RouxError::Network(net_e) => {
                     error!("is RouxError::Network");
                     error!("Network: {}", net_e);
+                    net_e
+                        .status()
+                        .map(|status| error!("Status: {}", status))
+                        .unwrap_or_else(|| error!("Couldn't get status from Network error"));
                 }
                 RouxError::Status(stat_e) => {
                     error!("is RouxError::Status");

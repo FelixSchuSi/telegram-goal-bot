@@ -15,6 +15,7 @@ pub enum VideoHost {
     Streamff,
     Streamgg,
     Streamin,
+    Streamain,
     Dubz,
     Streambug,
 }
@@ -45,6 +46,7 @@ impl FromStr for VideoHost {
             "streamin" => Ok(VideoHost::Streamin),
             "dubz" => Ok(VideoHost::Dubz),
             "streambug" => Ok(VideoHost::Streambug),
+            "streamain" => Ok(VideoHost::Streamain),
             _ => Err(UnkownVideoHostError),
         }
     }
@@ -65,6 +67,7 @@ impl fmt::Display for VideoHost {
             VideoHost::Streamff => write!(f, "streamff"),
             VideoHost::Streamgg => write!(f, "streamgg"),
             VideoHost::Streamin => write!(f, "streamin"),
+            VideoHost::Streamain => write!(f, "streamain"),
             VideoHost::Dubz => write!(f, "dubz"),
             VideoHost::Streambug => write!(f, "streambug"),
         }

@@ -91,6 +91,7 @@ async fn get_html(url: &str) -> Result<Html, ScrapeError> {
         | VideoHost::Streamvi
         | VideoHost::Juststream
         | VideoHost::Streamgg
+        | VideoHost::Streamain
         | VideoHost::Streamin => get_html_without_browser(&url).await,
         VideoHost::Dubz => {
             // Dubz has some clever blocking mechanism. They use cloudflare ddos/bot protection which is hard to bypass.
@@ -164,6 +165,11 @@ fn scrape_from_html(html: &Html, video_host: &VideoHost) -> Result<String, Scrap
         VideoHost::Streamgg => {
             let selector = "video > source";
             let attribute = "src";
+            scrape_html(&html, selector, attribute)
+        }
+        VideoHost::Streamain => {
+            let selector = "video";
+            let attribute = "data-link";
             scrape_html(&html, selector, attribute)
         }
         VideoHost::Streamin => {

@@ -38,7 +38,8 @@
     },
     {
       "aliases": [
-        "dortmund"
+        "dortmund",
+        "bvb"
       ],
       "min_matches_needed": 1
     },
@@ -106,13 +107,29 @@
     },
     {
       "aliases": [
-        "bochum"
+        "heidenheim"
       ],
       "min_matches_needed": 1
     },
     {
       "aliases": [
-        "heidenheim"
+        "hamburg",
+        "hsv"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
+        "pauli",
+        "st.pauli"
+      ],
+      "min_matches_needed": 1
+    }
+  ],
+  "relegated_teams": [
+    {
+      "aliases": [
+        "bochum"
       ],
       "min_matches_needed": 1
     },
@@ -121,9 +138,7 @@
         "darmstadt"
       ],
       "min_matches_needed": 1
-    }
-  ],
-  "relegated_teams": [
+    },
     {
       "aliases": [
         "hertha"
@@ -148,13 +163,6 @@
     {
       "aliases": [
         "hannover"
-      ],
-      "min_matches_needed": 1
-    },
-    {
-      "aliases": [
-        "hamburg",
-        "hsv"
       ],
       "min_matches_needed": 1
     },
