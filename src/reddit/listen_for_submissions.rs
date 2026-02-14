@@ -61,67 +61,65 @@ impl RedditHandle {
                     );
                     continue;
                 }
-                send_link(&submission.title, &self.bot, url, &competition).await;
+
+                let scraped_url = match scrape_video(url).await {
+                    Ok(scrape_result) => scrape_result,
+                    Err(e) => {
+                        error!(
+                            "Scraping failed: {} submission.title: {} url: {}",
+                            e.0, submission.title, url,
+                        );
+                        send_link(&submission.title, &self.bot, url, &competition).await;
+                        self.register_message_for_replays(&competition, &submission)
+                            .await;
+                        continue;
+                    }
+                };
+
+                let download_video = match download_video_with_retries(&scraped_url.to_string())
+                    .await
+                {
+                    Ok(download_video) => download_video,
+                    Err(e) => {
+                        error!(
+                            "Downloading video failed in all 10 tries. Error: {} submission.title: {} scraped_url: {} url: {}",
+                            e,submission.title,                            scraped_url,                            url
+                        );
+                        send_link(&submission.title, &self.bot, url, &competition).await;
+                        self.register_message_for_replays(&competition, &submission)
+                            .await;
+                        continue;
+                    }
+                };
+
+                match send_video_with_retries(
+                    &submission.title,
+                    &self.bot,
+                    &download_video,
+                    &competition,
+                )
+                .await
+                {
+                    Ok(video_message) => {
+                        info!(
+                            "Sending video was successfull. submission.title: {} url: {} message_id: {}",
+                            submission.title, url, video_message.id.0
+                        );
+                        remove_file(download_video).expect("Failed to delete file");
+                    }
+                    Err(e) => {
+                        error!(
+                            "Sending video failed in all 10 tries. Sending Link instead. Error: {} submission.title: {} scraped_url: {} url: {}",
+                            e,
+                            submission.title,
+                            scraped_url,
+                            url
+                        );
+                        send_link(&submission.title, &self.bot, url, &competition).await;
+                    }
+                };
                 self.register_message_for_replays(&competition, &submission)
                     .await;
-                // let scraped_url = match scrape_video(url).await {
-                //     Ok(scrape_result) => scrape_result,
-                //     Err(e) => {
-                //         error!(
-                //             "Scraping failed: {} submission.title: {} url: {}",
-                //             e.0, submission.title, url,
-                //         );
-                //         send_link(&submission.title, &self.bot, url, &competition).await;
-                //         self.register_message_for_replays(&competition, &submission)
-                //             .await;
-                //         continue;
-                //     }
-                // };
-
-                // let download_video = match download_video_with_retries(&scraped_url.to_string())
-                //     .await
-                // {
-                //     Ok(download_video) => download_video,
-                //     Err(e) => {
-                //         error!(
-                //             "Downloading video failed in all 10 tries. Error: {} submission.title: {} scraped_url: {} url: {}",
-                //             e,submission.title,                            scraped_url,                            url
-                //         );
-                //         send_link(&submission.title, &self.bot, url, &competition).await;
-                //         self.register_message_for_replays(&competition, &submission)
-                //             .await;
-                //         continue;
-                //     }
-                // };
-
-                // match send_video_with_retries(
-                //     &submission.title,
-                //     &self.bot,
-                //     &download_video,
-                //     &competition,
-                // )
-                // .await
-                // {
-                //     Ok(video_message) => {
-                //         info!(
-                //             "Sending video was successfull. submission.title: {} url: {} message_id: {}",
-                //             submission.title, url, video_message.id.0
-                //         );
-                //         remove_file(download_video).expect("Failed to delete file");
-                //     }
-                //     Err(e) => {
-                //         error!(
-                //             "Sending video failed in all 10 tries. Sending Link instead. Error: {} submission.title: {} scraped_url: {} url: {}",
-                //             e,
-                //             submission.title,
-                //             scraped_url,
-                //             url
-                //         );
-                //         send_link(&submission.title, &self.bot, url, &competition).await;
-                //     }
-                // };
-                // self.register_message_for_replays(&competition, &submission)
-                //     .await;
             }
         }
 

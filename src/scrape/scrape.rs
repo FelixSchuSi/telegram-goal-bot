@@ -91,8 +91,20 @@ async fn get_html(url: &str) -> Result<Html, ScrapeError> {
         | VideoHost::Streamvi
         | VideoHost::Juststream
         | VideoHost::Streamgg
-        | VideoHost::Streamain
         | VideoHost::Streamin => get_html_without_browser(&url).await,
+        VideoHost::Streamain => {
+            let parsed = Url::parse(url).map_err(|err| ScrapeError(err.to_string()))?;
+            let mut segments = parsed
+                .path_segments()
+                .ok_or_else(|| ScrapeError("URL has no path segments".to_string()))?;
+            let id = segments
+                .next()
+                .map(|s| s.to_string())
+                .ok_or_else(|| ScrapeError("segments is empty".to_string()))?;
+            let watch_url = format!("https://streamain.com/embed/{}", id);
+            info!("Scraping streamain with watch url: {}", watch_url);
+            get_html_without_browser(&watch_url).await
+        }
         VideoHost::Dubz => {
             // Dubz has some clever blocking mechanism. They use cloudflare ddos/bot protection which is hard to bypass.
             // However this protection is only enabled on 'dubz.link' and 'dubz.co' but not on 'dubz.cc'.
@@ -173,7 +185,7 @@ fn scrape_from_html(html: &Html, video_host: &VideoHost) -> Result<String, Scrap
             scrape_html(&html, selector, attribute)
         }
         VideoHost::Streamin => {
-            let selector = "video";
+            let selector = "video > source";
             let attribute = "src";
             let result = scrape_html(&html, selector, attribute);
             result.map(|ok_value| add_host_if_url_is_relative(&ok_value, "https://streamin.me"))?
@@ -259,10 +271,18 @@ mod tests {
     #[tokio::test]
     #[ignore]
     async fn test_with_request_streamin01() {
-        let result = scrape_video("https://streamin.me/v/3727f22e").await;
+        let result = scrape_video("https://streamin.link/v/204a6d6e").await;
         assert!(result.is_ok());
         // streamin is rotating the concrete source url of the videos.
         // Testing that we are able to successfully scrape is all we can do.
+    }
+
+    #[tokio::test]
+    #[ignore]
+    async fn test_with_request_streamain01() {
+        let result = scrape_video("https://streamain.com/wl2jomMHMbEcUhr/watch").await;
+        assert!(result.is_ok());
+        println!("Scraped url: {}", result.unwrap());
     }
 
     #[tokio::test]
