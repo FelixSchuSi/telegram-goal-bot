@@ -95,12 +95,6 @@
     },
     {
       "aliases": [
-        "norwich"
-      ],
-      "min_matches_needed": 1
-    },
-    {
-      "aliases": [
         "brentford"
       ],
       "min_matches_needed": 1
@@ -125,20 +119,19 @@
     },
     {
       "aliases": [
-        "luton"
-      ],
-      "min_matches_needed": 1
-    },
-    {
-      "aliases": [
         "burnley"
       ],
       "min_matches_needed": 1
     },
     {
       "aliases": [
-        "sheffield",
-        "sheff"
+        "leeds"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
+        "sunderland"
       ],
       "min_matches_needed": 1
     }
@@ -146,13 +139,26 @@
   "relegated_teams": [
     {
       "aliases": [
-        "southampton"
+        "sheffield",
+        "sheff"
       ],
       "min_matches_needed": 1
     },
     {
       "aliases": [
-        "leeds"
+        "luton"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
+        "norwich"
+      ],
+      "min_matches_needed": 1
+    },
+    {
+      "aliases": [
+        "southampton"
       ],
       "min_matches_needed": 1
     },
