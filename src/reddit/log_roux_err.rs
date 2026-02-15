@@ -43,6 +43,14 @@ pub async fn log_roux_err(err: StreamError<RouxError>) {
                     error!("is RouxError::Auth");
                     error!("Auth: {}", e);
                 }
+                RouxError::CredentialsNotSet => {
+                    error!("is RouxError::CredentialsNotSet");
+                    error!("CredentialsNotSet: {}", e);
+                }
+                RouxError::OAuthClientRequired => {
+                    error!("is RouxError::OAuthClientRequired");
+                    error!("OAuthClientRequired: {}", e);
+                }
             }
         }
     }

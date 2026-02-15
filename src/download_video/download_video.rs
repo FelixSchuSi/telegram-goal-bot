@@ -52,3 +52,21 @@ fn random_string(n: usize) -> String {
         .map(char::from)
         .collect()
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[ignore]
+    #[tokio::test]
+    async fn test_download_video() {
+        let url = "https://c-cdn.streamin.top/uploads/2d487fb9.mp4?Justnow#t=0.1";
+        let result = download_video_with_retries(url).await;
+        assert!(result.is_ok());
+        let path = result.unwrap();
+        assert!(path.exists());
+        println!(
+            "Absolute path to the downloaded video: {:?}",
+            std::fs::canonicalize(&path).unwrap()
+        );
+    }
+}
