@@ -51,16 +51,17 @@ async fn main() {
 
     let mut reddit_handle_submissions =
         create_reddit_handle(Arc::clone(&listen_for_replays_submission_ids)).await;
-    let mut reddit_handle_comments =
-        create_reddit_handle(Arc::clone(&listen_for_replays_submission_ids)).await;
+    // let mut reddit_handle_comments =
+    //     create_reddit_handle(Arc::clone(&listen_for_replays_submission_ids)).await;
 
     info!("reddit comment handle and reddit submission handle successfully started");
 
-    future::join(
-        reddit_handle_submissions.listen_for_submissions(),
-        reddit_handle_comments.search_for_alternative_angles_in_submission_comments(),
-    )
-    .await;
+    // future::join(
+    //     reddit_handle_submissions.listen_for_submissions(),
+    //     reddit_handle_comments.search_for_alternative_angles_in_submission_comments(),
+    // )
+    // .await;
+    reddit_handle_submissions.listen_for_submissions().await;
 }
 
 async fn create_reddit_handle(

@@ -35,8 +35,8 @@ impl RedditHandle {
     pub async fn listen_for_submissions(&mut self) {
         let (mut stream, join_handle) = stream_submissions(
             &self.subreddit,
-            Duration::from_secs(5),
-            ExponentialBackoff::from_millis(5).factor(100).take(3),
+            Duration::from_secs(120),
+            ExponentialBackoff::from_millis(3000).factor(5).take(3),
             Some(Duration::from_secs(10)),
         );
 
