@@ -3,6 +3,7 @@ use log::error;
 use reqwest::header;
 use reqwest::header::USER_AGENT;
 use reqwest::Client;
+use roux::Subreddit;
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
@@ -22,7 +23,7 @@ impl From<reqwest::Error> for RedditError {
     }
 }
 
-pub async fn refresh_client() -> Result<Client, RedditError> {
+pub async fn get_fresh_subreddit() -> Result<Subreddit, RedditError> {
     let reddit_client_id = std::env::var("REDDIT_CLIENT_ID").unwrap();
     let refresh_token = std::env::var("REDDIT_REFRESH_TOKEN").unwrap();
     let user_agent = std::env::var("REDDIT_USER_AGENT").unwrap();
@@ -67,6 +68,7 @@ pub async fn refresh_client() -> Result<Client, RedditError> {
             .build()
             .unwrap();
         error!("Successfully refreshed Reddit access token");
-        Ok(client)
+        let subreddit = Subreddit::new_oauth("soccer", &client);
+        Ok(subreddit)
     }
 }

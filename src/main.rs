@@ -1,4 +1,4 @@
-use crate::reddit::refresh_client::refresh_client;
+use crate::reddit::get_fresh_subreddit::get_fresh_subreddit;
 use chrono::{DateTime, Local};
 use config::config::Config;
 use dotenv::dotenv;
@@ -67,16 +67,15 @@ async fn main() {
 async fn create_reddit_handle(
     listen_for_replays_submission_ids: Arc<Mutex<Vec<GoalSubmission>>>,
 ) -> RedditHandle {
-    let client = refresh_client().await.unwrap();
+    let subreddit: Subreddit = get_fresh_subreddit().await.unwrap();
     let config = Arc::new(Config::init());
     let bot = Arc::new(Bot::from_env());
-
-    let subreddit = Subreddit::new_oauth("soccer", &client);
 
     RedditHandle {
         subreddit,
         bot,
         config,
         listen_for_replays_submission_ids: Arc::clone(&listen_for_replays_submission_ids),
+        token_created_at: Local::now().into(),
     }
 }
