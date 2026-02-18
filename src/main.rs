@@ -1,9 +1,9 @@
 use crate::reddit::get_fresh_subreddit::get_fresh_subreddit;
+use crate::scrape::get_html_with_browser::get_html_with_browser;
 use chrono::{DateTime, Local};
 use config::config::Config;
 use dotenv::dotenv;
 use filter::competition::CompetitionName;
-use futures_util::future;
 use log::{error, info};
 use reddit::listen_for_submissions::RedditHandle;
 use roux::Subreddit;
@@ -43,6 +43,14 @@ async fn main() {
         .init();
     dotenv().ok();
     error!("successfully read dotenv");
+    let scrape_res = get_html_with_browser("https://streamff.link/v/7b56c7af", "video")
+        .await
+        .map_err(|err| {
+            error!("Error while scraping: {:?}", err);
+            err
+        });
+
+    println!("Scrape result: {:?}", scrape_res);
 
     // List of submissions that are goals and were posted to telegram.
     // We want to listen for comments for this submission to find replays of that goal to post them to telegram as well.
