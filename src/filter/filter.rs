@@ -16,8 +16,8 @@ pub fn submission_filter(submission: &SubmissionData, competition: &Competition)
     let mut title_split = lower_title.split_whitespace();
 
     info!(
-        "Checking submission for competition {:?}: {}",
-        competition.name, submission.title
+        "Checking submission for competition {:?}: {} link: {}",
+        competition.name, submission.title, host
     );
 
     // Check if the title contains two teams of the specified competition

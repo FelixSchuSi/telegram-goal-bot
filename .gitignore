@@ -14,3 +14,4 @@ secrets.json
 .test.env
 .prod.env
 *.sh
+*.mp4

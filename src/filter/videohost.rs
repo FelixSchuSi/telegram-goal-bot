@@ -18,6 +18,7 @@ pub enum VideoHost {
     Streamain,
     Dubz,
     Streambug,
+    VReddIt,
 }
 #[derive(Debug, PartialEq, Eq)]
 pub struct UnkownVideoHostError;
@@ -30,6 +31,10 @@ impl FromStr for VideoHost {
         owned_string = owned_string.replace("https://", "");
         owned_string = owned_string.replace("www.", "");
         let domain = owned_string.split(".").collect::<Vec<&str>>()[0];
+
+        if owned_string.contains("v.redd.it") {
+            return Ok(VideoHost::VReddIt);
+        }
 
         match domain {
             "streamwo" => Ok(VideoHost::Streamwo),
@@ -70,6 +75,7 @@ impl fmt::Display for VideoHost {
             VideoHost::Streamain => write!(f, "streamain"),
             VideoHost::Dubz => write!(f, "dubz"),
             VideoHost::Streambug => write!(f, "streambug"),
+            VideoHost::VReddIt => write!(f, "v.redd.it"),
         }
     }
 }

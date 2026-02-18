@@ -69,4 +69,18 @@ mod tests {
             std::fs::canonicalize(&path).unwrap()
         );
     }
+
+    #[ignore]
+    #[tokio::test]
+    async fn test_download_video_02() {
+        let url = "https://v.redd.it/richbjacp4kg1/CMAF_720.mp4";
+        let result = download_video_with_retries(url).await;
+        assert!(result.is_ok());
+        let path = result.unwrap();
+        assert!(path.exists());
+        println!(
+            "Absolute path to the downloaded video: {:?}",
+            std::fs::canonicalize(&path).unwrap()
+        );
+    }
 }

@@ -50,8 +50,17 @@ async fn scrape_with_retries(
     let video_host = VideoHost::from_str(&options.url)
         .map_err(|_| ScrapeError("Unkown VideoHost".to_string()))?;
     for i in 0..options.max_retries {
-        let html: Html = get_html(&options.url).await?;
-        let scrape_result = scrape_from_html(&html, &video_host);
+        let scrape_result: Result<String, ScrapeError>;
+        if video_host == VideoHost::VReddIt {
+            scrape_result = if options.url.ends_with("/") {
+                Ok(options.url.to_owned() + "CMAF_720.mp4")
+            } else {
+                Ok(options.url.to_owned() + "/CMAF_720.mp4")
+            };
+        } else {
+            let html: Html = get_html(&options.url).await?;
+            scrape_result = scrape_from_html(&html, &video_host);
+        }
         match scrape_result {
             Ok(result) => {
                 return Ok(result);
@@ -91,6 +100,7 @@ async fn get_html(url: &str) -> Result<Html, ScrapeError> {
         | VideoHost::Streamvi
         | VideoHost::Juststream
         | VideoHost::Streamgg
+        | VideoHost::VReddIt
         | VideoHost::Streamin => get_html_without_browser(&url).await,
         VideoHost::Streamain => {
             let parsed = Url::parse(url).map_err(|err| ScrapeError(err.to_string()))?;
@@ -200,6 +210,12 @@ fn scrape_from_html(html: &Html, video_host: &VideoHost) -> Result<String, Scrap
             let attribute = "src";
             scrape_html(&html, selector, attribute)
         }
+        VideoHost::VReddIt => {
+            // this is never actually called since we handle v.redd.it separately
+            let selector = "shreddit-player";
+            let attribute = "src";
+            scrape_html(&html, selector, attribute)
+        }
     }
 }
 
@@ -292,6 +308,15 @@ mod tests {
         assert!(result.is_ok());
         // streamin is rotating the concrete source url of the videos.
         // Testing that we are able to successfully scrape is all we can do.
+    }
+
+    #[tokio::test]
+    #[ignore]
+    async fn test_with_request_vreddit() {
+        let result = scrape_video("https://v.redd.it/richbjacp4kg1").await;
+        println!("error: {:?}", result);
+        assert!(result.is_ok());
+        println!("Scraped url: {}", result.unwrap());
     }
 
     #[tokio::test]
