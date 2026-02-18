@@ -1,15 +1,14 @@
-use headless_chrome::{Browser, LaunchOptions};
+use crate::scrape::scrape::ScrapeError;
+use headless_chrome::Browser;
 use scraper::Html;
 
-use crate::scrape::scrape::ScrapeError;
-
 pub async fn get_html_with_browser(url: &str, selector: &str) -> Result<Html, ScrapeError> {
-    let mut launch_options = LaunchOptions::default_builder();
-    launch_options.sandbox(false);
-    let browser = Browser::new(launch_options.build().map_err(|err| {
-        ScrapeError("Error while configuring Browser: ".to_owned() + &*err.to_string())
-    })?)
-    .map_err(|err| {
+    let debug_ws_url = std::env::var("BROWSER_WS_ENDPOINT").map_err(|err| {
+        ScrapeError(
+            "Error while reading BROWSER_WS_ENDPOINT from env: ".to_owned() + &*err.to_string(),
+        )
+    })?;
+    let browser = Browser::connect(debug_ws_url).map_err(|err| {
         ScrapeError("Error while configuring Browser: ".to_owned() + &*err.to_string())
     })?;
     let tab = browser

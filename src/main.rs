@@ -42,7 +42,7 @@ async fn main() {
         })
         .init();
     dotenv().ok();
-    error!("successfully read dotenv");
+    info!("successfully read dotenv");
     let scrape_res = get_html_with_browser("https://streamff.link/v/7b56c7af", "video")
         .await
         .map_err(|err| {
