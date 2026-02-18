@@ -11,7 +11,7 @@ chrono = "0.4.24"
 dotenv = "0.15.0"
 env_logger = "0.10.0"
 futures-util = "0.3.28"
-headless_chrome = {git = "https://github.com/rust-headless-chrome/rust-headless-chrome", features = ["fetch", "native-tls"], rev = "2905c37c88c2a770a13566e89f7a2b294b8d05eb"}
+headless_chrome = {git = "https://github.com/rust-headless-chrome/rust-headless-chrome", features = ["native-tls"], rev = "2905c37c88c2a770a13566e89f7a2b294b8d05eb"}
 html-escape = "0.2.13"
 jsonpath-rust = "0.3.0"
 log = "0.4.17"
