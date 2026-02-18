@@ -50,7 +50,7 @@ async fn main() {
             err
         });
 
-    println!("Scrape result: {:?}", scrape_res);
+    info!("Scrape result: {:?}", scrape_res);
 
     // List of submissions that are goals and were posted to telegram.
     // We want to listen for comments for this submission to find replays of that goal to post them to telegram as well.
