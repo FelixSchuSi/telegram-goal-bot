@@ -5,7 +5,7 @@ use crate::scrape::scrape::ScrapeError;
 
 pub async fn get_html_with_browser(url: &str, selector: &str) -> Result<Html, ScrapeError> {
     let mut launch_options = LaunchOptions::default_builder();
-    launch_options.sandbox(false).port(Some(8001));
+    launch_options.sandbox(false);
     let browser = Browser::new(launch_options.build().map_err(|err| {
         ScrapeError("Error while configuring Browser: ".to_owned() + &*err.to_string())
     })?)
