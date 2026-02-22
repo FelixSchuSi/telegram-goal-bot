@@ -13,13 +13,13 @@ struct AuthResponse {
 
 #[derive(Debug)]
 pub enum RedditError {
-    Request(reqwest::Error),
-    Status(reqwest::Response),
+    Request(()),
+    Status(()),
 }
 
 impl From<reqwest::Error> for RedditError {
-    fn from(err: reqwest::Error) -> Self {
-        RedditError::Request(err)
+    fn from(_err: reqwest::Error) -> Self {
+        RedditError::Request(())
     }
 }
 
@@ -44,7 +44,7 @@ pub async fn get_fresh_subreddit() -> Result<Subreddit, RedditError> {
     let response = request.send().await?;
 
     if !response.status().is_success() {
-        Err(RedditError::Status(response))
+        Err(RedditError::Status(()))
     } else {
         let auth_data: AuthResponse = response.json().await.unwrap();
 

@@ -13,7 +13,7 @@ use crate::{
     },
     GoalSubmission,
 };
-use chrono::{DateTime, Local, Utc};
+use chrono::{DateTime, Utc};
 use futures_util::StreamExt;
 use log::{error, info, warn};
 use roux::{submission::SubmissionData, Subreddit};
@@ -73,7 +73,7 @@ impl RedditHandle {
     pub async fn listen_for_submissions(&mut self) {
         loop {
             // Ensure we have a valid token before starting the stream
-            if let Err(e) = self.ensure_valid_token().await {
+            if let Err(_e) = self.ensure_valid_token().await {
                 error!("Failed to refresh token. Retrying in 60 seconds...");
                 tokio::time::sleep(Duration::from_secs(60)).await;
                 continue;
@@ -87,7 +87,7 @@ impl RedditHandle {
             );
 
             while let Some(submission) = stream.next().await {
-                if let Err(e) = self.ensure_valid_token().await {
+                if let Err(_e) = self.ensure_valid_token().await {
                     error!("Failed to refresh token during stream");
                     break; // Break inner loop to recreate stream with new token
                 }
