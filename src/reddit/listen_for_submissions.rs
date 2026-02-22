@@ -7,22 +7,15 @@ use crate::{
     },
     reddit::get_fresh_subreddit::{get_fresh_subreddit, RedditError},
     scrape::scrape::scrape_video,
-    telegram::{
-        send::{get_latest_message_id_of_group, send_video_with_retries},
-        send_link::send_link,
-    },
+    telegram::{send::send_video_with_retries, send_link::send_link},
     GoalSubmission,
 };
-use chrono::{DateTime, Utc};
+use chrono::{DateTime, Local, Utc};
 use futures_util::StreamExt;
 use log::{error, info, warn};
 use roux::{submission::SubmissionData, Subreddit};
 use roux_stream::stream_submissions;
-use std::{
-    fs::remove_file,
-    sync::{Arc, Mutex},
-    time::Duration,
-};
+use std::{fs::remove_file, time::Duration};
 use teloxide::Bot;
 use tokio_retry::strategy::ExponentialBackoff;
 
@@ -32,13 +25,27 @@ const TOKEN_REFRESH_THRESHOLD: Duration = Duration::from_secs(60 * 60); // 1 hou
 
 pub struct RedditHandle {
     pub subreddit: Subreddit,
-    pub bot: Arc<Bot>,
-    pub config: Arc<Config>,
-    pub listen_for_replays_submission_ids: Arc<Mutex<Vec<GoalSubmission>>>,
+    pub bot: Bot,
+    pub config: Config,
+    pub listen_for_replays_submission_ids: Vec<GoalSubmission>,
     pub token_created_at: DateTime<Utc>,
 }
 
 impl RedditHandle {
+    pub async fn new() -> Self {
+        let subreddit: Subreddit = get_fresh_subreddit().await.unwrap();
+        let config = Config::init();
+        let bot = Bot::from_env();
+
+        RedditHandle {
+            subreddit,
+            bot,
+            config,
+            listen_for_replays_submission_ids: Vec::new(),
+            token_created_at: Local::now().into(),
+        }
+    }
+
     /// Check if the token needs to be refreshed (less than 1 hour validity remaining)
     fn should_refresh_token(&self) -> bool {
         let elapsed = Utc::now().signed_duration_since(self.token_created_at);
@@ -203,21 +210,12 @@ impl RedditHandle {
         competition: &Competition,
         submission: &SubmissionData,
     ) {
-        let reply_id =
-            get_latest_message_id_of_group(&&self.bot, competition.get_chat_id_replies())
-                .await
-                .0;
-        info!("After sending video the messageId of the video was successfully saved - MessageId: {:?}, submission_title: {:?}, submission_id: {:?}", reply_id, submission.title, submission.id);
-        self.listen_for_replays_submission_ids
-            .lock()
-            .unwrap()
-            .push(GoalSubmission {
-                submission_id: submission.id.clone(),
-                competition: competition.name.clone(),
-                sent_comment_ids: Vec::new(),
-                reply_id,
-                added_time: chrono::offset::Local::now(),
-            });
+        info!("After sending video the messageId of the video was successfully saved - submission_title: {:?}, submission_id: {:?}",  submission.title, submission.id);
+        self.listen_for_replays_submission_ids.push(GoalSubmission {
+            submission_id: submission.id.clone(),
+            competition: competition.name.clone(),
+            added_time: chrono::offset::Local::now(),
+        });
     }
 
     fn check_if_submission_was_already_posted(
@@ -225,8 +223,8 @@ impl RedditHandle {
         competition: &Competition,
         submission: &SubmissionData,
     ) -> bool {
-        let submissions = self.listen_for_replays_submission_ids.lock().unwrap();
-        let result = submissions
+        let result = self
+            .listen_for_replays_submission_ids
             .iter()
             .find(|e| e.submission_id == submission.id && e.competition == competition.name);
         result.is_some()

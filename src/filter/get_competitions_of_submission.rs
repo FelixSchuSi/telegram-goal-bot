@@ -1,8 +1,6 @@
-use roux::submission::SubmissionData;
-
-use crate::config::config::Config;
-
 use super::{competition::Competition, filter::submission_filter};
+use crate::config::config::Config;
+use roux::submission::SubmissionData;
 
 pub fn get_competitions_of_submission(
     submission: &SubmissionData,

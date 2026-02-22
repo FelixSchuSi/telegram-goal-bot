@@ -1,6 +1,5 @@
-use scraper::Html;
-
 use crate::scrape::scrape::ScrapeError;
+use scraper::Html;
 
 pub async fn get_html_without_browser(url: &str) -> Result<Html, ScrapeError> {
     let document = reqwest::get(url)

@@ -1,6 +1,5 @@
-use scraper::Html;
-
 use crate::scrape::scrape::ScrapeError;
+use scraper::Html;
 
 pub fn scrape_html(html: &Html, selector: &str, attribute: &str) -> Result<String, ScrapeError> {
     let title_selector = scraper::Selector::parse(selector).map_err(|_| {

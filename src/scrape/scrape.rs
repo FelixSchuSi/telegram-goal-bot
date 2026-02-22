@@ -1,15 +1,13 @@
-use std::str::FromStr;
-use std::time::Duration;
-
-use log::{error, info};
-use scraper::Html;
-use tokio::time::sleep;
-use url::{ParseError, Url};
-
 use crate::filter::videohost::VideoHost;
 use crate::scrape::get_html_with_browser::get_html_with_browser;
 use crate::scrape::get_html_without_browser::get_html_without_browser;
 use crate::scrape::scrape_html::scrape_html;
+use log::{error, info};
+use scraper::Html;
+use std::str::FromStr;
+use std::time::Duration;
+use tokio::time::sleep;
+use url::{ParseError, Url};
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct ScrapeError(pub String);

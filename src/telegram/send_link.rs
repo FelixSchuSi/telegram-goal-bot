@@ -1,3 +1,4 @@
+use crate::filter::competition::Competition;
 use log::info;
 use teloxide::{
     payloads::SendMessageSetters,
@@ -5,8 +6,6 @@ use teloxide::{
     types::{Message, ParseMode},
     Bot,
 };
-
-use crate::filter::competition::Competition;
 
 pub async fn send_link(caption: &str, bot: &Bot, url: &str, competition: &Competition) -> Message {
     info!(

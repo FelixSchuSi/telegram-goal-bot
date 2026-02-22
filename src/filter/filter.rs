@@ -1,6 +1,6 @@
 use super::{competition::Competition, videohost::VideoHost};
 use chrono::Utc;
-use log::{info, trace};
+use log::info;
 use roux::submission::SubmissionData;
 use std::str::FromStr;
 

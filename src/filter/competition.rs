@@ -1,6 +1,5 @@
-use std::ops::Index;
-
 use serde::Deserialize;
+use std::ops::Index;
 use teloxide::types::ChatId;
 
 #[derive(Debug, Deserialize, Clone, PartialEq)]
@@ -49,10 +48,6 @@ impl Competition {
 
     pub fn get_chat_id(&self) -> ChatId {
         ChatId(-1000000000000 + self.chat_id)
-    }
-
-    pub fn get_chat_id_replies(&self) -> ChatId {
-        ChatId(-1000000000000 + self.chat_id_replies)
     }
 }
 
